@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Malam Sama Anwar — Permainan Seram 3D</title>
+  <link rel="stylesheet" href="./style.css" />
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js"
+    }
+  }
+  </script>
+</head>
+<body>
+  <!-- Kanvas 3D Utama -->
+  <canvas id="game-canvas"></canvas>
+
+  <!-- Kesan Skrin (Vignette, Kerosakan Isyarat, Kilat) -->
+  <div id="vignette-overlay"></div>
+  <div id="danger-pulse"></div>
+  <div id="flash-overlay"></div>
+
+  <!-- ================= 1. LOBI UTAMA ================= -->
+  <section id="lobby-screen" class="screen active">
+    <div class="lobby-container">
+      <header class="lobby-header">
+        <div class="badge">TINGKAT 14 • MENARA PERDANA • 2:17 PAGI</div>
+        <h1 class="game-title">MALAM SAMA <span>ANWAR</span></h1>
+        <p class="game-subtitle">Kumpul 4 Fail Audit Sulit, hidupkan janakuasa kecemasan, dan turun lif sebelum beliau menjumpai anda.</p>
+      </header>
+
+      <div class="lobby-grid">
+        <!-- Panel Tetapan & Mula -->
+        <div class="panel">
+          <h2>Tetapan Permainan</h2>
+
+          <label class="field-label">Tahap Kesukaran</label>
+          <div class="diff-group" id="difficulty-group">
+            <button type="button" class="diff-btn" data-diff="mudah">
+              <strong>Mudah</strong>
+              <span>Kelajuan perlahan, bateri tahan lama</span>
+            </button>
+            <button type="button" class="diff-btn active" data-diff="sederhana">
+              <strong>Sederhana</strong>
+              <span>Seimbang & mendebarkan</span>
+            </button>
+            <button type="button" class="diff-btn" data-diff="sukar">
+              <strong>Sukar</strong>
+              <span>Peka bunyi larian & agresif</span>
+            </button>
+          </div>
+
+          <label class="field-label" for="sens-slider">
+            Sensitiviti Kamera: <span id="sens-val">1.0</span>x
+          </label>
+          <input type="range" id="sens-slider" min="0.4" max="2.2" step="0.1" value="1.0" />
+
+          <div class="asset-box">
+            <div class="asset-title">Aset Entiti (Pilihan Pantas)</div>
+            <p class="asset-hint">Secara lalai game guna <code>assets/anwar.png</code> & <code>assets/sakau.mp3</code>. Anda juga boleh terus pilih fail di sini:</p>
+            <div class="upload-row">
+              <label class="file-btn">
+                <span>Muat Naik Muka (.png/.jpg)</span>
+                <input type="file" id="face-upload" accept="image/*" />
+              </label>
+              <label class="file-btn">
+                <span>Muat Naik Suara (.mp3/.wav)</span>
+                <input type="file" id="audio-upload" accept="audio/*" />
+              </label>
+            </div>
+            <div id="asset-status" class="asset-status">Status: Sedia dimainkan</div>
+          </div>
+
+          <div class="action-buttons">
+            <button type="button" id="btn-start" class="btn-primary">MULA MISI</button>
+            <button type="button" id="btn-start-skip" class="btn-secondary">TERUS MAIN (LANGKAU INTRO)</button>
+          </div>
+        </div>
+
+        <!-- Panel Panduan Jelas -->
+        <div class="panel">
+          <h2>Cara Main & Kawalan</h2>
+          <ol class="guide-list">
+            <li><strong>Fasa 1 — Cari 4 Fail Audit Sulit:</strong> Periksa meja di <em>Bilik Fail</em>, <em>Bilik Mesyuarat</em>, <em>Pantri</em>, dan <em>Pejabat Pengarah</em>.</li>
+            <li><strong>Fasa 2 — Hidupkan 2 Suis Janakuasa:</strong> Pergi ke <em>Bilik Server & Janakuasa</em> untuk pulihkan bekalan elektrik lif.</li>
+            <li><strong>Fasa 3 — Melarikan Diri:</strong> Patah balik ke <em>Lobi Lif Utama</em> dan tekan butang lif.</li>
+            <li><strong>Menyorok & Bertahan:</strong> Apabila mendengar jeritan <em>"SAKAU!"</em> semakin kuat, masuk ke dalam <strong>Loker Sembunyi</strong> berjalur atau pecut lari ke bilik lain.</li>
+          </ol>
+
+          <div class="controls-split">
+            <div>
+              <h3>Komputer (PC)</h3>
+              <ul>
+                <li><kbd>W A S D</kbd> : Bergerak</li>
+                <li><kbd>Shift</kbd> : Pecut (Lari)</li>
+                <li><kbd>Tetikus</kbd> : Pandang Sekeliling</li>
+                <li><kbd>F</kbd> / <kbd>Klik Kanan</kbd> : Lampu Suluh</li>
+                <li><kbd>E</kbd> / <kbd>Klik Kiri</kbd> : Ambil / Masuk Loker</li>
+              </ul>
+            </div>
+            <div>
+              <h3>Telefon Pintar</h3>
+              <ul>
+                <li><strong>Kiri Skrin</strong> : Kayu ria gerak</li>
+                <li><strong>Kanan Skrin</strong> : Seret untuk pandang</li>
+                <li><strong>Butang LARI</strong> : Pecut</li>
+                <li><strong>Butang SULUH</strong> : Hidup/Mati lampu</li>
+                <li><strong>Butang AKSI</strong> : Ambil fail / Loker</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= 2. BABAK INTRO SINEMATIK ================= -->
+  <section id="intro-screen" class="screen">
+    <div class="letterbox top"></div>
+    <div class="intro-hud">
+      <div class="rec-tag"><span class="dot"></span> RAKAMAN CCTV • 02:17:04</div>
+      <button type="button" id="btn-skip-intro" class="btn-skip">LANGKAU INTRO &raquo;</button>
+    </div>
+    <div class="subtitle-box">
+      <div id="intro-speaker" class="speaker">AIMAN (JURUAUDIT DALAMAN)</div>
+      <p id="intro-text">Jam sudah pukul 2 pagi... Semua staf dah balik, tinggal aku seorang menyiapkan semakan kewangan Tingkat 14.</p>
+      <div class="intro-progress"><div id="intro-bar"></div></div>
+    </div>
+    <div class="letterbox bottom"></div>
+  </section>
+
+  <!-- ================= 3. HUD DALAM PERMAINAN ================= -->
+  <section id="hud-screen" class="screen">
+    <!-- Atas Kiri: Misi & Status -->
+    <div class="hud-top-left">
+      <div class="mission-card">
+        <div class="mission-label">OBJEKTIF SEMASA</div>
+        <div id="mission-text" class="mission-text">Kumpul Fail Audit Sulit (0 / 4)</div>
+        <div id="room-name" class="room-badge">Lokasi: Lobi Lif Utama</div>
+      </div>
+
+      <div class="bars-card">
+        <div class="bar-row">
+          <span>STAMINA</span>
+          <div class="bar-track"><div id="stamina-fill" class="bar-fill stamina"></div></div>
+        </div>
+        <div class="bar-row">
+          <span>BATERI SULUH</span>
+          <div class="bar-track"><div id="battery-fill" class="bar-fill battery"></div></div>
+        </div>
+      </div>
+
+      <div id="danger-banner" class="danger-banner hidden">
+        AMARAN: BELIAU SEMAKIN HAMPIR!
+      </div>
+    </div>
+
+    <!-- Atas Kanan: Pelan Lantai & Jeda -->
+    <div class="hud-top-right">
+      <div class="minimap-wrap">
+        <canvas id="minimap-canvas" width="150" height="150"></canvas>
+        <div class="minimap-label">PELAN TINGKAT 14</div>
+      </div>
+      <button type="button" id="btn-pause" class="hud-icon-btn" title="Jeda">II</button>
+    </div>
+
+    <!-- Tengah: Titik Sasaran & Arahan Interaksi -->
+    <div id="crosshair" class="crosshair"></div>
+    <div id="interact-prompt" class="interact-prompt hidden">
+      Tekan <strong>[E]</strong> atau <strong>AKSI</strong> untuk mengambil
+    </div>
+    <div id="hiding-banner" class="hiding-banner hidden">
+      ANDA SEDANG BERSEMBUNYI DI DALAM LOKER — Tekan <strong>[E]</strong> atau <strong>AKSI</strong> untuk keluar
+    </div>
+    <div id="toast-msg" class="toast-msg hidden"></div>
+
+    <!-- Kawalan Telefon Pintar (Sentuh) -->
+    <div id="mobile-controls" class="mobile-controls">
+      <div id="joystick-zone" class="joystick-zone">
+        <div id="joystick-base" class="joystick-base">
+          <div id="joystick-stick" class="joystick-stick"></div>
+        </div>
+      </div>
+
+      <div id="look-zone" class="look-zone"></div>
+
+      <div class="mobile-buttons">
+        <button type="button" id="mob-flashlight" class="mob-btn">SULUH</button>
+        <button type="button" id="mob-sprint" class="mob-btn">LARI</button>
+        <button type="button" id="mob-interact" class="mob-btn accent">AKSI</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= 4. MENU JEDA ================= -->
+  <section id="pause-screen" class="screen overlay-modal">
+    <div class="modal-card">
+      <h2>PERMAINAN DIJEDA</h2>
+      <p>Tarik nafas sekejap. Beliau masih meronda di koridor Tingkat 14.</p>
+      <div class="modal-actions">
+        <button type="button" id="btn-resume" class="btn-primary">SAMBUNG MAIN</button>
+        <button type="button" id="btn-toggle-touch" class="btn-secondary">TOGOL KAWALAN TELEFON</button>
+        <button type="button" id="btn-quit" class="btn-danger">KELUAR KE LOBI</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= 5. SKRIN JUMPSCARE ================= -->
+  <section id="jumpscare-screen" class="screen">
+    <div class="jumpscare-flash"></div>
+    <div id="jumpscare-face-wrap" class="jumpscare-face-wrap">
+      <img id="jumpscare-img" alt="Entiti" />
+      <div class="jumpscare-caption">SAKAUUUU!!</div>
+    </div>
+  </section>
+
+  <!-- ================= 6. SKRIN KALAH (DEATH REPORT) ================= -->
+  <section id="death-screen" class="screen overlay-modal">
+    <div class="modal-card death-card">
+      <div class="status-pill danger">MISI GAGAL</div>
+      <h1>ANDA TELAH DISAKAU!</h1>
+      <p class="death-sub">Beliau berjaya menangkap anda sebelum fail audit sempat dibawa keluar dari Tingkat 14.</p>
+
+      <div class="stats-grid">
+        <div class="stat-item">
+          <span>Lokasi Ditangkap</span>
+          <strong id="stat-death-room">-</strong>
+        </div>
+        <div class="stat-item">
+          <span>Masa Bertahan</span>
+          <strong id="stat-death-time">00:00</strong>
+        </div>
+        <div class="stat-item">
+          <span>Fail Audit Diperoleh</span>
+          <strong id="stat-death-files">0 / 4</strong>
+        </div>
+        <div class="stat-item">
+          <span>Suis Kuasa Dihidupkan</span>
+          <strong id="stat-death-switches">0 / 2</strong>
+        </div>
+      </div>
+
+      <div class="modal-actions">
+        <button type="button" id="btn-retry" class="btn-primary">CUBA LAGI</button>
+        <button type="button" id="btn-death-lobby" class="btn-secondary">KEMBALI KE LOBI</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= 7. SKRIN MENANG ================= -->
+  <section id="win-screen" class="screen overlay-modal">
+    <div class="modal-card win-card">
+      <div class="status-pill success">MISI BERJAYA</div>
+      <h1>BERJAYA MELARIKAN DIRI!</h1>
+      <p class="death-sub">Pintu lif tertutup rapat tepat pada masanya. Semua 4 Fail Audit Sulit kini selamat di tangan anda.</p>
+
+      <div class="stats-grid">
+        <div class="stat-item">
+          <span>Tahap Kesukaran</span>
+          <strong id="stat-win-diff">Sederhana</strong>
+        </div>
+        <div class="stat-item">
+          <span>Masa Selesai</span>
+          <strong id="stat-win-time">00:00</strong>
+        </div>
+      </div>
+
+      <div class="modal-actions">
+        <button type="button" id="btn-win-again" class="btn-primary">MAIN SEMULA</button>
+        <button type="button" id="btn-win-lobby" class="btn-secondary">KEMBALI KE LOBI</button>
+      </div>
+    </div>
+  </section>
+
+  <script type="module" src="./js/main.js"></script>
+</body>
+</html>
