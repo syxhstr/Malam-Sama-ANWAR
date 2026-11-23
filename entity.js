@@ -74,12 +74,12 @@ export class AnwarEntity {
   tryLoadDefaultFace() {
     const loader = new THREE.TextureLoader();
     loader.load(
-      './assets/anwar.png',
+      './anwar.png',
       (tex) => {
         tex.colorSpace = THREE.SRGBColorSpace;
         this.sprite.material.map = tex;
         this.sprite.material.needsUpdate = true;
-        this.imageSrc = './assets/anwar.png';
+        this.imageSrc = './anwar.png';
       },
       undefined,
       () => {
