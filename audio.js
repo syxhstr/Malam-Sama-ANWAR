@@ -23,7 +23,7 @@ export class HorrorAudio {
 
   async loadDefaultScream() {
     try {
-      const res = await fetch('./assets/sakau.mp3');
+      const res = await fetch('./sakau.mp3');
       if (res.ok) {
         const arr = await res.arrayBuffer();
         this.screamBuffer = await this.ctx.decodeAudioData(arr);
