@@ -17,7 +17,7 @@
   <!-- Kanvas 3D Utama -->
   <canvas id="game-canvas"></canvas>
 
-  <!-- Kesan Skrin (Vignette, Kerosakan Isyarat, Kilat) -->
+  <!-- Kesan Skrin -->
   <div id="vignette-overlay"></div>
   <div id="danger-pulse"></div>
   <div id="flash-overlay"></div>
@@ -28,7 +28,7 @@
       <header class="lobby-header">
         <div class="badge">TINGKAT 14 • MENARA PERDANA • 2:17 PAGI</div>
         <h1 class="game-title">MALAM SAMA <span>ANWAR</span></h1>
-        <p class="game-subtitle">Kumpul 4 Fail Audit Sulit, hidupkan janakuasa kecemasan, dan turun lif sebelum beliau menjumpai anda.</p>
+        <p class="game-subtitle">Kumpul 4 Fail Audit Sulit, hidupkan 2 janakuasa kecemasan, dan melarikan diri melalui Lif Utama.</p>
       </header>
 
       <div class="lobby-grid">
@@ -58,15 +58,15 @@
           <input type="range" id="sens-slider" min="0.4" max="2.2" step="0.1" value="1.0" />
 
           <div class="asset-box">
-            <div class="asset-title">Aset Entiti (Pilihan Pantas)</div>
-            <p class="asset-hint">Secara lalai game guna <code>assets/anwar.png</code> & <code>assets/sakau.mp3</code>. Anda juga boleh terus pilih fail di sini:</p>
+            <div class="asset-title">Aset Entiti (Muka & Suara)</div>
+            <p class="asset-hint">Game automatik baca <code>anwar.png</code> & <code>sakau.mp3</code> di GitHub, atau pilih terus dari peranti anda:</p>
             <div class="upload-row">
               <label class="file-btn">
-                <span>Muat Naik Muka (.png/.jpg)</span>
+                <span>Pilih Gambar Muka</span>
                 <input type="file" id="face-upload" accept="image/*" />
               </label>
               <label class="file-btn">
-                <span>Muat Naik Suara (.mp3/.wav)</span>
+                <span>Pilih Audio Suara</span>
                 <input type="file" id="audio-upload" accept="audio/*" />
               </label>
             </div>
@@ -83,10 +83,10 @@
         <div class="panel">
           <h2>Cara Main & Kawalan</h2>
           <ol class="guide-list">
-            <li><strong>Fasa 1 — Cari 4 Fail Audit Sulit:</strong> Periksa meja di <em>Bilik Fail</em>, <em>Bilik Mesyuarat</em>, <em>Pantri</em>, dan <em>Pejabat Pengarah</em>.</li>
+            <li><strong>Fasa 1 — Kumpul 4 Fail Audit Sulit:</strong> Periksa meja di <em>Bilik Fail</em>, <em>Bilik Mesyuarat</em>, <em>Pantri</em>, dan <em>Pejabat Pengarah</em>.</li>
             <li><strong>Fasa 2 — Hidupkan 2 Suis Janakuasa:</strong> Pergi ke <em>Bilik Server & Janakuasa</em> untuk pulihkan bekalan elektrik lif.</li>
-            <li><strong>Fasa 3 — Melarikan Diri:</strong> Patah balik ke <em>Lobi Lif Utama</em> dan tekan butang lif.</li>
-            <li><strong>Menyorok & Bertahan:</strong> Apabila mendengar jeritan <em>"SAKAU!"</em> semakin kuat, masuk ke dalam <strong>Loker Sembunyi</strong> berjalur atau pecut lari ke bilik lain.</li>
+            <li><strong>Fasa 3 — Melarikan Diri:</strong> Kembali ke <em>Lobi Lif Utama</em> dan aktifkan pintu lif.</li>
+            <li><strong>Laluan Lari & Loker:</strong> Setiap bilik mempunyai <strong>2 pintu keluar luas</strong>. Anda juga boleh masuk ke dalam <strong>Loker Sembunyi</strong> biru apabila beliau menghampiri.</li>
           </ol>
 
           <div class="controls-split">
@@ -125,7 +125,7 @@
     </div>
     <div class="subtitle-box">
       <div id="intro-speaker" class="speaker">AIMAN (JURUAUDIT DALAMAN)</div>
-      <p id="intro-text">Jam sudah pukul 2 pagi... Semua staf dah balik, tinggal aku seorang menyiapkan semakan kewangan Tingkat 14.</p>
+      <p id="intro-text">Jam sudah 2:17 pagi... Semua staf dah balik, tinggal aku seorang di Tingkat 14 Menara Perdana.</p>
       <div class="intro-progress"><div id="intro-bar"></div></div>
     </div>
     <div class="letterbox bottom"></div>
@@ -133,11 +133,10 @@
 
   <!-- ================= 3. HUD DALAM PERMAINAN ================= -->
   <section id="hud-screen" class="screen">
-    <!-- Atas Kiri: Misi & Status -->
     <div class="hud-top-left">
       <div class="mission-card">
         <div class="mission-label">OBJEKTIF SEMASA</div>
-        <div id="mission-text" class="mission-text">Kumpul Fail Audit Sulit (0 / 4)</div>
+        <div id="mission-text" class="mission-text">Fasa 1: Kumpul Fail Audit Sulit (0 / 4)</div>
         <div id="room-name" class="room-badge">Lokasi: Lobi Lif Utama</div>
       </div>
 
@@ -157,19 +156,17 @@
       </div>
     </div>
 
-    <!-- Atas Kanan: Pelan Lantai & Jeda -->
     <div class="hud-top-right">
       <div class="minimap-wrap">
-        <canvas id="minimap-canvas" width="150" height="150"></canvas>
+        <canvas id="minimap-canvas" width="160" height="160"></canvas>
         <div class="minimap-label">PELAN TINGKAT 14</div>
       </div>
       <button type="button" id="btn-pause" class="hud-icon-btn" title="Jeda">II</button>
     </div>
 
-    <!-- Tengah: Titik Sasaran & Arahan Interaksi -->
     <div id="crosshair" class="crosshair"></div>
     <div id="interact-prompt" class="interact-prompt hidden">
-      Tekan <strong>[E]</strong> atau <strong>AKSI</strong> untuk mengambil
+      Tekan <strong>[E]</strong> atau <strong>AKSI</strong>
     </div>
     <div id="hiding-banner" class="hiding-banner hidden">
       ANDA SEDANG BERSEMBUNYI DI DALAM LOKER — Tekan <strong>[E]</strong> atau <strong>AKSI</strong> untuk keluar
@@ -198,7 +195,7 @@
   <section id="pause-screen" class="screen overlay-modal">
     <div class="modal-card">
       <h2>PERMAINAN DIJEDA</h2>
-      <p>Tarik nafas sekejap. Beliau masih meronda di koridor Tingkat 14.</p>
+      <p>Tarik nafas sekejap. Beliau masih meronda di Tingkat 14.</p>
       <div class="modal-actions">
         <button type="button" id="btn-resume" class="btn-primary">SAMBUNG MAIN</button>
         <button type="button" id="btn-toggle-touch" class="btn-secondary">TOGOL KAWALAN TELEFON</button>
@@ -216,7 +213,7 @@
     </div>
   </section>
 
-  <!-- ================= 6. SKRIN KALAH (DEATH REPORT) ================= -->
+  <!-- ================= 6. SKRIN KALAH ================= -->
   <section id="death-screen" class="screen overlay-modal">
     <div class="modal-card death-card">
       <div class="status-pill danger">MISI GAGAL</div>
@@ -274,6 +271,6 @@
     </div>
   </section>
 
-  <script type="module" src="./main.js"></script>
+  <script type="module" src="./js/main.js"></script>
 </body>
 </html>
