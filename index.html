@@ -4,23 +4,839 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Malam Sama Anwar — Permainan Seram 3D</title>
-  <link rel="stylesheet" href="./style.css" />
-  <script type="importmap">
-  {
-    "imports": {
-      "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js"
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+      -webkit-user-select: none;
     }
-  }
-  </script>
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: #07090d;
+      color: #f1f5f9;
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      touch-action: none;
+    }
+
+    #game-canvas {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      display: block;
+      z-index: 1;
+    }
+
+    #vignette-overlay {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 2;
+      background: radial-gradient(circle at center, transparent 48%, rgba(0, 0, 0, 0.85) 100%);
+    }
+
+    #danger-pulse {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 3;
+      opacity: 0;
+      box-shadow: inset 0 0 110px rgba(220, 38, 38, 0.85);
+      transition: opacity 0.12s ease;
+    }
+
+    .screen {
+      position: fixed;
+      inset: 0;
+      z-index: 10;
+      display: none;
+    }
+
+    .screen.active {
+      display: flex;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    /* ================= LOBI ================= */
+    #lobby-screen {
+      background: linear-gradient(135deg, rgba(8, 12, 20, 0.84), rgba(15, 23, 42, 0.74));
+      backdrop-filter: blur(6px);
+      overflow-y: auto;
+      padding: 20px;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .lobby-container {
+      width: 100%;
+      max-width: 1040px;
+      margin: auto;
+    }
+
+    .lobby-header {
+      text-align: center;
+      margin-bottom: 22px;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 5px 12px;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      background: rgba(220, 38, 38, 0.2);
+      border: 1px solid rgba(248, 113, 113, 0.45);
+      color: #fca5a5;
+      margin-bottom: 10px;
+    }
+
+    .game-title {
+      font-size: clamp(2rem, 5vw, 3.4rem);
+      font-weight: 900;
+      letter-spacing: 2px;
+      text-shadow: 0 4px 24px rgba(0, 0, 0, 0.8);
+    }
+
+    .game-title span {
+      color: #ef4444;
+    }
+
+    .game-subtitle {
+      color: #cbd5e1;
+      max-width: 650px;
+      margin: 8px auto 0;
+      font-size: 0.98rem;
+      line-height: 1.5;
+    }
+
+    .lobby-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+
+    @media (max-width: 820px) {
+      .lobby-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .panel {
+      background: rgba(15, 23, 42, 0.88);
+      border: 1px solid rgba(148, 163, 184, 0.22);
+      border-radius: 14px;
+      padding: 20px;
+      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.55);
+    }
+
+    .panel h2 {
+      font-size: 1.15rem;
+      margin-bottom: 14px;
+      color: #f8fafc;
+      border-bottom: 1px solid rgba(148, 163, 184, 0.18);
+      padding-bottom: 8px;
+    }
+
+    .field-label {
+      display: block;
+      font-size: 0.86rem;
+      color: #cbd5e1;
+      margin-bottom: 8px;
+      font-weight: 600;
+    }
+
+    .diff-group {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .diff-btn {
+      background: rgba(30, 41, 59, 0.85);
+      border: 1px solid rgba(148, 163, 184, 0.25);
+      border-radius: 10px;
+      padding: 10px 8px;
+      color: #e2e8f0;
+      cursor: pointer;
+      text-align: left;
+      transition: all 0.18s ease;
+    }
+
+    .diff-btn strong {
+      display: block;
+      font-size: 0.92rem;
+      margin-bottom: 3px;
+    }
+
+    .diff-btn span {
+      display: block;
+      font-size: 0.72rem;
+      color: #94a3b8;
+      line-height: 1.3;
+    }
+
+    .diff-btn.active {
+      background: rgba(220, 38, 38, 0.25);
+      border-color: #ef4444;
+      box-shadow: 0 0 0 1px #ef4444;
+    }
+
+    input[type="range"] {
+      width: 100%;
+      margin-bottom: 16px;
+      accent-color: #ef4444;
+    }
+
+    .asset-box {
+      background: rgba(2, 6, 23, 0.55);
+      border: 1px dashed rgba(148, 163, 184, 0.3);
+      border-radius: 10px;
+      padding: 12px;
+      margin-bottom: 16px;
+    }
+
+    .asset-title {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #fbbf24;
+      margin-bottom: 4px;
+    }
+
+    .asset-hint {
+      font-size: 0.76rem;
+      color: #94a3b8;
+      margin-bottom: 10px;
+      line-height: 1.4;
+    }
+
+    .asset-hint code {
+      color: #e2e8f0;
+      background: rgba(255,255,255,0.08);
+      padding: 1px 4px;
+      border-radius: 4px;
+    }
+
+    .upload-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .file-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 8px;
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 8px;
+      font-size: 0.76rem;
+      font-weight: 600;
+      cursor: pointer;
+      color: #e2e8f0;
+    }
+
+    .file-btn:hover {
+      background: #334155;
+    }
+
+    .file-btn input {
+      display: none;
+    }
+
+    .asset-status {
+      margin-top: 8px;
+      font-size: 0.75rem;
+      color: #34d399;
+    }
+
+    .action-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+    }
+
+    .btn-primary, .btn-secondary, .btn-danger {
+      width: 100%;
+      padding: 13px 16px;
+      border-radius: 10px;
+      font-weight: 800;
+      font-size: 0.95rem;
+      letter-spacing: 0.8px;
+      cursor: pointer;
+      border: none;
+      transition: transform 0.12s ease, background 0.15s ease;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #dc2626, #991b1b);
+      color: #fff;
+      box-shadow: 0 8px 20px rgba(220, 38, 38, 0.35);
+    }
+
+    .btn-primary:hover {
+      background: linear-gradient(135deg, #ef4444, #b91c1c);
+    }
+
+    .btn-secondary {
+      background: #1e293b;
+      color: #e2e8f0;
+      border: 1px solid #334155;
+    }
+
+    .btn-secondary:hover {
+      background: #273549;
+    }
+
+    .btn-danger {
+      background: #450a0a;
+      color: #fecaca;
+      border: 1px solid #7f1d1d;
+    }
+
+    .guide-list {
+      padding-left: 18px;
+      font-size: 0.86rem;
+      color: #cbd5e1;
+      line-height: 1.55;
+      margin-bottom: 16px;
+    }
+
+    .guide-list li {
+      margin-bottom: 7px;
+    }
+
+    .guide-list strong {
+      color: #f8fafc;
+    }
+
+    .controls-split {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      background: rgba(2, 6, 23, 0.5);
+      padding: 12px;
+      border-radius: 10px;
+    }
+
+    .controls-split h3 {
+      font-size: 0.84rem;
+      color: #fbbf24;
+      margin-bottom: 6px;
+    }
+
+    .controls-split ul {
+      list-style: none;
+      font-size: 0.78rem;
+      color: #cbd5e1;
+      line-height: 1.6;
+    }
+
+    kbd {
+      background: #334155;
+      padding: 1px 5px;
+      border-radius: 4px;
+      font-size: 0.74rem;
+      color: #fff;
+    }
+
+    /* ================= INTRO SINEMATIK ================= */
+    #intro-screen {
+      flex-direction: column;
+      justify-content: space-between;
+      pointer-events: auto;
+    }
+
+    .letterbox {
+      height: 11vh;
+      background: #000;
+      width: 100%;
+    }
+
+    .intro-hud {
+      position: absolute;
+      top: 13vh;
+      left: 24px;
+      right: 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .rec-tag {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-family: monospace;
+      font-size: 0.9rem;
+      color: #f87171;
+      background: rgba(0, 0, 0, 0.65);
+      padding: 6px 12px;
+      border-radius: 6px;
+    }
+
+    .rec-tag .dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: #ef4444;
+      animation: blink 1s infinite;
+    }
+
+    @keyframes blink {
+      50% { opacity: 0.15; }
+    }
+
+    .btn-skip {
+      background: rgba(15, 23, 42, 0.85);
+      color: #f8fafc;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .subtitle-box {
+      position: absolute;
+      bottom: 13vh;
+      left: 50%;
+      transform: translateX(-50%);
+      width: min(760px, 92vw);
+      background: rgba(0, 0, 0, 0.82);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 12px;
+      padding: 16px 20px;
+      text-align: center;
+    }
+
+    .speaker {
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 1.4px;
+      color: #fbbf24;
+      margin-bottom: 6px;
+    }
+
+    #intro-text {
+      font-size: 1.05rem;
+      line-height: 1.5;
+      color: #f8fafc;
+    }
+
+    .intro-progress {
+      width: 100%;
+      height: 4px;
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 99px;
+      margin-top: 12px;
+      overflow: hidden;
+    }
+
+    #intro-bar {
+      width: 0%;
+      height: 100%;
+      background: #ef4444;
+    }
+
+    /* ================= HUD DALAM GAME ================= */
+    #hud-screen {
+      pointer-events: none;
+    }
+
+    .hud-top-left {
+      position: absolute;
+      top: 14px;
+      left: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      max-width: 290px;
+    }
+
+    .mission-card, .bars-card {
+      background: rgba(10, 15, 28, 0.78);
+      border: 1px solid rgba(148, 163, 184, 0.25);
+      border-radius: 10px;
+      padding: 10px 12px;
+      backdrop-filter: blur(4px);
+    }
+
+    .mission-label {
+      font-size: 0.68rem;
+      letter-spacing: 1.2px;
+      color: #fbbf24;
+      font-weight: 800;
+    }
+
+    .mission-text {
+      font-size: 0.94rem;
+      font-weight: 700;
+      margin: 3px 0;
+    }
+
+    .room-badge {
+      font-size: 0.76rem;
+      color: #94a3b8;
+    }
+
+    .bar-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .bar-row:last-child {
+      margin-bottom: 0;
+    }
+
+    .bar-track {
+      flex: 1;
+      height: 7px;
+      background: rgba(255, 255, 255, 0.12);
+      border-radius: 99px;
+      overflow: hidden;
+    }
+
+    .bar-fill {
+      height: 100%;
+      width: 100%;
+      transition: width 0.1s linear;
+    }
+
+    .bar-fill.stamina { background: #38bdf8; }
+    .bar-fill.battery { background: #facc15; }
+
+    .danger-banner {
+      background: rgba(185, 28, 28, 0.9);
+      border: 1px solid #fca5a5;
+      color: #fff;
+      font-weight: 800;
+      font-size: 0.78rem;
+      padding: 8px 10px;
+      border-radius: 8px;
+      text-align: center;
+      animation: pulseScale 0.5s infinite alternate;
+    }
+
+    @keyframes pulseScale {
+      from { transform: scale(1); }
+      to { transform: scale(1.03); }
+    }
+
+    .hud-top-right {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+    }
+
+    .minimap-wrap {
+      background: rgba(10, 15, 28, 0.82);
+      border: 1px solid rgba(148, 163, 184, 0.3);
+      border-radius: 10px;
+      padding: 6px;
+      text-align: center;
+    }
+
+    #minimap-canvas {
+      display: block;
+      border-radius: 6px;
+      background: #0f172a;
+    }
+
+    .minimap-label {
+      font-size: 0.64rem;
+      font-weight: 700;
+      color: #94a3b8;
+      margin-top: 4px;
+    }
+
+    .hud-icon-btn {
+      pointer-events: auto;
+      width: 42px;
+      height: 42px;
+      border-radius: 10px;
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      color: #fff;
+      font-weight: 900;
+      cursor: pointer;
+    }
+
+    .crosshair {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.75);
+      transform: translate(-50%, -50%);
+    }
+
+    .interact-prompt, .hiding-banner, .toast-msg {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(250, 204, 21, 0.55);
+      padding: 9px 16px;
+      border-radius: 999px;
+      font-size: 0.86rem;
+      white-space: nowrap;
+    }
+
+    .interact-prompt { top: 56%; }
+    .hiding-banner { top: 20%; border-color: #38bdf8; color: #bae6fd; }
+    .toast-msg { top: 14%; border-color: #34d399; color: #a7f3d0; }
+
+    /* ================= KAWALAN TELEFON ================= */
+    .mobile-controls {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      display: none;
+    }
+
+    .mobile-controls.visible {
+      display: block;
+    }
+
+    .joystick-zone {
+      position: absolute;
+      left: 16px;
+      bottom: 20px;
+      width: 140px;
+      height: 140px;
+      pointer-events: auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .joystick-base {
+      width: 112px;
+      height: 112px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.1);
+      border: 2px solid rgba(255, 255, 255, 0.28);
+      position: relative;
+    }
+
+    .joystick-stick {
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.72);
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .look-zone {
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 55%;
+      height: 100%;
+      pointer-events: auto;
+    }
+
+    .mobile-buttons {
+      position: absolute;
+      right: 18px;
+      bottom: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      pointer-events: auto;
+      z-index: 5;
+    }
+
+    .mob-btn {
+      width: 72px;
+      height: 52px;
+      border-radius: 14px;
+      background: rgba(15, 23, 42, 0.82);
+      border: 2px solid rgba(255, 255, 255, 0.32);
+      color: #fff;
+      font-weight: 800;
+      font-size: 0.78rem;
+    }
+
+    .mob-btn.active {
+      background: rgba(234, 179, 8, 0.35);
+      border-color: #facc15;
+    }
+
+    .mob-btn.accent {
+      background: rgba(220, 38, 38, 0.85);
+      border-color: #fca5a5;
+    }
+
+    /* ================= MODAL & JUMPSCARE ================= */
+    .overlay-modal {
+      background: rgba(3, 7, 18, 0.86);
+      backdrop-filter: blur(8px);
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .modal-card {
+      width: min(460px, 94vw);
+      background: #0f172a;
+      border: 1px solid rgba(148, 163, 184, 0.25);
+      border-radius: 16px;
+      padding: 24px;
+      text-align: center;
+    }
+
+    .modal-card h2, .modal-card h1 {
+      margin-bottom: 10px;
+    }
+
+    .death-card {
+      border-color: rgba(239, 68, 68, 0.55);
+    }
+
+    .win-card {
+      border-color: rgba(52, 211, 153, 0.55);
+    }
+
+    .status-pill {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 800;
+      margin-bottom: 10px;
+    }
+
+    .status-pill.danger { background: rgba(220, 38, 38, 0.25); color: #fca5a5; }
+    .status-pill.success { background: rgba(16, 185, 129, 0.25); color: #6ee7b7; }
+
+    .death-sub {
+      color: #cbd5e1;
+      font-size: 0.9rem;
+      line-height: 1.45;
+      margin-bottom: 18px;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    .stat-item {
+      background: rgba(2, 6, 23, 0.65);
+      padding: 10px;
+      border-radius: 10px;
+      text-align: left;
+    }
+
+    .stat-item span {
+      display: block;
+      font-size: 0.72rem;
+      color: #94a3b8;
+      margin-bottom: 3px;
+    }
+
+    .stat-item strong {
+      font-size: 0.95rem;
+      color: #f8fafc;
+    }
+
+    .modal-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    #jumpscare-screen {
+      background: #000;
+      align-items: center;
+      justify-content: center;
+      z-index: 30;
+    }
+
+    .jumpscare-flash {
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(
+        0deg,
+        rgba(255, 0, 0, 0.18),
+        rgba(255, 0, 0, 0.18) 2px,
+        transparent 2px,
+        transparent 6px
+      );
+      animation: strobe 0.08s infinite;
+    }
+
+    @keyframes strobe {
+      0% { background-color: rgba(220, 38, 38, 0.35); }
+      50% { background-color: rgba(0, 0, 0, 0.85); }
+      100% { background-color: rgba(255, 255, 255, 0.25); }
+    }
+
+    .jumpscare-face-wrap {
+      position: relative;
+      text-align: center;
+      animation: shakeHard 0.07s infinite;
+    }
+
+    #jumpscare-img {
+      width: min(76vw, 440px);
+      height: min(76vw, 440px);
+      object-fit: contain;
+      filter: contrast(1.4) saturate(1.3);
+      transform: scale(1.15);
+    }
+
+    .jumpscare-caption {
+      font-size: clamp(2.2rem, 7vw, 4.2rem);
+      font-weight: 900;
+      color: #ef4444;
+      text-shadow: 0 0 24px #000, 0 0 12px #dc2626;
+      letter-spacing: 3px;
+      margin-top: -12px;
+    }
+
+    @keyframes shakeHard {
+      0% { transform: translate(-8px, 6px) scale(1.12); }
+      25% { transform: translate(9px, -7px) scale(1.18); }
+      50% { transform: translate(-6px, -8px) scale(1.15); }
+      75% { transform: translate(8px, 7px) scale(1.2); }
+      100% { transform: translate(0, 0) scale(1.14); }
+    }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
 </head>
 <body>
-  <!-- Kanvas 3D Utama -->
   <canvas id="game-canvas"></canvas>
-
-  <!-- Kesan Skrin -->
   <div id="vignette-overlay"></div>
   <div id="danger-pulse"></div>
-  <div id="flash-overlay"></div>
 
   <!-- ================= 1. LOBI UTAMA ================= -->
   <section id="lobby-screen" class="screen active">
@@ -32,7 +848,6 @@
       </header>
 
       <div class="lobby-grid">
-        <!-- Panel Tetapan & Mula -->
         <div class="panel">
           <h2>Tetapan Permainan</h2>
 
@@ -59,7 +874,7 @@
 
           <div class="asset-box">
             <div class="asset-title">Aset Entiti (Muka & Suara)</div>
-            <p class="asset-hint">Game automatik baca <code>anwar.png</code> & <code>sakau.mp3</code> di GitHub, atau pilih terus dari peranti anda:</p>
+            <p class="asset-hint">Game automatik baca <code>anwar.png</code> & <code>sakau.mp3</code> di GitHub, atau pilih terus dari PC/telefon anda:</p>
             <div class="upload-row">
               <label class="file-btn">
                 <span>Pilih Gambar Muka</span>
@@ -79,7 +894,6 @@
           </div>
         </div>
 
-        <!-- Panel Panduan Jelas -->
         <div class="panel">
           <h2>Cara Main & Kawalan</h2>
           <ol class="guide-list">
@@ -93,11 +907,11 @@
             <div>
               <h3>Komputer (PC)</h3>
               <ul>
-                <li><kbd>W A S D</kbd> : Bergerak</li>
+                <li><kbd>W A S D</kbd> / <kbd>Anak Panah</kbd> : Gerak</li>
                 <li><kbd>Shift</kbd> : Pecut (Lari)</li>
-                <li><kbd>Tetikus</kbd> : Pandang Sekeliling</li>
+                <li><kbd>Tetikus</kbd> (Klik skrin / Seret) : Pandang</li>
                 <li><kbd>F</kbd> / <kbd>Klik Kanan</kbd> : Lampu Suluh</li>
-                <li><kbd>E</kbd> / <kbd>Klik Kiri</kbd> : Ambil / Masuk Loker</li>
+                <li><kbd>E</kbd> / <kbd>Klik Kiri</kbd> : Ambil / Loker</li>
               </ul>
             </div>
             <div>
@@ -173,16 +987,13 @@
     </div>
     <div id="toast-msg" class="toast-msg hidden"></div>
 
-    <!-- Kawalan Telefon Pintar (Sentuh) -->
     <div id="mobile-controls" class="mobile-controls">
       <div id="joystick-zone" class="joystick-zone">
         <div id="joystick-base" class="joystick-base">
           <div id="joystick-stick" class="joystick-stick"></div>
         </div>
       </div>
-
       <div id="look-zone" class="look-zone"></div>
-
       <div class="mobile-buttons">
         <button type="button" id="mob-flashlight" class="mob-btn">SULUH</button>
         <button type="button" id="mob-sprint" class="mob-btn">LARI</button>
@@ -195,7 +1006,7 @@
   <section id="pause-screen" class="screen overlay-modal">
     <div class="modal-card">
       <h2>PERMAINAN DIJEDA</h2>
-      <p>Tarik nafas sekejap. Beliau masih meronda di Tingkat 14.</p>
+      <p style="color:#cbd5e1;margin-bottom:16px;">Tarik nafas sekejap. Beliau masih meronda di Tingkat 14.</p>
       <div class="modal-actions">
         <button type="button" id="btn-resume" class="btn-primary">SAMBUNG MAIN</button>
         <button type="button" id="btn-toggle-touch" class="btn-secondary">TOGOL KAWALAN TELEFON</button>
@@ -271,6 +1082,1450 @@
     </div>
   </section>
 
-  <script type="module" src="./js/main.js"></script>
+  <script>
+    (function () {
+      if (typeof THREE === 'undefined') {
+        document.getElementById('asset-status').style.color = '#f87171';
+        document.getElementById('asset-status').textContent = 'Ralat: Sambungan internet diperlukan untuk memuatkan enjin 3D.';
+        return;
+      }
+
+      /* ================= 1. SISTEM AUDIO DINAMIK 3D ================= */
+      class HorrorAudio {
+        constructor() {
+          this.ctx = null;
+          this.screamBuffer = null;
+          this.screamSource = null;
+          this.screamGain = null;
+          this.screamPanner = null;
+          this.lastSynthTime = 0;
+          this.ambientStarted = false;
+        }
+
+        init() {
+          if (!this.ctx) {
+            const AudioCtx = window.AudioContext || window.webkitAudioContext;
+            this.ctx = new AudioCtx();
+          }
+          if (this.ctx.state === 'suspended') {
+            this.ctx.resume();
+          }
+          if (!this.ambientStarted) {
+            this.startAmbient();
+            this.loadDefaultScream();
+          }
+          if (this.screamBuffer && !this.screamSource) {
+            this.startContinuousScreamLoop();
+          }
+        }
+
+        async loadDefaultScream() {
+          const paths = ['./sakau.mp3', './assets/sakau.mp3'];
+          for (const path of paths) {
+            try {
+              const res = await fetch(path);
+              if (res.ok) {
+                const arr = await res.arrayBuffer();
+                this.screamBuffer = await this.ctx.decodeAudioData(arr);
+                this.startContinuousScreamLoop();
+                return;
+              }
+            } catch (_) {}
+          }
+        }
+
+        async setCustomAudioFile(file) {
+          this.init();
+          const arr = await file.arrayBuffer();
+          this.screamBuffer = await this.ctx.decodeAudioData(arr);
+          this.startContinuousScreamLoop();
+        }
+
+        startContinuousScreamLoop() {
+          if (!this.ctx || !this.screamBuffer) return;
+
+          if (this.screamSource) {
+            try {
+              this.screamSource.stop();
+              this.screamSource.disconnect();
+            } catch (_) {}
+            this.screamSource = null;
+          }
+
+          const src = this.ctx.createBufferSource();
+          src.buffer = this.screamBuffer;
+          src.loop = true; // Mainkan keseluruhan trek penuh (30s dsb.) tanpa terpotong
+
+          const panner = this.ctx.createStereoPanner ? this.ctx.createStereoPanner() : null;
+          const gain = this.ctx.createGain();
+          gain.gain.value = 0.0;
+
+          if (panner) {
+            src.connect(panner);
+            panner.connect(gain);
+          } else {
+            src.connect(gain);
+          }
+          gain.connect(this.ctx.destination);
+
+          src.start(0);
+          this.screamSource = src;
+          this.screamPanner = panner;
+          this.screamGain = gain;
+        }
+
+        startAmbient() {
+          if (!this.ctx || this.ambientStarted) return;
+          this.ambientStarted = true;
+
+          const bufferSize = this.ctx.sampleRate * 2;
+          const noiseBuffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
+          const data = noiseBuffer.getChannelData(0);
+          for (let i = 0; i < bufferSize; i++) {
+            data[i] = (Math.random() * 2 - 1) * 0.14;
+          }
+
+          const noise = this.ctx.createBufferSource();
+          noise.buffer = noiseBuffer;
+          noise.loop = true;
+
+          const filter = this.ctx.createBiquadFilter();
+          filter.type = 'lowpass';
+          filter.frequency.value = 300;
+
+          const gain = this.ctx.createGain();
+          gain.gain.value = 0.06;
+
+          noise.connect(filter);
+          filter.connect(gain);
+          gain.connect(this.ctx.destination);
+          noise.start();
+        }
+
+        playTone(freq, duration, type = 'sine', volume = 0.2, slideTo = null) {
+          if (!this.ctx) return;
+          const now = this.ctx.currentTime;
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+
+          osc.type = type;
+          osc.frequency.setValueAtTime(freq, now);
+          if (slideTo) {
+            osc.frequency.exponentialRampToValueAtTime(slideTo, now + duration);
+          }
+
+          gain.gain.setValueAtTime(volume, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + duration);
+
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start(now);
+          osc.stop(now + duration);
+        }
+
+        playClick() { this.playTone(620, 0.06, 'triangle', 0.15, 300); }
+        playPickup() {
+          this.playTone(520, 0.12, 'sine', 0.22, 880);
+          setTimeout(() => this.playTone(880, 0.18, 'sine', 0.2, 1180), 90);
+        }
+        playSwitch() { this.playTone(140, 0.25, 'sawtooth', 0.28, 70); }
+        playLocker() { this.playTone(210, 0.18, 'square', 0.16, 110); }
+
+        updateProximityAudio(distance, pan = 0, isPlaying = true, maxHearDist = 30) {
+          if (!this.ctx) return;
+          const now = this.ctx.currentTime;
+
+          if (!isPlaying || distance >= maxHearDist) {
+            if (this.screamGain) {
+              this.screamGain.gain.setTargetAtTime(0.0, now, 0.09);
+            }
+            return;
+          }
+
+          // Kuat apabila dekat, terus mengecil & senyap apabila pemain lari jauh
+          const norm = Math.max(0, Math.min(1, 1 - distance / maxHearDist));
+          const dynamicVol = Math.pow(norm, 1.65) * 1.15;
+
+          if (this.screamGain) {
+            this.screamGain.gain.setTargetAtTime(Math.min(1.0, dynamicVol), now, 0.08);
+            if (this.screamPanner) {
+              this.screamPanner.pan.setTargetAtTime(Math.max(-1, Math.min(1, pan)), now, 0.08);
+            }
+          } else {
+            const ms = performance.now();
+            const interval = Math.max(950, distance * 120);
+            if (ms - this.lastSynthTime >= interval) {
+              this.lastSynthTime = ms;
+              const v = Math.max(0.03, dynamicVol * 0.35);
+              this.playTone(290, 0.16, 'sawtooth', v, 410);
+              setTimeout(() => this.playTone(430, 0.28, 'sawtooth', v * 1.15, 220), 170);
+            }
+          }
+        }
+
+        playJumpscare() {
+          if (!this.ctx) return;
+          const now = this.ctx.currentTime;
+          this.playTone(95, 1.3, 'sawtooth', 0.65, 32);
+          this.playTone(620, 0.9, 'square', 0.45, 140);
+
+          if (this.screamGain) {
+            if (this.screamPanner) this.screamPanner.pan.setValueAtTime(0, now);
+            this.screamGain.gain.setValueAtTime(1.0, now);
+          }
+        }
+      }
+
+      /* ================= 2. PETA PEJABAT LUAS (2 PINTU SETIAP BILIK) ================= */
+      function createFloorTexture(style) {
+        const c = document.createElement('canvas');
+        c.width = 256; c.height = 256;
+        const ctx = c.getContext('2d');
+
+        if (style === 'marble') {
+          ctx.fillStyle = '#e2e8f0'; ctx.fillRect(0, 0, 256, 256);
+          ctx.fillStyle = '#1e293b'; ctx.fillRect(0, 0, 128, 128); ctx.fillRect(128, 128, 128, 128);
+        } else if (style === 'wood') {
+          ctx.fillStyle = '#78350f'; ctx.fillRect(0, 0, 256, 256);
+          ctx.fillStyle = '#92400e';
+          for (let y = 0; y < 256; y += 32) ctx.fillRect(0, y, 256, 28);
+        } else if (style === 'carpet') {
+          ctx.fillStyle = '#581c2c'; ctx.fillRect(0, 0, 256, 256);
+          ctx.fillStyle = 'rgba(255,255,255,0.06)';
+          for (let i = 0; i < 400; i++) ctx.fillRect(Math.random() * 256, Math.random() * 256, 3, 3);
+        } else if (style === 'tile') {
+          ctx.fillStyle = '#115e59'; ctx.fillRect(0, 0, 256, 256);
+          ctx.strokeStyle = '#ccfbf1'; ctx.lineWidth = 3;
+          for (let x = 0; x <= 256; x += 64) {
+            ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, 256); ctx.stroke();
+            ctx.beginPath(); ctx.moveTo(0, x); ctx.lineTo(256, x); ctx.stroke();
+          }
+        } else {
+          ctx.fillStyle = '#334155'; ctx.fillRect(0, 0, 256, 256);
+          ctx.fillStyle = '#eab308'; ctx.fillRect(0, 232, 256, 24);
+        }
+
+        const tex = new THREE.CanvasTexture(c);
+        tex.wrapS = THREE.RepeatWrapping;
+        tex.wrapT = THREE.RepeatWrapping;
+        tex.repeat.set(6, 6);
+        return tex;
+      }
+
+      function createWallTexture() {
+        const c = document.createElement('canvas');
+        c.width = 256; c.height = 256;
+        const ctx = c.getContext('2d');
+        ctx.fillStyle = '#e7e5e4'; ctx.fillRect(0, 0, 256, 175);
+        ctx.fillStyle = '#451a03'; ctx.fillRect(0, 175, 256, 81);
+        ctx.fillStyle = '#78350f'; ctx.fillRect(0, 172, 256, 8);
+        const tex = new THREE.CanvasTexture(c);
+        tex.wrapS = THREE.RepeatWrapping;
+        tex.wrapT = THREE.ClampToEdgeWrapping;
+        return tex;
+      }
+
+      function createPlaqueTexture(text) {
+        const c = document.createElement('canvas');
+        c.width = 512; c.height = 128;
+        const ctx = c.getContext('2d');
+        ctx.fillStyle = '#0f172a'; ctx.fillRect(0, 0, 512, 128);
+        ctx.strokeStyle = '#facc15'; ctx.lineWidth = 8; ctx.strokeRect(8, 8, 496, 112);
+        ctx.fillStyle = '#f8fafc'; ctx.font = 'bold 34px sans-serif';
+        ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+        ctx.fillText(text, 256, 66);
+        return new THREE.CanvasTexture(c);
+      }
+
+      class OfficeMap {
+        constructor(scene) {
+          this.scene = scene;
+          this.colliders = [];
+          this.interactables = [];
+          this.lockers = [];
+
+          this.rooms = [
+            { name: 'Lobi Lif Utama', x: 0, z: 25, w: 20, d: 14, style: 'marble' },
+            { name: 'Koridor Utama', x: 0, z: 0, w: 12, d: 36, style: 'marble' },
+            { name: 'Bilik Fail & Arkib', x: -18, z: 9, w: 24, d: 18, style: 'wood' },
+            { name: 'Pantri & Ruang Rehat', x: -18, z: -9, w: 24, d: 18, style: 'tile' },
+            { name: 'Bilik Mesyuarat Eksekutif', x: 18, z: 9, w: 24, d: 18, style: 'carpet' },
+            { name: 'Bilik Server & Janakuasa', x: 18, z: -9, w: 24, d: 18, style: 'hazard' },
+            { name: 'Pejabat Pengarah', x: 0, z: -26, w: 32, d: 16, style: 'wood' }
+          ];
+
+          this.navNodes = [
+            { id: 0, pos: new THREE.Vector3(0, 0, 25), links: [1] },
+            { id: 1, pos: new THREE.Vector3(0, 0, 15), links: [0, 2] },
+            { id: 2, pos: new THREE.Vector3(0, 0, 9), links: [1, 3, 6, 11] },
+            { id: 3, pos: new THREE.Vector3(0, 0, 0), links: [2, 4] },
+            { id: 4, pos: new THREE.Vector3(0, 0, -9), links: [3, 5, 10, 15] },
+            { id: 5, pos: new THREE.Vector3(0, 0, -14.5), links: [4, 16, 17] },
+            { id: 6, pos: new THREE.Vector3(-6, 0, 9), links: [2, 7] },
+            { id: 7, pos: new THREE.Vector3(-19, 0, 9), links: [6, 8] },
+            { id: 8, pos: new THREE.Vector3(-20, 0, 0), links: [7, 9] },
+            { id: 9, pos: new THREE.Vector3(-19, 0, -9), links: [8, 10] },
+            { id: 10, pos: new THREE.Vector3(-6, 0, -9), links: [4, 9] },
+            { id: 11, pos: new THREE.Vector3(6, 0, 9), links: [2, 12] },
+            { id: 12, pos: new THREE.Vector3(19, 0, 9), links: [11, 13] },
+            { id: 13, pos: new THREE.Vector3(20, 0, 0), links: [12, 14] },
+            { id: 14, pos: new THREE.Vector3(19, 0, -9), links: [13, 15] },
+            { id: 15, pos: new THREE.Vector3(6, 0, -9), links: [4, 14] },
+            { id: 16, pos: new THREE.Vector3(-3.7, 0, -18), links: [5, 18] },
+            { id: 17, pos: new THREE.Vector3(3.7, 0, -18), links: [5, 18] },
+            { id: 18, pos: new THREE.Vector3(0, 0, -24), links: [16, 17] }
+          ];
+
+          this.patrolNodeIds = [18, 7, 9, 1, 12, 14, 3];
+          this.wallMat = new THREE.MeshStandardMaterial({ map: createWallTexture(), roughness: 0.75 });
+
+          this.buildArchitecture();
+          this.buildFurnitureAndLockers();
+          this.spawnMissionItems();
+        }
+
+        addBox(x, y, z, w, h, d, mat, collide = true) {
+          const mesh = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), mat);
+          mesh.position.set(x, y, z);
+          this.scene.add(mesh);
+          if (collide) {
+            this.colliders.push({
+              minX: x - w / 2,
+              maxX: x + w / 2,
+              minZ: z - d / 2,
+              maxZ: z + d / 2
+            });
+          }
+          return mesh;
+        }
+
+        buildArchitecture() {
+          const H = 4.6;
+          for (const r of this.rooms) {
+            const floor = new THREE.Mesh(
+              new THREE.PlaneGeometry(r.w, r.d),
+              new THREE.MeshStandardMaterial({ map: createFloorTexture(r.style), roughness: 0.65 })
+            );
+            floor.rotation.x = -Math.PI / 2;
+            floor.position.set(r.x, 0, r.z);
+            this.scene.add(floor);
+
+            const ceil = new THREE.Mesh(
+              new THREE.PlaneGeometry(r.w, r.d),
+              new THREE.MeshStandardMaterial({ color: 0x1e293b, roughness: 0.9 })
+            );
+            ceil.rotation.x = Math.PI / 2;
+            ceil.position.set(r.x, H, r.z);
+            this.scene.add(ceil);
+
+            const light = new THREE.PointLight(0xfff3d6, 1.5, 24);
+            light.position.set(r.x, H - 0.35, r.z);
+            this.scene.add(light);
+          }
+
+          // Dinding Lobi Lif Utama
+          this.addBox(0, H / 2, 32.3, 20.6, H, 0.6, this.wallMat);
+          this.addBox(-10.3, H / 2, 25.3, 0.6, H, 14.6, this.wallMat);
+          this.addBox(10.3, H / 2, 25.3, 0.6, H, 14.6, this.wallMat);
+          this.addBox(-8.15, H / 2, 18, 4.3, H, 0.6, this.wallMat);
+          this.addBox(8.15, H / 2, 18, 4.3, H, 0.6, this.wallMat);
+
+          // Dinding Luar Sayap Barat & Timur
+          this.addBox(-30.3, H / 2, 0, 0.6, H, 36.6, this.wallMat);
+          this.addBox(30.3, H / 2, 0, 0.6, H, 36.6, this.wallMat);
+
+          // Dinding Selatan & Utara Sayap
+          this.addBox(-18.15, H / 2, 18, 24.3, H, 0.6, this.wallMat);
+          this.addBox(18.15, H / 2, 18, 24.3, H, 0.6, this.wallMat);
+          this.addBox(-23.15, H / 2, -18, 14.3, H, 0.6, this.wallMat);
+          this.addBox(23.15, H / 2, -18, 14.3, H, 0.6, this.wallMat);
+
+          // Dinding Pejabat Pengarah
+          this.addBox(0, H / 2, -34.3, 32.6, H, 0.6, this.wallMat);
+          this.addBox(-16.3, H / 2, -26.15, 0.6, H, 16.6, this.wallMat);
+          this.addBox(16.3, H / 2, -26.15, 0.6, H, 16.6, this.wallMat);
+
+          // Dinding Pemisah Koridor Barat & Timur (Pintu lebar 4.6m)
+          this.addBox(-6, H / 2, 14.65, 0.6, H, 6.7, this.wallMat);
+          this.addBox(-6, H / 2, 0, 0.6, H, 13.4, this.wallMat);
+          this.addBox(-6, H / 2, -14.65, 0.6, H, 6.7, this.wallMat);
+
+          this.addBox(6, H / 2, 14.65, 0.6, H, 6.7, this.wallMat);
+          this.addBox(6, H / 2, 0, 0.6, H, 13.4, this.wallMat);
+          this.addBox(6, H / 2, -14.65, 0.6, H, 6.7, this.wallMat);
+
+          // Pintu Sambung Bilik Fail <-> Pantri & Bilik Mesyuarat <-> Bilik Server
+          this.addBox(-26.15, H / 2, 0, 7.7, H, 0.6, this.wallMat);
+          this.addBox(-11.85, H / 2, 0, 11.7, H, 0.6, this.wallMat);
+          this.addBox(11.85, H / 2, 0, 11.7, H, 0.6, this.wallMat);
+          this.addBox(26.15, H / 2, 0, 7.7, H, 0.6, this.wallMat);
+
+          // 2 Pintu Keluar Pejabat Pengarah
+          this.addBox(-11.0, H / 2, -18, 10.0, H, 0.6, this.wallMat);
+          this.addBox(0, H / 2, -18, 2.8, H, 0.6, this.wallMat);
+          this.addBox(11.0, H / 2, -18, 10.0, H, 0.6, this.wallMat);
+
+          this.addPlaque('BILIK FAIL & ARKIB', -5.65, 3.4, 9, Math.PI / 2);
+          this.addPlaque('BILIK MESYUARAT', 5.65, 3.4, 9, -Math.PI / 2);
+          this.addPlaque('PANTRI & REHAT', -5.65, 3.4, -9, Math.PI / 2);
+          this.addPlaque('BILIK JANAKUASA', 5.65, 3.4, -9, -Math.PI / 2);
+          this.addPlaque('PEJABAT PENGARAH', 0, 3.4, -17.65, 0);
+        }
+
+        addPlaque(label, x, y, z, rotY) {
+          const sign = new THREE.Mesh(
+            new THREE.PlaneGeometry(3.0, 0.72),
+            new THREE.MeshBasicMaterial({ map: createPlaqueTexture(label) })
+          );
+          sign.position.set(x, y, z);
+          sign.rotation.y = rotY;
+          this.scene.add(sign);
+        }
+
+        buildFurnitureAndLockers() {
+          const deskMat = new THREE.MeshStandardMaterial({ color: 0x5c2d16, roughness: 0.5 });
+          const metalMat = new THREE.MeshStandardMaterial({ color: 0x475569, roughness: 0.4, metalness: 0.5 });
+
+          this.addBox(-16, 0.45, 9, 4.0, 0.9, 1.8, deskMat);
+          this.addBox(16, 0.45, 9, 6.2, 0.9, 2.2, deskMat);
+          this.addBox(-16, 0.45, -9, 4.2, 0.9, 1.6, metalMat);
+          this.addBox(0, 0.45, -28.5, 4.8, 0.9, 1.8, deskMat);
+
+          this.addBox(23.5, 1.4, -12, 1.4, 2.8, 4.2, metalMat);
+          this.addBox(23.5, 1.4, -6, 1.4, 2.8, 4.2, metalMat);
+
+          const liftDoorMat = new THREE.MeshStandardMaterial({ color: 0x94a3b8, metalness: 0.8, roughness: 0.25 });
+          const liftMesh = this.addBox(0, 1.5, 31.8, 3.2, 3.0, 0.3, liftDoorMat, false);
+          this.interactables.push({
+            id: 'elevator',
+            type: 'elevator',
+            label: 'Aktifkan Lif Utama',
+            position: new THREE.Vector3(0, 1.2, 31.0),
+            mesh: liftMesh,
+            done: false
+          });
+
+          const lockerCoords = [
+            { x: -8.8, z: 26, rot: Math.PI / 2 },
+            { x: -28.8, z: 14, rot: Math.PI / 2 },
+            { x: 28.8, z: 14, rot: -Math.PI / 2 },
+            { x: -28.8, z: -14, rot: Math.PI / 2 },
+            { x: 28.8, z: -14, rot: -Math.PI / 2 },
+            { x: -14.8, z: -31, rot: Math.PI / 2 },
+            { x: 14.8, z: -31, rot: -Math.PI / 2 },
+            { x: -4.8, z: 0, rot: Math.PI / 2 }
+          ];
+
+          const lockerMat = new THREE.MeshStandardMaterial({ color: 0x1d4ed8, roughness: 0.4, metalness: 0.35 });
+
+          lockerCoords.forEach((lc, idx) => {
+            const mesh = this.addBox(lc.x, 1.3, lc.z, 1.2, 2.6, 1.2, lockerMat, true);
+            const exitOffset = new THREE.Vector3(Math.sin(lc.rot) * 1.5, 0, Math.cos(lc.rot) * 1.5);
+            const lockerObj = {
+              id: `locker_${idx}`,
+              type: 'locker',
+              label: 'Sembunyi Dalam Loker',
+              position: new THREE.Vector3(lc.x, 1.2, lc.z),
+              insidePos: new THREE.Vector3(lc.x, 1.65, lc.z),
+              exitPos: new THREE.Vector3(lc.x, 1.65, lc.z).add(exitOffset),
+              yaw: lc.rot,
+              mesh
+            };
+            this.lockers.push(lockerObj);
+            this.interactables.push(lockerObj);
+          });
+        }
+
+        spawnMissionItems() {
+          const fileSpots = [
+            { x: -16, y: 1.02, z: 9 },
+            { x: 16, y: 1.02, z: 9 },
+            { x: -16, y: 1.02, z: -9 },
+            { x: 0, y: 1.02, z: -28.5 }
+          ];
+          const fileMat = new THREE.MeshStandardMaterial({ color: 0xfacc15, emissive: 0x854d0e, emissiveIntensity: 0.7 });
+
+          fileSpots.forEach((f, i) => {
+            const mesh = new THREE.Mesh(new THREE.BoxGeometry(0.65, 0.1, 0.45), fileMat);
+            mesh.position.set(f.x, f.y, f.z);
+            this.scene.add(mesh);
+            this.interactables.push({
+              id: `file_${i}`,
+              type: 'file',
+              label: `Ambil Fail Audit Sulit #${i + 1}`,
+              position: new THREE.Vector3(f.x, f.y, f.z),
+              mesh,
+              done: false
+            });
+          });
+
+          const switchSpots = [
+            { x: 22.6, y: 1.5, z: -12 },
+            { x: 22.6, y: 1.5, z: -6 }
+          ];
+          switchSpots.forEach((s, i) => {
+            const mat = new THREE.MeshStandardMaterial({ color: 0xef4444, emissive: 0x991b1b, emissiveIntensity: 0.85 });
+            const mesh = new THREE.Mesh(new THREE.BoxGeometry(0.3, 0.55, 0.4), mat);
+            mesh.position.set(s.x, s.y, s.z);
+            this.scene.add(mesh);
+            this.interactables.push({
+              id: `switch_${i}`,
+              type: 'switch',
+              label: `Hidupkan Suis Janakuasa #${i + 1}`,
+              position: new THREE.Vector3(s.x, s.y, s.z),
+              mesh,
+              done: false
+            });
+          });
+
+          const batterySpots = [
+            { x: 0, y: 0.3, z: 4 },
+            { x: -20, y: 0.3, z: 0 },
+            { x: 20, y: 0.3, z: 0 },
+            { x: 0, y: 0.3, z: -22 }
+          ];
+          const batMat = new THREE.MeshStandardMaterial({ color: 0x38bdf8, emissive: 0x0369a1, emissiveIntensity: 0.75 });
+          batterySpots.forEach((b, i) => {
+            const mesh = new THREE.Mesh(new THREE.CylinderGeometry(0.14, 0.14, 0.35, 12), batMat);
+            mesh.position.set(b.x, b.y, b.z);
+            this.scene.add(mesh);
+            this.interactables.push({
+              id: `battery_${i}`,
+              type: 'battery',
+              label: 'Ambil Bateri Lampu Suluh (+50%)',
+              position: new THREE.Vector3(b.x, b.y, b.z),
+              mesh,
+              done: false
+            });
+          });
+        }
+
+        getRoomAt(x, z) {
+          for (const r of this.rooms) {
+            if (Math.abs(x - r.x) <= r.w / 2 && Math.abs(z - r.z) <= r.d / 2) {
+              return r.name;
+            }
+          }
+          return 'Koridor Tingkat 14';
+        }
+      }
+
+      /* ================= 3. ENTITI ANWAR (PERLANGGARAN DINDING + LALUAN PINTU) ================= */
+      function createPlaceholderTexture() {
+        const c = document.createElement('canvas');
+        c.width = 512; c.height = 512;
+        const ctx = c.getContext('2d');
+        const grad = ctx.createRadialGradient(256, 230, 40, 256, 256, 240);
+        grad.addColorStop(0, '#fca5a5');
+        grad.addColorStop(0.65, '#991b1b');
+        grad.addColorStop(1, 'rgba(0,0,0,0)');
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 0, 512, 512);
+
+        ctx.fillStyle = '#0f172a';
+        ctx.beginPath();
+        ctx.ellipse(256, 240, 125, 160, 0, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.fillStyle = '#fef08a';
+        ctx.beginPath();
+        ctx.arc(210, 205, 16, 0, Math.PI * 2);
+        ctx.arc(302, 205, 16, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.fillStyle = '#ffffff';
+        ctx.font = 'bold 26px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText('LETAK anwar.png', 256, 430);
+        ctx.font = '20px sans-serif';
+        ctx.fillText('DI REPO GITHUB', 256, 462);
+        return new THREE.CanvasTexture(c);
+      }
+
+      function lineIntersectsBox(x1, z1, x2, z2, box, pad = 0.45) {
+        const minX = box.minX - pad;
+        const maxX = box.maxX + pad;
+        const minZ = box.minZ - pad;
+        const maxZ = box.maxZ + pad;
+
+        let t0 = 0, t1 = 1;
+        const dx = x2 - x1;
+        const dz = z2 - z1;
+        const checks = [
+          [-dx, x1 - minX],
+          [dx, maxX - x1],
+          [-dz, z1 - minZ],
+          [dz, maxZ - z1]
+        ];
+
+        for (const [p, q] of checks) {
+          if (Math.abs(p) < 1e-6) {
+            if (q < 0) return false;
+          } else {
+            const r = q / p;
+            if (p < 0) {
+              if (r > t1) return false;
+              if (r > t0) t0 = r;
+            } else {
+              if (r < t0) return false;
+              if (r < t1) t1 = r;
+            }
+          }
+        }
+        return t0 <= t1;
+      }
+
+      class AnwarEntity {
+        constructor(scene, officeMap) {
+          this.scene = scene;
+          this.map = officeMap;
+          this.patrolIndex = 0;
+          this.position = new THREE.Vector3(0, 0, -24);
+          this.state = 'RONDA';
+          this.baseSpeed = 4.8;
+          this.chaseSpeed = 6.5;
+          this.detectRange = 20;
+          this.loseTimer = 0;
+
+          const placeholderTex = createPlaceholderTexture();
+          this.imageSrc = placeholderTex.image.toDataURL();
+
+          this.group = new THREE.Group();
+          this.group.position.copy(this.position);
+
+          const mat = new THREE.SpriteMaterial({ map: placeholderTex, transparent: true });
+          this.sprite = new THREE.Sprite(mat);
+          this.sprite.scale.set(2.3, 2.7, 1);
+          this.sprite.position.y = 1.45;
+          this.group.add(this.sprite);
+
+          this.auraLight = new THREE.PointLight(0xdc2626, 1.5, 11);
+          this.auraLight.position.set(0, 1.6, 0);
+          this.group.add(this.auraLight);
+
+          this.scene.add(this.group);
+          this.tryLoadDefaultFace();
+        }
+
+        tryLoadDefaultFace() {
+          const loader = new THREE.TextureLoader();
+          loader.load('./anwar.png', (tex) => {
+            if (THREE.SRGBColorSpace) tex.colorSpace = THREE.SRGBColorSpace;
+            this.sprite.material.map = tex;
+            this.sprite.material.needsUpdate = true;
+            this.imageSrc = './anwar.png';
+          }, undefined, () => {
+            loader.load('./assets/anwar.png', (tex) => {
+              if (THREE.SRGBColorSpace) tex.colorSpace = THREE.SRGBColorSpace;
+              this.sprite.material.map = tex;
+              this.sprite.material.needsUpdate = true;
+              this.imageSrc = './assets/anwar.png';
+            });
+          });
+        }
+
+        setCustomFace(dataUrl) {
+          const loader = new THREE.TextureLoader();
+          loader.load(dataUrl, (tex) => {
+            if (THREE.SRGBColorSpace) tex.colorSpace = THREE.SRGBColorSpace;
+            this.sprite.material.map = tex;
+            this.sprite.material.needsUpdate = true;
+            this.imageSrc = dataUrl;
+          });
+        }
+
+        setDifficulty(diff) {
+          if (diff === 'mudah') {
+            this.baseSpeed = 4.1; this.chaseSpeed = 5.5; this.detectRange = 16;
+          } else if (diff === 'sukar') {
+            this.baseSpeed = 5.5; this.chaseSpeed = 7.4; this.detectRange = 25;
+          } else {
+            this.baseSpeed = 4.8; this.chaseSpeed = 6.5; this.detectRange = 20;
+          }
+        }
+
+        reset() {
+          this.position.set(0, 0, -24);
+          this.group.position.copy(this.position);
+          this.state = 'RONDA';
+          this.patrolIndex = 1;
+          this.loseTimer = 0;
+        }
+
+        hasLineOfSight(fromPos, toPos, pad = 0.45) {
+          for (const box of this.map.colliders) {
+            if (lineIntersectsBox(fromPos.x, fromPos.z, toPos.x, toPos.z, box, pad)) return false;
+          }
+          return true;
+        }
+
+        canOccupy(nx, nz, radius = 0.52) {
+          for (const b of this.map.colliders) {
+            if (nx + radius > b.minX && nx - radius < b.maxX && nz + radius > b.minZ && nz - radius < b.maxZ) {
+              return false;
+            }
+          }
+          return true;
+        }
+
+        moveWithCollision(vx, vz) {
+          const r = 0.52;
+          let moved = false;
+          if (this.canOccupy(this.position.x + vx, this.position.z, r)) {
+            this.position.x += vx;
+            moved = true;
+          }
+          if (this.canOccupy(this.position.x, this.position.z + vz, r)) {
+            this.position.z += vz;
+            moved = true;
+          }
+          return moved;
+        }
+
+        findNearestNode(pos) {
+          const nodes = this.map.navNodes;
+          let bestVisible = null, bestVisDist = Infinity;
+          let bestAny = nodes[0], bestAnyDist = Infinity;
+
+          for (const n of nodes) {
+            const d = pos.distanceTo(n.pos);
+            if (d < bestAnyDist) { bestAnyDist = d; bestAny = n; }
+            if (d < bestVisDist && this.hasLineOfSight(pos, n.pos, 0.35)) {
+              bestVisDist = d; bestVisible = n;
+            }
+          }
+          return bestVisible || bestAny;
+        }
+
+        getNextWaypointToward(targetPos) {
+          const nodes = this.map.navNodes;
+          const startNode = this.findNearestNode(this.position);
+          const goalNode = this.findNearestNode(targetPos);
+          if (startNode.id === goalNode.id) return goalNode.pos;
+
+          const dist = new Map();
+          const prev = new Map();
+          const unvisited = new Set();
+
+          for (const n of nodes) { dist.set(n.id, Infinity); unvisited.add(n.id); }
+          dist.set(startNode.id, 0);
+
+          while (unvisited.size > 0) {
+            let uId = null, minD = Infinity;
+            for (const id of unvisited) {
+              const d = dist.get(id);
+              if (d < minD) { minD = d; uId = id; }
+            }
+            if (uId === null || uId === goalNode.id) break;
+            unvisited.delete(uId);
+
+            const uNode = nodes[uId];
+            for (const vId of uNode.links) {
+              if (!unvisited.has(vId)) continue;
+              const vNode = nodes[vId];
+              const alt = minD + uNode.pos.distanceTo(vNode.pos);
+              if (alt < dist.get(vId)) {
+                dist.set(vId, alt);
+                prev.set(vId, uId);
+              }
+            }
+          }
+
+          let step = goalNode.id;
+          while (prev.has(step) && prev.get(step) !== startNode.id) {
+            step = prev.get(step);
+          }
+          return nodes[step].pos;
+        }
+
+        update(dt, playerPos, playerYaw, isPlayerHiding, isPlayerSprinting, audio, onCatch) {
+          const flatPlayer = new THREE.Vector3(playerPos.x, 0, playerPos.z);
+          const dist = this.position.distanceTo(flatPlayer);
+
+          const toEntity = new THREE.Vector3().subVectors(this.position, flatPlayer);
+          const worldAngle = Math.atan2(-toEntity.x, -toEntity.z);
+          let relAngle = worldAngle - playerYaw;
+          while (relAngle > Math.PI) relAngle -= Math.PI * 2;
+          while (relAngle < -Math.PI) relAngle += Math.PI * 2;
+          const stereoPan = -Math.sin(relAngle);
+
+          audio.updateProximityAudio(dist, stereoPan, true, 30);
+
+          const canSeePlayer = !isPlayerHiding && dist < this.detectRange && this.hasLineOfSight(this.position, flatPlayer, 0.4);
+          const canHearSprint = !isPlayerHiding && isPlayerSprinting && dist < this.detectRange * 0.85;
+
+          if (canSeePlayer || canHearSprint) {
+            this.state = 'KEJAR';
+            this.loseTimer = 4.0;
+          } else if (this.state === 'KEJAR') {
+            this.loseTimer -= dt;
+            if (isPlayerHiding || this.loseTimer <= 0) this.state = 'RONDA';
+          }
+
+          let steerTarget, speed;
+          if (this.state === 'KEJAR' && !isPlayerHiding) {
+            speed = this.chaseSpeed;
+            steerTarget = this.hasLineOfSight(this.position, flatPlayer, 0.48)
+              ? flatPlayer
+              : this.getNextWaypointToward(flatPlayer);
+          } else {
+            speed = this.baseSpeed;
+            const patrolNodeId = this.map.patrolNodeIds[this.patrolIndex];
+            const patrolGoal = this.map.navNodes[patrolNodeId].pos;
+            if (this.position.distanceTo(patrolGoal) < 1.6) {
+              this.patrolIndex = (this.patrolIndex + 1) % this.map.patrolNodeIds.length;
+            }
+            steerTarget = this.hasLineOfSight(this.position, patrolGoal, 0.48)
+              ? patrolGoal
+              : this.getNextWaypointToward(patrolGoal);
+          }
+
+          const dir = new THREE.Vector3().subVectors(steerTarget, this.position);
+          dir.y = 0;
+          if (dir.lengthSq() > 0.001) {
+            dir.normalize();
+            const moved = this.moveWithCollision(dir.x * speed * dt, dir.z * speed * dt);
+            if (!moved) this.moveWithCollision(-dir.z * speed * dt, dir.x * speed * dt);
+          }
+
+          const bob = Math.sin(performance.now() * (this.state === 'KEJAR' ? 0.018 : 0.008)) * 0.12;
+          this.group.position.set(this.position.x, 0, this.position.z);
+          this.sprite.position.y = 1.45 + bob;
+
+          if (!isPlayerHiding && dist < 1.35 && this.hasLineOfSight(this.position, flatPlayer, 0.3)) {
+            onCatch();
+          }
+          return dist;
+        }
+      }
+
+      /* ================= 4. ENJIN UTAMA & KAWALAN ================= */
+      const canvas = document.getElementById('game-canvas');
+      const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+      const scene = new THREE.Scene();
+      scene.background = new THREE.Color(0x070a12);
+      scene.fog = new THREE.FogExp2(0x070a12, 0.032);
+
+      const camera = new THREE.PerspectiveCamera(72, window.innerWidth / window.innerHeight, 0.1, 80);
+      scene.add(camera);
+
+      const hemiLight = new THREE.HemisphereLight(0xcbd5e1, 0x1e293b, 0.78);
+      scene.add(hemiLight);
+
+      const flashlight = new THREE.SpotLight(0xfffbeb, 4.4, 30, Math.PI / 5.2, 0.45, 1.0);
+      flashlight.position.set(0.25, -0.2, 0);
+      flashlight.target.position.set(0, -0.2, -5);
+      camera.add(flashlight);
+      camera.add(flashlight.target);
+
+      const audio = new HorrorAudio();
+      const officeMap = new OfficeMap(scene);
+      const anwar = new AnwarEntity(scene, officeMap);
+
+      const state = {
+        mode: 'LOBBY',
+        difficulty: 'sederhana',
+        sensitivity: 1.0,
+        yaw: Math.PI,
+        pitch: 0,
+        pos: new THREE.Vector3(0, 1.65, 26),
+        stamina: 100,
+        battery: 100,
+        flashlightOn: true,
+        isHiding: false,
+        currentLocker: null,
+        filesCollected: 0,
+        switchesOn: 0,
+        elapsedTime: 0,
+        introTimer: 0,
+        touchEnabled: ('ontouchstart' in window) || navigator.maxTouchPoints > 0
+      };
+
+      const keys = {};
+      let joyVec = { x: 0, y: 0 };
+      let mobileSprinting = false;
+      let isMouseDragging = false;
+      let lastMouseX = 0;
+      let lastMouseY = 0;
+
+      const screens = {
+        LOBBY: document.getElementById('lobby-screen'),
+        INTRO: document.getElementById('intro-screen'),
+        PLAYING: document.getElementById('hud-screen'),
+        PAUSED: document.getElementById('pause-screen'),
+        JUMPSCARE: document.getElementById('jumpscare-screen'),
+        DEATH: document.getElementById('death-screen'),
+        WIN: document.getElementById('win-screen')
+      };
+
+      function showScreen(name) {
+        Object.entries(screens).forEach(([k, el]) => el.classList.toggle('active', k === name));
+      }
+
+      document.querySelectorAll('.diff-btn').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.diff-btn').forEach((b) => b.classList.remove('active'));
+          btn.classList.add('active');
+          state.difficulty = btn.dataset.diff;
+          anwar.setDifficulty(state.difficulty);
+        });
+      });
+
+      const sensSlider = document.getElementById('sens-slider');
+      const sensVal = document.getElementById('sens-val');
+      sensSlider.addEventListener('input', () => {
+        state.sensitivity = parseFloat(sensSlider.value);
+        sensVal.textContent = state.sensitivity.toFixed(1);
+      });
+
+      document.getElementById('face-upload').addEventListener('change', (e) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = () => {
+          anwar.setCustomFace(reader.result);
+          document.getElementById('asset-status').textContent = `Muka dimuat naik: ${file.name}`;
+        };
+        reader.readAsDataURL(file);
+      });
+
+      document.getElementById('audio-upload').addEventListener('change', async (e) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+        await audio.setCustomAudioFile(file);
+        document.getElementById('asset-status').textContent = `Suara dimuat naik: ${file.name}`;
+      });
+
+      document.getElementById('btn-start').addEventListener('click', () => {
+        audio.init();
+        audio.playClick();
+        resetGame();
+        startIntro();
+      });
+
+      document.getElementById('btn-start-skip').addEventListener('click', () => {
+        audio.init();
+        audio.playClick();
+        resetGame();
+        beginGameplay();
+      });
+
+      document.getElementById('btn-skip-intro').addEventListener('click', () => {
+        audio.playClick();
+        beginGameplay();
+      });
+
+      const introShots = [
+        {
+          speaker: 'AIMAN (JURUAUDIT DALAMAN)',
+          text: 'Jam sudah 2:17 pagi... Semua staf dah balik, tinggal aku seorang di Tingkat 14 Menara Perdana.',
+          camPos: new THREE.Vector3(0, 2.3, 27),
+          lookAt: new THREE.Vector3(0, 1.4, 14)
+        },
+        {
+          speaker: 'SISTEM KESELAMATAN MENARA',
+          text: 'AMARAN: Sistem lif utama telah dikunci secara manual. Bekalan kuasa kecemasan terputus.',
+          camPos: new THREE.Vector3(18, 2.2, -5),
+          lookAt: new THREE.Vector3(23, 1.5, -10)
+        },
+        {
+          speaker: 'AIMAN (JURUAUDIT DALAMAN)',
+          text: '4 Fail Audit Sulit tu masih di atas meja bilik-bilik pejabat. Aku kena kumpul semua dan hidupkan janakuasa!',
+          camPos: new THREE.Vector3(-16, 2.1, 13),
+          lookAt: new THREE.Vector3(-16, 1.0, 9)
+        },
+        {
+          speaker: 'SUARA DARI HUJUNG KORIDOR',
+          text: '"SAKAU... SAKAU... MANA KAU NAK LARI?!" — Cepat cari jalan keluar atau menyorok!',
+          camPos: new THREE.Vector3(0, 1.9, -12),
+          lookAt: new THREE.Vector3(0, 1.5, -24)
+        }
+      ];
+
+      function startIntro() {
+        state.mode = 'INTRO';
+        state.introTimer = 0;
+        audio.updateProximityAudio(999, 0, false);
+        showScreen('INTRO');
+      }
+
+      function beginGameplay() {
+        state.mode = 'PLAYING';
+        showScreen('PLAYING');
+        document.getElementById('mobile-controls').classList.toggle('visible', state.touchEnabled);
+        if (!state.touchEnabled && canvas.requestPointerLock) {
+          try { canvas.requestPointerLock(); } catch (_) {}
+        }
+      }
+
+      function resetGame() {
+        state.pos.set(0, 1.65, 26);
+        state.yaw = Math.PI;
+        state.pitch = 0;
+        state.stamina = 100;
+        state.battery = 100;
+        state.flashlightOn = true;
+        flashlight.visible = true;
+        state.isHiding = false;
+        state.currentLocker = null;
+        state.filesCollected = 0;
+        state.switchesOn = 0;
+        state.elapsedTime = 0;
+
+        officeMap.interactables.forEach((item) => {
+          item.done = false;
+          if (item.mesh && item.type !== 'elevator' && item.type !== 'locker') item.mesh.visible = true;
+          if (item.type === 'switch' && item.mesh) {
+            item.mesh.material.color.setHex(0xef4444);
+            item.mesh.material.emissive.setHex(0x991b1b);
+          }
+        });
+
+        anwar.setDifficulty(state.difficulty);
+        anwar.reset();
+        audio.updateProximityAudio(999, 0, false);
+        updateMissionHUD();
+      }
+
+      window.addEventListener('keydown', (e) => {
+        keys[e.code] = true;
+        if (state.mode !== 'PLAYING') return;
+        if (e.code === 'KeyF') toggleFlashlight();
+        if (e.code === 'KeyE') triggerInteract();
+        if (e.code === 'Escape' || e.code === 'KeyP') pauseGame();
+      });
+
+      window.addEventListener('keyup', (e) => { keys[e.code] = false; });
+
+      // Sokong kedua-dua Pointer Lock DAN seret tetikus biasa supaya sentiasa boleh pandang di PC
+      window.addEventListener('mousemove', (e) => {
+        if (state.mode !== 'PLAYING') return;
+        if (document.pointerLockElement === canvas) {
+          state.yaw -= e.movementX * 0.0022 * state.sensitivity;
+          state.pitch -= e.movementY * 0.0022 * state.sensitivity;
+          state.pitch = Math.max(-1.25, Math.min(1.25, state.pitch));
+        } else if (isMouseDragging) {
+          const dx = e.clientX - lastMouseX;
+          const dy = e.clientY - lastMouseY;
+          lastMouseX = e.clientX;
+          lastMouseY = e.clientY;
+          state.yaw -= dx * 0.004 * state.sensitivity;
+          state.pitch -= dy * 0.004 * state.sensitivity;
+          state.pitch = Math.max(-1.25, Math.min(1.25, state.pitch));
+        }
+      });
+
+      canvas.addEventListener('mousedown', (e) => {
+        if (state.mode !== 'PLAYING') return;
+        isMouseDragging = true;
+        lastMouseX = e.clientX;
+        lastMouseY = e.clientY;
+
+        if (!state.touchEnabled && document.pointerLockElement !== canvas && canvas.requestPointerLock) {
+          try { canvas.requestPointerLock(); } catch (_) {}
+        }
+        if (e.button === 0) triggerInteract();
+        if (e.button === 2) toggleFlashlight();
+      });
+
+      window.addEventListener('mouseup', () => { isMouseDragging = false; });
+      window.addEventListener('contextmenu', (e) => e.preventDefault());
+
+      // Sentuhan Telefon
+      const joyZone = document.getElementById('joystick-zone');
+      const joyStick = document.getElementById('joystick-stick');
+      let joyTouchId = null;
+
+      joyZone.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        const t = e.changedTouches[0];
+        joyTouchId = t.identifier;
+        updateJoystick(t);
+      });
+
+      joyZone.addEventListener('touchmove', (e) => {
+        e.preventDefault();
+        for (const t of e.changedTouches) {
+          if (t.identifier === joyTouchId) updateJoystick(t);
+        }
+      });
+
+      const resetJoy = (e) => {
+        for (const t of e.changedTouches) {
+          if (t.identifier === joyTouchId) {
+            joyTouchId = null;
+            joyVec = { x: 0, y: 0 };
+            joyStick.style.transform = 'translate(-50%, -50%)';
+          }
+        }
+      };
+      joyZone.addEventListener('touchend', resetJoy);
+      joyZone.addEventListener('touchcancel', resetJoy);
+
+      function updateJoystick(touch) {
+        const rect = joyZone.getBoundingClientRect();
+        const cx = rect.left + rect.width / 2;
+        const cy = rect.top + rect.height / 2;
+        const maxR = 40;
+        let dx = touch.clientX - cx;
+        let dy = touch.clientY - cy;
+        const dist = Math.hypot(dx, dy);
+        if (dist > maxR) { dx = (dx / dist) * maxR; dy = (dy / dist) * maxR; }
+        joyStick.style.transform = `translate(calc(-50% + ${dx}px), calc(-50% + ${dy}px))`;
+        joyVec.x = dx / maxR;
+        joyVec.y = dy / maxR;
+      }
+
+      const lookZone = document.getElementById('look-zone');
+      let lookTouchId = null, lastLookX = 0, lastLookY = 0;
+
+      lookZone.addEventListener('touchstart', (e) => {
+        const t = e.changedTouches[0];
+        lookTouchId = t.identifier;
+        lastLookX = t.clientX;
+        lastLookY = t.clientY;
+      });
+
+      lookZone.addEventListener('touchmove', (e) => {
+        e.preventDefault();
+        for (const t of e.changedTouches) {
+          if (t.identifier === lookTouchId) {
+            const dx = t.clientX - lastLookX;
+            const dy = t.clientY - lastLookY;
+            lastLookX = t.clientX;
+            lastLookY = t.clientY;
+            state.yaw -= dx * 0.0055 * state.sensitivity;
+            state.pitch -= dy * 0.0055 * state.sensitivity;
+            state.pitch = Math.max(-1.25, Math.min(1.25, state.pitch));
+          }
+        }
+      });
+
+      lookZone.addEventListener('touchend', (e) => {
+        for (const t of e.changedTouches) {
+          if (t.identifier === lookTouchId) lookTouchId = null;
+        }
+      });
+
+      document.getElementById('mob-flashlight').addEventListener('touchstart', (e) => { e.preventDefault(); toggleFlashlight(); });
+      const mobSprintBtn = document.getElementById('mob-sprint');
+      mobSprintBtn.addEventListener('touchstart', (e) => { e.preventDefault(); mobileSprinting = true; mobSprintBtn.classList.add('active'); });
+      mobSprintBtn.addEventListener('touchend', () => { mobileSprinting = false; mobSprintBtn.classList.remove('active'); });
+      document.getElementById('mob-interact').addEventListener('touchstart', (e) => { e.preventDefault(); triggerInteract(); });
+
+      document.getElementById('btn-pause').addEventListener('click', pauseGame);
+      document.getElementById('btn-resume').addEventListener('click', () => { audio.playClick(); beginGameplay(); });
+      document.getElementById('btn-toggle-touch').addEventListener('click', () => {
+        state.touchEnabled = !state.touchEnabled;
+        document.getElementById('mobile-controls').classList.toggle('visible', state.touchEnabled);
+        showToast(state.touchEnabled ? 'Kawalan Telefon Diaktifkan' : 'Kawalan Telefon Dimatikan');
+      });
+      document.getElementById('btn-quit').addEventListener('click', returnToLobby);
+      document.getElementById('btn-retry').addEventListener('click', () => { resetGame(); beginGameplay(); });
+      document.getElementById('btn-death-lobby').addEventListener('click', returnToLobby);
+      document.getElementById('btn-win-again').addEventListener('click', () => { resetGame(); beginGameplay(); });
+      document.getElementById('btn-win-lobby').addEventListener('click', returnToLobby);
+
+      function pauseGame() {
+        if (state.mode !== 'PLAYING') return;
+        state.mode = 'PAUSED';
+        audio.updateProximityAudio(999, 0, false);
+        if (document.pointerLockElement) document.exitPointerLock();
+        showScreen('PAUSED');
+      }
+
+      function returnToLobby() {
+        state.mode = 'LOBBY';
+        audio.updateProximityAudio(999, 0, false);
+        if (document.pointerLockElement) document.exitPointerLock();
+        showScreen('LOBBY');
+      }
+
+      function toggleFlashlight() {
+        if (state.battery <= 0) { showToast('Bateri lampu suluh sudah habis!'); return; }
+        state.flashlightOn = !state.flashlightOn;
+        flashlight.visible = state.flashlightOn;
+        audio.playClick();
+      }
+
+      function showToast(msg) {
+        const el = document.getElementById('toast-msg');
+        el.textContent = msg;
+        el.classList.remove('hidden');
+        clearTimeout(el._timer);
+        el._timer = setTimeout(() => el.classList.add('hidden'), 2400);
+      }
+
+      let nearestInteractable = null;
+
+      function triggerInteract() {
+        if (state.isHiding && state.currentLocker) {
+          state.isHiding = false;
+          state.pos.copy(state.currentLocker.exitPos);
+          state.currentLocker = null;
+          document.getElementById('hiding-banner').classList.add('hidden');
+          audio.playLocker();
+          return;
+        }
+
+        if (!nearestInteractable) return;
+        const item = nearestInteractable;
+
+        if (item.type === 'locker') {
+          state.isHiding = true;
+          state.currentLocker = item;
+          state.pos.copy(item.insidePos);
+          state.yaw = item.yaw;
+          state.pitch = 0;
+          document.getElementById('hiding-banner').classList.remove('hidden');
+          audio.playLocker();
+        } else if (item.type === 'file') {
+          item.done = true;
+          item.mesh.visible = false;
+          state.filesCollected++;
+          audio.playPickup();
+          showToast(`Fail Audit Sulit diperoleh (${state.filesCollected}/4)!`);
+          updateMissionHUD();
+        } else if (item.type === 'switch') {
+          if (state.filesCollected < 4) { showToast('Kumpul kesemua 4 Fail Audit Sulit dahulu!'); return; }
+          item.done = true;
+          item.mesh.material.color.setHex(0x22c55e);
+          item.mesh.material.emissive.setHex(0x15803d);
+          state.switchesOn++;
+          audio.playSwitch();
+          showToast(`Suis Janakuasa dihidupkan (${state.switchesOn}/2)!`);
+          updateMissionHUD();
+        } else if (item.type === 'battery') {
+          item.done = true;
+          item.mesh.visible = false;
+          state.battery = Math.min(100, state.battery + 50);
+          audio.playPickup();
+          showToast('Bateri lampu suluh dicas +50%!');
+        } else if (item.type === 'elevator') {
+          if (state.filesCollected < 4 || state.switchesOn < 2) {
+            showToast('Lif terkunci! Lengkapkan fail audit & suis janakuasa dahulu.');
+            return;
+          }
+          triggerWin();
+        }
+      }
+
+      function updateMissionHUD() {
+        const el = document.getElementById('mission-text');
+        if (state.filesCollected < 4) {
+          el.textContent = `Fasa 1: Kumpul Fail Audit Sulit (${state.filesCollected} / 4)`;
+        } else if (state.switchesOn < 2) {
+          el.textContent = `Fasa 2: Hidupkan Suis Janakuasa (${state.switchesOn} / 2)`;
+        } else {
+          el.textContent = 'Fasa 3: Kembali ke Lobi Lif Utama & Melarikan Diri!';
+        }
+      }
+
+      function formatTime(sec) {
+        const m = Math.floor(sec / 60).toString().padStart(2, '0');
+        const s = Math.floor(sec % 60).toString().padStart(2, '0');
+        return `${m}:${s}`;
+      }
+
+      function triggerCatch() {
+        if (state.mode !== 'PLAYING') return;
+        state.mode = 'JUMPSCARE';
+        if (document.pointerLockElement) document.exitPointerLock();
+
+        document.getElementById('jumpscare-img').src = anwar.imageSrc;
+        showScreen('JUMPSCARE');
+        audio.playJumpscare();
+
+        setTimeout(() => {
+          state.mode = 'END';
+          audio.updateProximityAudio(999, 0, false);
+          document.getElementById('stat-death-room').textContent = officeMap.getRoomAt(state.pos.x, state.pos.z);
+          document.getElementById('stat-death-time').textContent = formatTime(state.elapsedTime);
+          document.getElementById('stat-death-files').textContent = `${state.filesCollected} / 4`;
+          document.getElementById('stat-death-switches').textContent = `${state.switchesOn} / 2`;
+          showScreen('DEATH');
+        }, 1550);
+      }
+
+      function triggerWin() {
+        state.mode = 'END';
+        audio.updateProximityAudio(999, 0, false);
+        if (document.pointerLockElement) document.exitPointerLock();
+        audio.playPickup();
+        document.getElementById('stat-win-diff').textContent = state.difficulty.toUpperCase();
+        document.getElementById('stat-win-time').textContent = formatTime(state.elapsedTime);
+        showScreen('WIN');
+      }
+
+      function canMoveTo(nx, nz) {
+        const r = 0.42;
+        for (const b of officeMap.colliders) {
+          if (nx + r > b.minX && nx - r < b.maxX && nz + r > b.minZ && nz - r < b.maxZ) return false;
+        }
+        return true;
+      }
+
+      function updatePlayer(dt) {
+        if (state.isHiding) {
+          camera.position.copy(state.pos);
+          camera.rotation.order = 'YXZ';
+          camera.rotation.y = state.yaw;
+          camera.rotation.x = state.pitch;
+          return false;
+        }
+
+        let forward = 0, right = 0;
+        if (keys['KeyW'] || keys['ArrowUp']) forward += 1;
+        if (keys['KeyS'] || keys['ArrowDown']) forward -= 1;
+        if (keys['KeyD'] || keys['ArrowRight']) right += 1;
+        if (keys['KeyA'] || keys['ArrowLeft']) right -= 1;
+
+        if (Math.abs(joyVec.x) > 0.1 || Math.abs(joyVec.y) > 0.1) {
+          forward -= joyVec.y;
+          right += joyVec.x;
+        }
+
+        const wantsSprint = keys['ShiftLeft'] || keys['ShiftRight'] || mobileSprinting;
+        const isMoving = Math.hypot(forward, right) > 0.1;
+        const isSprinting = wantsSprint && isMoving && state.stamina > 2;
+
+        if (isSprinting) state.stamina = Math.max(0, state.stamina - 24 * dt);
+        else state.stamina = Math.min(100, state.stamina + 18 * dt);
+
+        const speed = isSprinting ? 9.0 : 5.4;
+        const sin = Math.sin(state.yaw);
+        const cos = Math.cos(state.yaw);
+
+        let vx = (-sin * forward + cos * right);
+        let vz = (-cos * forward - sin * right);
+        const len = Math.hypot(vx, vz);
+        if (len > 0.001) {
+          vx = (vx / len) * speed * dt;
+          vz = (vz / len) * speed * dt;
+        }
+
+        if (canMoveTo(state.pos.x + vx, state.pos.z)) state.pos.x += vx;
+        if (canMoveTo(state.pos.x, state.pos.z + vz)) state.pos.z += vz;
+
+        if (state.flashlightOn) {
+          const drain = state.difficulty === 'mudah' ? 1.0 : 1.5;
+          state.battery = Math.max(0, state.battery - drain * dt);
+          if (state.battery === 0) { state.flashlightOn = false; flashlight.visible = false; }
+        }
+
+        const bob = isMoving ? Math.sin(performance.now() * (isSprinting ? 0.017 : 0.011)) * 0.06 : 0;
+        camera.position.set(state.pos.x, state.pos.y + bob, state.pos.z);
+        camera.rotation.order = 'YXZ';
+        camera.rotation.y = state.yaw;
+        camera.rotation.x = state.pitch;
+
+        nearestInteractable = null;
+        let bestDist = 2.8;
+        for (const item of officeMap.interactables) {
+          if (item.done) continue;
+          const d = state.pos.distanceTo(item.position);
+          if (d < bestDist) { bestDist = d; nearestInteractable = item; }
+        }
+
+        const promptEl = document.getElementById('interact-prompt');
+        if (nearestInteractable) {
+          promptEl.innerHTML = `Tekan <strong>[E]</strong> / <strong>AKSI</strong>: ${nearestInteractable.label}`;
+          promptEl.classList.remove('hidden');
+        } else {
+          promptEl.classList.add('hidden');
+        }
+
+        document.getElementById('stamina-fill').style.width = `${state.stamina}%`;
+        document.getElementById('battery-fill').style.width = `${state.battery}%`;
+        document.getElementById('room-name').textContent = `Lokasi: ${officeMap.getRoomAt(state.pos.x, state.pos.z)}`;
+
+        return isSprinting;
+      }
+
+      const miniCanvas = document.getElementById('minimap-canvas');
+      const mCtx = miniCanvas.getContext('2d');
+
+      function drawMinimap(entityDist) {
+        mCtx.clearRect(0, 0, 160, 160);
+        const scale = 2.15, cx = 80, cy = 82;
+
+        mCtx.fillStyle = '#1e293b';
+        for (const r of officeMap.rooms) {
+          mCtx.fillRect(cx + (r.x - r.w / 2) * scale, cy + (r.z - r.d / 2) * scale, r.w * scale, r.d * scale);
+        }
+
+        for (const item of officeMap.interactables) {
+          if (item.done) continue;
+          if (item.type === 'file') mCtx.fillStyle = '#facc15';
+          else if (item.type === 'switch') mCtx.fillStyle = '#ef4444';
+          else if (item.type === 'locker') mCtx.fillStyle = '#38bdf8';
+          else if (item.type === 'elevator') mCtx.fillStyle = '#22c55e';
+          else continue;
+          mCtx.fillRect(cx + item.position.x * scale - 2.2, cy + item.position.z * scale - 2.2, 4.4, 4.4);
+        }
+
+        if (entityDist < 24) {
+          mCtx.fillStyle = '#ef4444';
+          mCtx.beginPath();
+          mCtx.arc(cx + anwar.position.x * scale, cy + anwar.position.z * scale, 4.2, 0, Math.PI * 2);
+          mCtx.fill();
+        }
+
+        mCtx.fillStyle = '#ffffff';
+        mCtx.beginPath();
+        mCtx.arc(cx + state.pos.x * scale, cy + state.pos.z * scale, 3.8, 0, Math.PI * 2);
+        mCtx.fill();
+      }
+
+      let lastTime = performance.now();
+      function animate(now) {
+        requestAnimationFrame(animate);
+        const dt = Math.min(0.05, (now - lastTime) / 1000);
+        lastTime = now;
+
+        if (state.mode === 'LOBBY') {
+          const t = now * 0.00025;
+          camera.position.set(Math.sin(t) * 12, 2.6, Math.cos(t) * 12);
+          camera.lookAt(0, 1.3, 0);
+        } else if (state.mode === 'INTRO') {
+          state.introTimer += dt;
+          const totalIntro = 16;
+          const shotIdx = Math.min(introShots.length - 1, Math.floor(state.introTimer / 4));
+          const shot = introShots[shotIdx];
+
+          document.getElementById('intro-speaker').textContent = shot.speaker;
+          document.getElementById('intro-text').textContent = shot.text;
+          document.getElementById('intro-bar').style.width = `${Math.min(100, (state.introTimer / totalIntro) * 100)}%`;
+
+          camera.position.lerp(shot.camPos, 0.05);
+          camera.lookAt(shot.lookAt);
+
+          if (state.introTimer >= totalIntro) beginGameplay();
+        } else if (state.mode === 'PLAYING') {
+          state.elapsedTime += dt;
+          const isSprinting = updatePlayer(dt);
+          const dist = anwar.update(dt, state.pos, state.yaw, state.isHiding, isSprinting, audio, triggerCatch);
+
+          const dangerRatio = Math.max(0, Math.min(1, 1 - dist / 16));
+          document.getElementById('danger-pulse').style.opacity = dangerRatio.toFixed(2);
+          document.getElementById('danger-banner').classList.toggle('hidden', dist > 15);
+          drawMinimap(dist);
+        }
+
+        renderer.render(scene, camera);
+      }
+
+      window.addEventListener('resize', () => {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+      });
+
+      requestAnimationFrame(animate);
+    })();
+  </script>
 </body>
 </html>
