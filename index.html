@@ -2,70 +2,214 @@
 <html lang="ms">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Malam Misteri — V 0.1.0</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Malam Sama Madani</title>
   <style>
-    :root {
-      --bg: #07080b;
-      --panel: #10131a;
-      --panel-2: #171c26;
-      --border: #262e3d;
-      --text: #e6eaf2;
-      --muted: #8b95a8;
-      --red: #e11d48;
-      --red-glow: rgba(225, 29, 72, 0.35);
-      --amber: #f59e0b;
-      --green: #10b981;
-      --cyan: #06b6d4;
-    }
-
     * {
       box-sizing: border-box;
-      user-select: none;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
-
-    body {
       margin: 0;
-      background: radial-gradient(circle at center, #111520 0%, #050608 100%);
-      color: var(--text);
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      overflow-x: hidden;
+      padding: 0;
+      user-select: none;
+      -webkit-user-select: none;
     }
 
-    /* Scanline & Horror Vignette */
-    .vignette {
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: #07090d;
+      color: #f1f5f9;
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      touch-action: none;
+    }
+
+    #game-canvas {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      display: block;
+      z-index: 1;
+    }
+
+    #vignette-overlay {
       position: fixed;
       inset: 0;
       pointer-events: none;
-      background: radial-gradient(circle, transparent 55%, rgba(0, 0, 0, 0.85) 100%);
-      z-index: 50;
+      z-index: 2;
+      background: radial-gradient(circle at center, transparent 58%, rgba(0, 0, 0, 0.72) 100%);
     }
 
-    .scanlines {
+    #danger-pulse {
       position: fixed;
       inset: 0;
       pointer-events: none;
-      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.28) 50%);
-      background-size: 100% 4px;
-      z-index: 49;
-      opacity: 0.45;
+      z-index: 3;
+      opacity: 0;
+      box-shadow: inset 0 0 110px rgba(220, 38, 38, 0.85);
+      transition: opacity 0.12s ease;
     }
 
     .screen {
-      display: none;
-      width: 100%;
-      max-width: 960px;
-      padding: 20px;
+      position: fixed;
+      inset: 0;
       z-index: 10;
+      display: none;
     }
 
     .screen.active {
+      display: flex;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    /* ================= LOBI / MAIN MENU ================= */
+    #lobby-screen {
+      background: linear-gradient(135deg, rgba(6, 9, 16, 0.88), rgba(15, 23, 42, 0.78));
+      backdrop-filter: blur(6px);
+      overflow-y: auto;
+      padding: 20px;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .lobby-container {
+      width: 100%;
+      max-width: 960px;
+      margin: auto;
+      position: relative;
+    }
+
+    .top-quick-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .version-chip-btn {
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(250, 204, 21, 0.42);
+      color: #fde047;
+      font-weight: 800;
+      font-size: 0.76rem;
+      padding: 6px 12px;
+      border-radius: 999px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s ease;
+    }
+
+    .version-chip-btn:hover {
+      background: rgba(30, 41, 59, 0.95);
+      border-color: #facc15;
+      transform: translateY(-1px);
+    }
+
+    /* --- UPDATE LOG VIEW --- */
+    .update-log-list {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      max-height: 68vh;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+
+    .update-card {
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(148, 163, 184, 0.24);
+      border-radius: 14px;
+      padding: 16px 18px;
+      text-align: left;
+    }
+
+    .update-card.latest {
+      border-color: rgba(239, 68, 68, 0.55);
+      box-shadow: 0 10px 26px rgba(220, 38, 38, 0.16);
+    }
+
+    .update-card-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .update-ver {
+      font-size: 1.05rem;
+      font-weight: 900;
+      color: #f8fafc;
+    }
+
+    .update-date {
+      font-size: 0.75rem;
+      color: #94a3b8;
+      font-weight: 600;
+    }
+
+    .update-title {
+      font-size: 0.92rem;
+      font-weight: 800;
+      color: #fca5a5;
+      margin-bottom: 8px;
+    }
+
+    .update-bullets {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      font-size: 0.84rem;
+      color: #cbd5e1;
+      line-height: 1.45;
+    }
+
+    .update-bullets li::before {
+      content: "• ";
+      color: #ef4444;
+      font-weight: 900;
+    }
+
+    .lang-pill-group {
+      display: inline-flex;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(148, 163, 184, 0.3);
+      border-radius: 999px;
+      padding: 3px;
+    }
+
+    .lang-pill {
+      background: transparent;
+      border: none;
+      color: #94a3b8;
+      font-weight: 800;
+      font-size: 0.76rem;
+      padding: 5px 12px;
+      border-radius: 999px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .lang-pill.active {
+      background: #ef4444;
+      color: #ffffff;
+    }
+
+    .lobby-view {
+      display: none;
+      animation: fadeIn 0.2s ease;
+    }
+
+    .lobby-view.active {
       display: block;
-      animation: fadeIn 0.35s ease;
     }
 
     @keyframes fadeIn {
@@ -73,1314 +217,1999 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
-    @keyframes shake {
-      0%, 100% { transform: translate(0, 0); }
-      20% { transform: translate(-6px, 4px); }
-      40% { transform: translate(6px, -4px); }
-      60% { transform: translate(-4px, -3px); }
-      80% { transform: translate(4px, 3px); }
-    }
-
-    .shake {
-      animation: shake 0.35s infinite;
-    }
-
-    .card {
-      background: var(--panel);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 22px;
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.65);
-    }
-
-    h1, h2, h3 {
-      margin-top: 0;
-    }
-
-    .title-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 12px;
-      border-bottom: 1px solid var(--border);
-      padding-bottom: 16px;
-      margin-bottom: 20px;
-    }
-
-    .game-title {
-      font-size: 1.9rem;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      color: #fff;
-      text-shadow: 0 0 18px var(--red-glow);
-      margin: 0;
-    }
-
-    .version-badge {
-      background: rgba(225, 29, 72, 0.15);
-      border: 1px solid var(--red);
-      color: #ff6b8b;
-      padding: 6px 12px;
-      border-radius: 999px;
-      font-weight: 700;
-      font-size: 0.85rem;
-      cursor: pointer;
-      transition: 0.2s;
-    }
-
-    .version-badge:hover {
-      background: var(--red);
-      color: #fff;
-    }
-
-    .chapter-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 18px;
-    }
-
-    .chapter-card {
-      background: var(--panel-2);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 18px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      transition: 0.25s;
-    }
-
-    .chapter-card:hover {
-      border-color: var(--red);
-      transform: translateY(-2px);
-    }
-
-    .tag {
-      display: inline-block;
-      font-size: 0.75rem;
-      padding: 3px 9px;
-      border-radius: 6px;
-      font-weight: 600;
-      margin-bottom: 8px;
-    }
-
-    .tag-ch1 { background: rgba(6, 182, 212, 0.15); color: var(--cyan); border: 1px solid rgba(6, 182, 212, 0.4); }
-    .tag-ch2 { background: rgba(225, 29, 72, 0.18); color: #ff6b8b; border: 1px solid rgba(225, 29, 72, 0.45); }
-
-    .btn {
-      background: #1e2533;
-      color: #fff;
-      border: 1px solid #333e54;
-      padding: 10px 15px;
-      border-radius: 8px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: 0.18s;
-      font-size: 0.92rem;
-    }
-
-    .btn:hover:not(:disabled) {
-      background: #2b3548;
-      border-color: #526385;
-    }
-
-    .btn:disabled {
-      opacity: 0.45;
-      cursor: not-allowed;
-    }
-
-    .btn-danger {
-      background: var(--red);
-      border-color: #fb7185;
-    }
-
-    .btn-danger:hover:not(:disabled) {
-      background: #be123c;
-    }
-
-    .btn-success {
-      background: #059669;
-      border-color: #34d399;
-    }
-
-    .btn-success:hover:not(:disabled) {
-      background: #047857;
-    }
-
-    .btn-amber {
-      background: #d97706;
-      border-color: #fbbf24;
-      color: #fff;
-    }
-
-    .mode-row {
-      display: flex;
-      gap: 8px;
-      margin-top: 12px;
-      flex-wrap: wrap;
-    }
-
-    /* Update Log Modal */
-    .modal-backdrop {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.82);
-      z-index: 80;
-      justify-content: center;
-      align-items: center;
-      padding: 16px;
-    }
-
-    .modal-backdrop.active {
-      display: flex;
-    }
-
-    .modal-box {
-      background: var(--panel);
-      border: 1px solid var(--border);
-      border-radius: 14px;
+    /* --- HOME MENU --- */
+    .home-hero {
+      text-align: center;
       max-width: 560px;
-      width: 100%;
-      max-height: 82vh;
-      overflow-y: auto;
-      padding: 22px;
+      margin: 0 auto;
+      padding: 28px 24px;
+      background: rgba(15, 23, 42, 0.86);
+      border: 1px solid rgba(148, 163, 184, 0.22);
+      border-radius: 18px;
+      box-shadow: 0 22px 50px rgba(0, 0, 0, 0.65);
     }
 
-    .log-item {
-      border-left: 3px solid var(--red);
-      padding-left: 12px;
-      margin-bottom: 16px;
-    }
-
-    .log-item.minor {
-      border-left-color: var(--cyan);
-    }
-
-    /* Chapter 1 Arena */
-    .ch1-arena {
-      position: relative;
-      height: 360px;
-      background: #090b10;
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      overflow: hidden;
-      margin: 14px 0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-
-    .entity-sprite {
-      width: 110px;
-      height: 110px;
-      object-fit: cover;
-      border-radius: 12px;
-      border: 2px solid var(--red);
-      box-shadow: 0 0 25px var(--red-glow);
-      cursor: pointer;
-      position: absolute;
-      transition: transform 0.1s;
-    }
-
-    /* Chapter 2 Control Room */
-    .hud-bar {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 10px;
+    .badge {
+      display: inline-block;
+      padding: 5px 14px;
+      border-radius: 999px;
+      font-size: 0.74rem;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      background: rgba(220, 38, 38, 0.2);
+      border: 1px solid rgba(248, 113, 113, 0.45);
+      color: #fca5a5;
       margin-bottom: 12px;
     }
 
-    .hud-stat {
-      background: var(--panel-2);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 10px;
-      text-align: center;
+    .game-title {
+      font-size: clamp(2.1rem, 5.5vw, 3.5rem);
+      font-weight: 900;
+      letter-spacing: 2px;
+      line-height: 1.1;
+      text-shadow: 0 4px 24px rgba(0, 0, 0, 0.85);
     }
 
-    .hud-stat .label {
-      font-size: 0.72rem;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: 0.8px;
+    .game-title span {
+      color: #ef4444;
+      display: block;
     }
 
-    .hud-stat .val {
-      font-size: 1.25rem;
+    .game-subtitle {
+      color: #cbd5e1;
+      margin: 12px auto 24px;
+      font-size: 0.95rem;
+      line-height: 1.5;
+    }
+
+    .main-menu-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .menu-btn {
+      width: 100%;
+      padding: 15px 20px;
+      border-radius: 12px;
       font-weight: 800;
-      margin-top: 2px;
-    }
-
-    .story-banner {
-      background: rgba(225, 29, 72, 0.1);
-      border: 1px solid rgba(225, 29, 72, 0.35);
-      border-radius: 10px;
-      padding: 10px 14px;
-      margin-bottom: 14px;
-      font-size: 0.92rem;
-      color: #ffd1dc;
-      min-height: 44px;
+      font-size: 1.05rem;
+      letter-spacing: 1px;
+      cursor: pointer;
+      border: 1px solid rgba(148, 163, 184, 0.28);
+      background: rgba(30, 41, 59, 0.9);
+      color: #f8fafc;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 10px;
+      transition: transform 0.12s ease, background 0.15s ease, border-color 0.15s ease;
     }
 
-    .ch2-grid {
+    .menu-btn:hover {
+      background: rgba(51, 65, 85, 0.95);
+      border-color: rgba(248, 250, 252, 0.45);
+      transform: translateY(-1px);
+    }
+
+    .menu-btn.play-btn {
+      background: linear-gradient(135deg, #dc2626, #991b1b);
+      border-color: #f87171;
+      box-shadow: 0 10px 24px rgba(220, 38, 38, 0.38);
+      font-size: 1.15rem;
+    }
+
+    .menu-btn.play-btn:hover {
+      background: linear-gradient(135deg, #ef4444, #b91c1c);
+    }
+
+    .pill-tag {
+      font-size: 0.7rem;
+      font-weight: 800;
+      padding: 4px 10px;
+      border-radius: 999px;
+      letter-spacing: 0.8px;
+      background: rgba(250, 204, 21, 0.18);
+      border: 1px solid rgba(250, 204, 21, 0.45);
+      color: #fde047;
+    }
+
+    .pill-tag.red {
+      background: rgba(0, 0, 0, 0.35);
+      border-color: rgba(255, 255, 255, 0.35);
+      color: #ffffff;
+    }
+
+    .pill-tag.blue {
+      background: rgba(37, 99, 235, 0.28);
+      border-color: rgba(96, 165, 250, 0.6);
+      color: #bfdbfe;
+    }
+
+    /* --- SUB-VIEW HEADER --- */
+    .subview-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 18px;
+      background: rgba(15, 23, 42, 0.88);
+      border: 1px solid rgba(148, 163, 184, 0.22);
+      padding: 14px 18px;
+      border-radius: 14px;
+    }
+
+    .subview-header h2 {
+      font-size: 1.2rem;
+      letter-spacing: 1px;
+    }
+
+    .btn-back {
+      background: #1e293b;
+      border: 1px solid #334155;
+      color: #f8fafc;
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 0.85rem;
+      cursor: pointer;
+    }
+
+    .btn-back:hover {
+      background: #334155;
+    }
+
+    /* --- CHAPTERS VIEW --- */
+    .chapters-grid {
       display: grid;
-      grid-template-columns: 1.15fr 1fr;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+
+    @media (max-width: 820px) {
+      .chapters-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .panel {
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(148, 163, 184, 0.24);
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.55);
+    }
+
+    .chapter-card.featured {
+      border-color: rgba(239, 68, 68, 0.55);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .chapter-card.featured-blue {
+      border-color: rgba(59, 130, 246, 0.65);
+      box-shadow: 0 18px 40px rgba(30, 58, 138, 0.25);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .chapter-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .chapter-num {
+      font-size: 0.76rem;
+      font-weight: 800;
+      letter-spacing: 1.4px;
+      color: #fca5a5;
+    }
+
+    .chapter-num.blue {
+      color: #93c5fd;
+    }
+
+    .chapter-title {
+      font-size: 1.45rem;
+      font-weight: 900;
+      margin-bottom: 8px;
+      color: #ffffff;
+    }
+
+    .chapter-desc {
+      font-size: 0.88rem;
+      color: #cbd5e1;
+      line-height: 1.5;
+      margin-bottom: 16px;
+    }
+
+    .field-label {
+      display: block;
+      font-size: 0.84rem;
+      color: #cbd5e1;
+      margin-bottom: 8px;
+      font-weight: 700;
+    }
+
+    .diff-group {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .diff-btn {
+      background: rgba(30, 41, 59, 0.85);
+      border: 1px solid rgba(148, 163, 184, 0.25);
+      border-radius: 10px;
+      padding: 10px 8px;
+      color: #e2e8f0;
+      cursor: pointer;
+      text-align: left;
+      transition: all 0.18s ease;
+    }
+
+    .diff-btn strong {
+      display: block;
+      font-size: 0.88rem;
+      margin-bottom: 3px;
+    }
+
+    .diff-btn span {
+      display: block;
+      font-size: 0.7rem;
+      color: #94a3b8;
+      line-height: 1.3;
+    }
+
+    .diff-btn.active {
+      background: rgba(220, 38, 38, 0.26);
+      border-color: #ef4444;
+      box-shadow: 0 0 0 1px #ef4444;
+    }
+
+    .action-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+    }
+
+    .btn-primary, .btn-blue, .btn-secondary, .btn-danger {
+      width: 100%;
+      padding: 13px 16px;
+      border-radius: 10px;
+      font-weight: 800;
+      font-size: 0.95rem;
+      letter-spacing: 0.8px;
+      cursor: pointer;
+      border: none;
+      transition: transform 0.12s ease, background 0.15s ease;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #dc2626, #991b1b);
+      color: #fff;
+      box-shadow: 0 8px 20px rgba(220, 38, 38, 0.35);
+    }
+
+    .btn-primary:hover {
+      background: linear-gradient(135deg, #ef4444, #b91c1c);
+    }
+
+    .btn-blue {
+      background: linear-gradient(135deg, #2563eb, #1d4ed8);
+      color: #fff;
+      box-shadow: 0 8px 20px rgba(37, 99, 235, 0.35);
+    }
+
+    .btn-blue:hover {
+      background: linear-gradient(135deg, #3b82f6, #2563eb);
+    }
+
+    .btn-secondary {
+      background: #1e293b;
+      color: #e2e8f0;
+      border: 1px solid #334155;
+    }
+
+    .btn-secondary:hover {
+      background: #273549;
+    }
+
+    .btn-danger {
+      background: #450a0a;
+      color: #fecaca;
+      border: 1px solid #7f1d1d;
+    }
+
+    .mini-controls-box {
+      margin-top: 14px;
+      padding: 10px 12px;
+      border-radius: 10px;
+      background: rgba(2, 6, 23, 0.55);
+      font-size: 0.76rem;
+      color: #94a3b8;
+      line-height: 1.5;
+    }
+
+    kbd {
+      background: #334155;
+      padding: 1px 5px;
+      border-radius: 4px;
+      font-size: 0.72rem;
+      color: #fff;
+    }
+
+    /* --- SHOP VIEW --- */
+    .shop-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
       gap: 14px;
     }
 
     @media (max-width: 760px) {
-      .ch2-grid {
+      .shop-grid {
         grid-template-columns: 1fr;
       }
-      .hud-bar {
-        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .shop-card {
+      background: rgba(15, 23, 42, 0.86);
+      border: 1px solid rgba(148, 163, 184, 0.22);
+      border-radius: 14px;
+      padding: 18px;
+      text-align: center;
+    }
+
+    .shop-icon {
+      font-size: 2rem;
+      margin-bottom: 8px;
+    }
+
+    .shop-card h3 {
+      font-size: 1rem;
+      margin-bottom: 6px;
+    }
+
+    .shop-card p {
+      font-size: 0.8rem;
+      color: #94a3b8;
+      margin-bottom: 12px;
+      line-height: 1.4;
+    }
+
+    /* --- SETTINGS VIEW --- */
+    .settings-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      max-width: 640px;
+      margin: 0 auto;
+    }
+
+    .lang-choice-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .lang-choice-btn {
+      padding: 12px;
+      border-radius: 10px;
+      background: #1e293b;
+      border: 1px solid #334155;
+      color: #e2e8f0;
+      font-weight: 800;
+      cursor: pointer;
+      text-align: center;
+    }
+
+    .lang-choice-btn.active {
+      background: rgba(220, 38, 38, 0.26);
+      border-color: #ef4444;
+      color: #ffffff;
+    }
+
+    input[type="range"] {
+      width: 100%;
+      accent-color: #ef4444;
+    }
+
+    .asset-box {
+      background: rgba(2, 6, 23, 0.55);
+      border: 1px dashed rgba(148, 163, 184, 0.3);
+      border-radius: 10px;
+      padding: 14px;
+    }
+
+    .asset-hint {
+      font-size: 0.78rem;
+      color: #94a3b8;
+      margin-bottom: 10px;
+      line-height: 1.4;
+    }
+
+    .asset-hint code {
+      color: #e2e8f0;
+      background: rgba(255,255,255,0.08);
+      padding: 1px 4px;
+      border-radius: 4px;
+    }
+
+    .upload-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .file-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 9px;
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 8px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      cursor: pointer;
+      color: #e2e8f0;
+    }
+
+    .file-btn:hover {
+      background: #334155;
+    }
+
+    .file-btn input {
+      display: none;
+    }
+
+    .asset-status {
+      margin-top: 6px;
+      font-size: 0.76rem;
+      color: #34d399;
+    }
+
+    /* ================= INTRO SINEMATIK ================= */
+    #intro-screen {
+      flex-direction: column;
+      justify-content: space-between;
+      pointer-events: auto;
+    }
+
+    .letterbox {
+      height: 11vh;
+      background: #000;
+      width: 100%;
+    }
+
+    .intro-hud {
+      position: absolute;
+      top: 13vh;
+      left: 24px;
+      right: 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .rec-tag {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-family: monospace;
+      font-size: 0.9rem;
+      color: #f87171;
+      background: rgba(0, 0, 0, 0.65);
+      padding: 6px 12px;
+      border-radius: 6px;
+    }
+
+    .rec-tag .dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: #ef4444;
+      animation: blink 1s infinite;
+    }
+
+    @keyframes blink {
+      50% { opacity: 0.15; }
+    }
+
+    .btn-skip {
+      background: rgba(15, 23, 42, 0.85);
+      color: #f8fafc;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .subtitle-box {
+      position: absolute;
+      bottom: 13vh;
+      left: 50%;
+      transform: translateX(-50%);
+      width: min(760px, 92vw);
+      background: rgba(0, 0, 0, 0.82);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 12px;
+      padding: 16px 20px;
+      text-align: center;
+    }
+
+    .speaker {
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 1.4px;
+      color: #fbbf24;
+      margin-bottom: 6px;
+    }
+
+    #intro-text {
+      font-size: 1.05rem;
+      line-height: 1.5;
+      color: #f8fafc;
+    }
+
+    .intro-progress {
+      width: 100%;
+      height: 4px;
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 99px;
+      margin-top: 12px;
+      overflow: hidden;
+    }
+
+    #intro-bar {
+      width: 0%;
+      height: 100%;
+      background: #ef4444;
+    }
+
+    /* ================= HUD DALAM GAME ================= */
+    #hud-screen {
+      pointer-events: none;
+    }
+
+    .hud-top-left {
+      position: absolute;
+      top: 14px;
+      left: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      max-width: 320px;
+      z-index: 6;
+    }
+
+    .mission-card, .keys-card {
+      background: rgba(10, 15, 28, 0.84);
+      border: 1px solid rgba(148, 163, 184, 0.28);
+      border-radius: 10px;
+      padding: 10px 12px;
+      backdrop-filter: blur(4px);
+    }
+
+    .mission-label {
+      font-size: 0.68rem;
+      letter-spacing: 1.2px;
+      color: #fbbf24;
+      font-weight: 800;
+    }
+
+    .mission-text {
+      font-size: 0.94rem;
+      font-weight: 700;
+      margin: 3px 0;
+    }
+
+    .room-badge {
+      font-size: 0.76rem;
+      color: #94a3b8;
+    }
+
+    .keys-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 5px;
+    }
+
+    .key-badge {
+      font-size: 0.72rem;
+      font-weight: 800;
+      padding: 3px 9px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.2);
+      background: rgba(30, 41, 59, 0.65);
+      color: #64748b;
+    }
+
+    .key-badge.owned.red {
+      background: rgba(220, 38, 38, 0.28);
+      border-color: #f87171;
+      color: #fecaca;
+    }
+
+    .key-badge.owned.blue {
+      background: rgba(37, 99, 235, 0.28);
+      border-color: #60a5fa;
+      color: #bfdbfe;
+    }
+
+    .key-badge.owned.green {
+      background: rgba(22, 163, 74, 0.28);
+      border-color: #4ade80;
+      color: #bbf7d0;
+    }
+
+    .key-badge.owned.gold {
+      background: rgba(234, 179, 8, 0.28);
+      border-color: #facc15;
+      color: #fef08a;
+    }
+
+    .danger-banner {
+      background: rgba(185, 28, 28, 0.9);
+      border: 1px solid #fca5a5;
+      color: #fff;
+      font-weight: 800;
+      font-size: 0.78rem;
+      padding: 8px 10px;
+      border-radius: 8px;
+      text-align: center;
+      animation: pulseScale 0.5s infinite alternate;
+    }
+
+    @keyframes pulseScale {
+      from { transform: scale(1); }
+      to { transform: scale(1.03); }
+    }
+
+    .hud-top-right {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      z-index: 6;
+    }
+
+    .minimap-wrap {
+      background: rgba(10, 15, 28, 0.82);
+      border: 1px solid rgba(148, 163, 184, 0.3);
+      border-radius: 10px;
+      padding: 6px;
+      text-align: center;
+    }
+
+    #minimap-canvas {
+      display: block;
+      border-radius: 6px;
+      background: #0f172a;
+    }
+
+    .minimap-label {
+      font-size: 0.64rem;
+      font-weight: 700;
+      color: #94a3b8;
+      margin-top: 4px;
+    }
+
+    .hud-icon-btn {
+      pointer-events: auto;
+      width: 42px;
+      height: 42px;
+      border-radius: 10px;
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      color: #fff;
+      font-weight: 900;
+      cursor: pointer;
+    }
+
+    .crosshair {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.75);
+      transform: translate(-50%, -50%);
+    }
+
+    .interact-prompt, .hiding-banner, .toast-msg {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(15, 23, 42, 0.92);
+      border: 1px solid rgba(250, 204, 21, 0.55);
+      padding: 9px 16px;
+      border-radius: 999px;
+      font-size: 0.86rem;
+      white-space: nowrap;
+      z-index: 6;
+    }
+
+    .interact-prompt { top: 56%; }
+    .hiding-banner { top: 20%; border-color: #38bdf8; color: #bae6fd; }
+    .toast-msg { top: 14%; border-color: #34d399; color: #a7f3d0; }
+
+    /* ================= BAB 2: HUD BILIK KAWALAN 3D ================= */
+    .ch2-clock-row {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 2px;
+    }
+
+    .ch2-clock-val {
+      font-size: 1.45rem;
+      font-weight: 900;
+      font-family: monospace;
+      color: #f8fafc;
+      letter-spacing: 1px;
+    }
+
+    .ch2-power-bar-wrap {
+      width: 100%;
+      height: 8px;
+      background: rgba(30, 41, 59, 0.9);
+      border-radius: 999px;
+      overflow: hidden;
+      margin: 6px 0 4px;
+      border: 1px solid rgba(148, 163, 184, 0.25);
+    }
+
+    .ch2-power-fill {
+      height: 100%;
+      width: 100%;
+      background: #22c55e;
+      transition: width 0.2s ease, background 0.2s ease;
+    }
+
+    .ch2-usage-dots {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      margin-top: 4px;
+    }
+
+    .ch2-dot {
+      width: 14px;
+      height: 7px;
+      border-radius: 3px;
+      background: rgba(51, 65, 85, 0.7);
+    }
+
+    .ch2-dot.on.low { background: #22c55e; }
+    .ch2-dot.on.mid { background: #facc15; }
+    .ch2-dot.on.high { background: #ef4444; }
+
+    .ch2-control-dock {
+      position: absolute;
+      bottom: 16px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px;
+      width: min(780px, 95vw);
+      pointer-events: auto;
+      z-index: 7;
+    }
+
+    .ch2-dock-btn {
+      padding: 10px 13px;
+      border-radius: 11px;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      color: #f8fafc;
+      font-weight: 800;
+      font-size: 0.8rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.5);
+      transition: all 0.14s ease;
+    }
+
+    .ch2-dock-btn:hover {
+      background: rgba(30, 41, 59, 0.98);
+      transform: translateY(-1px);
+    }
+
+    .ch2-dock-btn.door-closed {
+      background: rgba(185, 28, 28, 0.92);
+      border-color: #fca5a5;
+      color: #fff;
+    }
+
+    .ch2-dock-btn.light-on {
+      background: rgba(202, 138, 4, 0.92);
+      border-color: #fef08a;
+      color: #fff;
+    }
+
+    .ch2-dock-btn.cctv-btn {
+      background: rgba(29, 78, 216, 0.92);
+      border-color: #93c5fd;
+      color: #fff;
+    }
+
+    /* Overlay Monitor CCTV Bab 2 */
+    .ch2-cctv-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 8;
+      background: rgba(3, 7, 18, 0.72);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      pointer-events: auto;
+    }
+
+    .ch2-cctv-frame {
+      width: min(740px, 95vw);
+      background: #090d16;
+      border: 2px solid #38bdf8;
+      border-radius: 14px;
+      padding: 14px;
+      box-shadow: 0 0 40px rgba(56, 189, 248, 0.25);
+    }
+
+    .ch2-cctv-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      gap: 8px;
+    }
+
+    .ch2-cctv-screen-wrap {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      max-height: 46vh;
+      background: #020617;
+      border: 1px solid #1e293b;
+      border-radius: 10px;
+      overflow: hidden;
+      margin-bottom: 10px;
+    }
+
+    #ch2-cctv-canvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    .ch2-cam-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 6px;
+      margin-bottom: 10px;
+    }
+
+    @media (max-width: 560px) {
+      .ch2-cam-grid {
+        grid-template-columns: repeat(3, 1fr);
       }
     }
 
-    .room-box {
-      background: var(--panel-2);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 14px;
-      position: relative;
+    .ch2-cam-btn {
+      padding: 8px 6px;
+      border-radius: 8px;
+      background: #1e293b;
+      border: 1px solid #334155;
+      color: #cbd5e1;
+      font-weight: 800;
+      font-size: 0.74rem;
+      cursor: pointer;
     }
 
-    .room-box h3 {
-      font-size: 0.95rem;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      margin-bottom: 10px;
+    .ch2-cam-btn.active {
+      background: #0284c7;
+      border-color: #7dd3fc;
+      color: #ffffff;
+    }
+
+    .ch2-cctv-actions {
       display: flex;
       justify-content: space-between;
-      align-items: center;
+      gap: 10px;
     }
 
-    /* Window & Blinds */
-    .window-frame {
-      height: 145px;
-      background: radial-gradient(circle at top, #172033 0%, #05070a 90%);
-      border: 2px solid #2e384d;
-      border-radius: 8px;
-      position: relative;
-      overflow: hidden;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      margin-bottom: 10px;
-    }
-
-    .window-ghost {
-      width: 105px;
-      height: 125px;
-      object-fit: cover;
-      filter: brightness(0.32) contrast(1.6) grayscale(0.6);
-      opacity: 0;
-      transition: opacity 0.35s;
-    }
-
-    .window-ghost.visible {
-      opacity: 0.92;
-    }
-
-    .blinds-cover {
-      position: absolute;
-      inset: 0;
-      background: repeating-linear-gradient(
-        to bottom,
-        #1b212e 0px,
-        #1b212e 10px,
-        #0c0f14 10px,
-        #0c0f14 13px
-      );
-      transform: translateY(-100%);
-      transition: transform 0.3s ease;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      color: var(--muted);
-      font-size: 0.85rem;
-      font-weight: 700;
-      letter-spacing: 1px;
-    }
-
-    .blinds-cover.closed {
-      transform: translateY(0);
-    }
-
-    /* CCTV Screen */
-    .cctv-screen {
-      height: 135px;
-      background: #060a08;
-      border: 1px solid #1f3b2c;
-      border-radius: 8px;
-      padding: 10px;
-      position: relative;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      color: #4ade80;
-      font-family: monospace;
-      margin-bottom: 8px;
-      overflow: hidden;
-    }
-
-    .cctv-ghost {
-      position: absolute;
-      right: 14px;
-      bottom: 8px;
-      width: 78px;
-      height: 78px;
-      object-fit: cover;
-      filter: grayscale(1) contrast(1.8) brightness(0.65);
-      opacity: 0.85;
-      border: 1px solid #4ade80;
-    }
-
-    .cam-btns {
-      display: flex;
-      gap: 6px;
-    }
-
-    .cam-btns .btn {
-      flex: 1;
-      padding: 6px;
-      font-size: 0.78rem;
-    }
-
-    .cam-btns .btn.active-cam {
-      background: #065f46;
-      border-color: #34d399;
-    }
-
-    /* Document Desk */
-    .doc-paper {
-      background: #e5e2d9;
-      color: #18181b;
-      border-radius: 8px;
-      padding: 12px;
-      margin-bottom: 10px;
-      border-left: 5px solid #71717a;
-      font-family: 'Courier New', Courier, monospace;
-    }
-
-    .sticky-rule {
-      background: #fef08a;
-      color: #422006;
-      padding: 8px 10px;
-      border-radius: 6px;
-      font-size: 0.82rem;
-      font-weight: 700;
-      margin-bottom: 10px;
-      border-left: 4px solid #ca8a04;
-    }
-
-    .alert-strip {
-      padding: 8px 10px;
-      border-radius: 8px;
-      font-size: 0.84rem;
-      font-weight: 700;
-      margin-bottom: 8px;
-      display: none;
-    }
-
-    .alert-strip.show {
-      display: block;
-      animation: pulseAlert 0.8s infinite alternate;
-    }
-
-    @keyframes pulseAlert {
-      from { opacity: 0.75; }
-      to { opacity: 1; }
-    }
-
-    .alert-danger { background: rgba(225, 29, 72, 0.22); border: 1px solid var(--red); color: #fda4af; }
-    .alert-warn { background: rgba(245, 158, 11, 0.2); border: 1px solid var(--amber); color: #fde68a; }
-
-    /* Jumpscare Overlay */
-    .jumpscare-overlay {
-      display: none;
+    .ch2-look-zone {
       position: fixed;
       inset: 0;
-      background: #000;
-      z-index: 120;
-      flex-direction: column;
-      justify-content: center;
+      z-index: 4;
+      pointer-events: auto;
+    }
+
+    /* ================= KAWALAN TELEFON (BAB 1) ================= */
+    .mobile-controls {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      display: none;
+    }
+
+    .mobile-controls.visible {
+      display: block;
+    }
+
+    .joystick-zone {
+      position: absolute;
+      left: 16px;
+      bottom: 20px;
+      width: 140px;
+      height: 140px;
+      pointer-events: auto;
+      display: flex;
       align-items: center;
-      text-align: center;
+      justify-content: center;
+    }
+
+    .joystick-base {
+      width: 112px;
+      height: 112px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.1);
+      border: 2px solid rgba(255, 255, 255, 0.28);
+      position: relative;
+    }
+
+    .joystick-stick {
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.72);
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .look-zone {
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 55%;
+      height: 100%;
+      pointer-events: auto;
+    }
+
+    .mobile-buttons {
+      position: absolute;
+      right: 22px;
+      bottom: 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      pointer-events: auto;
+      z-index: 5;
+    }
+
+    .mob-btn {
+      width: 82px;
+      height: 60px;
+      border-radius: 16px;
+      background: rgba(15, 23, 42, 0.85);
+      border: 2px solid rgba(255, 255, 255, 0.35);
+      color: #fff;
+      font-weight: 800;
+      font-size: 0.85rem;
+    }
+
+    .mob-btn.accent {
+      background: rgba(220, 38, 38, 0.88);
+      border-color: #fca5a5;
+    }
+
+    /* ================= MODAL & JUMPSCARE ================= */
+    .overlay-modal {
+      background: rgba(3, 7, 18, 0.86);
+      backdrop-filter: blur(8px);
+      align-items: center;
+      justify-content: center;
       padding: 20px;
     }
 
-    .jumpscare-overlay.active {
-      display: flex;
+    .modal-card {
+      width: min(460px, 94vw);
+      background: #0f172a;
+      border: 1px solid rgba(148, 163, 184, 0.25);
+      border-radius: 16px;
+      padding: 24px;
+      text-align: center;
     }
 
-    .jumpscare-img {
-      width: min(72vw, 340px);
-      height: min(72vw, 340px);
-      object-fit: cover;
-      border-radius: 16px;
-      border: 4px solid var(--red);
-      box-shadow: 0 0 60px var(--red);
-      animation: shake 0.12s infinite;
+    .modal-card h2, .modal-card h1 {
+      margin-bottom: 10px;
+    }
+
+    .death-card {
+      border-color: rgba(239, 68, 68, 0.55);
+    }
+
+    .win-card {
+      border-color: rgba(52, 211, 153, 0.55);
+    }
+
+    .status-pill {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 800;
+      margin-bottom: 10px;
+    }
+
+    .status-pill.danger { background: rgba(220, 38, 38, 0.25); color: #fca5a5; }
+    .status-pill.success { background: rgba(16, 185, 129, 0.25); color: #6ee7b7; }
+
+    .death-sub {
+      color: #cbd5e1;
+      font-size: 0.9rem;
+      line-height: 1.45;
+      margin-bottom: 18px;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    .stat-item {
+      background: rgba(2, 6, 23, 0.65);
+      padding: 10px;
+      border-radius: 10px;
+      text-align: left;
+    }
+
+    .stat-item span {
+      display: block;
+      font-size: 0.72rem;
+      color: #94a3b8;
+      margin-bottom: 3px;
+    }
+
+    .stat-item strong {
+      font-size: 0.95rem;
+      color: #f8fafc;
+    }
+
+    .modal-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    #jumpscare-screen {
+      background: #000;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      padding: 12px;
+      z-index: 30;
+    }
+
+    .jumpscare-flash {
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(
+        0deg,
+        rgba(255, 0, 0, 0.18),
+        rgba(255, 0, 0, 0.18) 2px,
+        transparent 2px,
+        transparent 6px
+      );
+      animation: strobe 0.08s infinite;
+    }
+
+    @keyframes strobe {
+      0% { background-color: rgba(220, 38, 38, 0.35); }
+      50% { background-color: rgba(0, 0, 0, 0.85); }
+      100% { background-color: rgba(255, 255, 255, 0.25); }
+    }
+
+    .jumpscare-face-wrap {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      max-width: 92vw;
+      max-height: 92dvh;
+      text-align: center;
+      animation: shakeHard 0.08s infinite;
+    }
+
+    #jumpscare-img {
+      width: min(62vw, 52dvh, 340px);
+      height: min(62vw, 52dvh, 340px);
+      max-width: 100%;
+      max-height: 60dvh;
+      object-fit: contain;
+      filter: contrast(1.38) saturate(1.28) drop-shadow(0 0 22px rgba(220, 38, 38, 0.85));
+    }
+
+    .jumpscare-caption {
+      font-size: clamp(1.6rem, min(6.5vw, 7dvh), 3.4rem);
+      font-weight: 900;
+      color: #ef4444;
+      text-shadow: 0 0 24px #000, 0 0 12px #dc2626;
+      letter-spacing: 2px;
+      line-height: 1.05;
+      margin-top: 4px;
+      max-width: 92vw;
+    }
+
+    @keyframes shakeHard {
+      0% { transform: translate(-5px, 4px) scale(1.02); }
+      25% { transform: translate(6px, -4px) scale(1.06); }
+      50% { transform: translate(-4px, -5px) scale(1.04); }
+      75% { transform: translate(5px, 4px) scale(1.07); }
+      100% { transform: translate(0, 0) scale(1.03); }
     }
   </style>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
 </head>
 <body>
-  <div class="scanlines"></div>
-  <div class="vignette"></div>
+  <canvas id="game-canvas"></canvas>
+  <div id="vignette-overlay"></div>
+  <div id="danger-pulse"></div>
 
-  <!-- MAIN MENU -->
-  <div id="menuScreen" class="screen active">
-    <div class="card">
-      <div class="title-header">
-        <div>
-          <h1 class="game-title">Malam Misteri</h1>
-          <div style="color: var(--muted); font-size: 0.88rem;">Pilih Chapter untuk memulakan syif malam anda</div>
+  <!-- ================= 1. MAIN MENU / LOBI UTAMA ================= -->
+  <section id="lobby-screen" class="screen active">
+    <div class="lobby-container">
+      <div class="top-quick-bar">
+        <button type="button" id="btn-top-updates" class="version-chip-btn">
+          <span>📋</span>
+          <span data-i18n="topUpdateChip">V 0.1.0 • LOG KEMAS KINI</span>
+        </button>
+
+        <div class="lang-pill-group" role="group" aria-label="Language Switcher">
+          <button type="button" class="lang-pill active" data-lang-switch="bm">BM</button>
+          <button type="button" class="lang-pill" data-lang-switch="en">BI</button>
         </div>
-        <button class="version-badge" onclick="toggleUpdateLog(true)">📋 V 0.1.0 (Update Log)</button>
       </div>
 
-      <div class="chapter-grid">
-        <!-- CHAPTER 1 -->
-        <div class="chapter-card">
-          <div>
-            <span class="tag tag-ch1">CHAPTER 1 • ADA PILIHAN MOD</span>
-            <h3>Malam Sama Anwar</h3>
-            <p style="color: var(--muted); font-size: 0.9rem; line-height: 1.5;">
-              Bertahan selama 60 saat daripada kelibat yang muncul secara tiba-tiba. Pilih tahap kelajuan sebelum mula.
-            </p>
-          </div>
-          <div>
-            <div style="font-size: 0.78rem; color: var(--muted); margin-bottom: 6px;">Pilih Mod Chapter 1:</div>
-            <div class="mode-row">
-              <button class="btn" onclick="startChapter1('normal')">Mod Biasa</button>
-              <button class="btn btn-amber" onclick="startChapter1('laju')">Mod Laju</button>
-              <button class="btn btn-danger" onclick="startChapter1('gila')">Mod Mimpi Ngeri</button>
-            </div>
-          </div>
-        </div>
+      <!-- VIEW A: HOME MAIN MENU -->
+      <div id="lobby-view-home" class="lobby-view active">
+        <div class="home-hero">
+          <div class="badge" data-i18n="heroBadge">EDISI SERAM 3D • MENARA PERDANA</div>
+          <h1 class="game-title">MALAM SAMA <span>MADANI</span></h1>
+          <p class="game-subtitle" data-i18n="heroSubtitle">Terperangkap di dalam menara selepas waktu pejabat. Selesaikan setiap bab dan selamatkan diri sebelum ditangkap.</p>
 
-        <!-- CHAPTER 2 -->
-        <div class="chapter-card" style="border-color: rgba(225, 29, 72, 0.45);">
-          <div>
-            <span class="tag tag-ch2">CHAPTER 2 • BARU (TIADA MOD)</span>
-            <h3>Malam Sama Zahid</h3>
-            <p style="color: var(--muted); font-size: 0.9rem; line-height: 1.5;">
-              <strong>12:00 AM – 6:00 AM (Bilik Kawalan Tingkat 14).</strong><br>
-              Tiada flashlight, tiada lari. Semak fail sulit, pantau CCTV, tutup bidai tingkap, kunci pintu magnetik &amp; kawal rasa panik hingga subuh.
-            </p>
-          </div>
-          <div style="margin-top: 14px;">
-            <button class="btn btn-danger" style="width: 100%; padding: 12px;" onclick="startChapter2Intro()">
-              ▶ Mula Chapter 2: Malam Sama Zahid
+          <div class="main-menu-stack">
+            <button type="button" id="btn-nav-play" class="menu-btn play-btn">
+              <span data-i18n="menuPlay">MAIN</span>
+              <span class="pill-tag red" data-i18n="menuPlayTag">PILIH BAB &raquo;</span>
+            </button>
+
+            <button type="button" id="btn-nav-shop" class="menu-btn">
+              <span data-i18n="menuShop">KEDAI</span>
+              <span class="pill-tag" data-i18n="comingSoon">COMING SOON</span>
+            </button>
+
+            <button type="button" id="btn-nav-updates" class="menu-btn">
+              <span data-i18n="menuUpdates">LOG KEMAS KINI</span>
+              <span class="pill-tag red" data-i18n="menuUpdatesTag">V 0.1.0 BARU</span>
+            </button>
+
+            <button type="button" id="btn-nav-settings" class="menu-btn">
+              <span data-i18n="menuSettings">TETAPAN</span>
+              <span style="font-size:0.8rem;color:#94a3b8;" data-i18n="menuSettingsHint">BM / BI • Kamera</span>
             </button>
           </div>
         </div>
       </div>
-    </div>
-  </div>
 
-  <!-- CHAPTER 1 SCREEN -->
-  <div id="ch1Screen" class="screen">
-    <div class="card">
-      <div class="title-header" style="margin-bottom: 10px;">
-        <div>
-          <h2 style="margin: 0;">Chapter 1: Malam Sama Anwar</h2>
-          <span id="ch1ModeLabel" style="color: var(--cyan); font-size: 0.85rem;">Mod: Biasa</span>
+      <!-- VIEW B: CHAPTER SELECTION -->
+      <div id="lobby-view-chapters" class="lobby-view">
+        <div class="subview-header">
+          <button type="button" class="btn-back" data-back-home>&larr; <span data-i18n="btnBack">KEMBALI</span></button>
+          <h2 data-i18n="chapterSelectTitle">PILIH BAB PERMAINAN</h2>
+          <div style="width:74px;"></div>
         </div>
-        <button class="btn" onclick="returnToMenu()">← Menu Utama</button>
-      </div>
 
-      <div class="hud-bar" style="grid-template-columns: repeat(3, 1fr);">
-        <div class="hud-stat">
-          <div class="label">Masa Bertahan</div>
-          <div class="val" id="ch1Timer">60s</div>
-        </div>
-        <div class="hud-stat">
-          <div class="label">Skor Halau</div>
-          <div class="val" id="ch1Score">0</div>
-        </div>
-        <div class="hud-stat">
-          <div class="label">Tahap Bahaya</div>
-          <div class="val" id="ch1Danger" style="color: var(--amber);">0%</div>
-        </div>
-      </div>
-
-      <div class="ch1-arena" id="ch1Arena">
-        <div style="color: var(--muted); font-size: 0.9rem;">Klik kelibat Anwar secepat mungkin sebelum meter bahaya penuh!</div>
-        <img id="anwarTarget" class="entity-sprite" src="anwar.png" alt="Anwar" style="display:none;" onclick="hitAnwar()" onerror="handleImgFallback(this, 'ANWAR')" />
-      </div>
-    </div>
-  </div>
-
-  <!-- CHAPTER 2 INTRO STORY MODAL -->
-  <div id="ch2IntroScreen" class="screen">
-    <div class="card" style="max-width: 640px; margin: 0 auto;">
-      <span class="tag tag-ch2">PROLOG • CHAPTER 2</span>
-      <h2>Malam Sama Zahid — Tingkat 14</h2>
-      <p style="line-height: 1.65; color: #d1d5db;">
-        Selepas insiden malam pertama, kau ditugaskan menjaga <strong>Bilik Kawalan &amp; Arkib Tingkat 14</strong>.
-        Pintu lif dikunci dari luar pada jam <strong>12:00 tengah malam</strong>. Tiada lampu suluh, dan tiada tempat untuk berlari.
-      </p>
-      <div style="background: var(--panel-2); border: 1px solid var(--border); border-radius: 10px; padding: 14px; margin: 14px 0; font-size: 0.9rem; line-height: 1.6;">
-        <strong>Panduan Bertahan Hingga 6:00 AM:</strong>
-        <ul style="margin: 6px 0 0 18px; padding: 0; color: #cbd5e1;">
-          <li><strong>Semak Fail Meja:</strong> Selesaikan 12 fail mengikut nota kuning (salah cop akan memanggil Zahid!).</li>
-          <li><strong>Tingkap &amp; Bidai:</strong> Jika bayang Zahid muncul di cermin tingkap, <strong>Tutup Bidai</strong> dan <strong>jangan klik apa-apa</strong> selama 3 saat.</li>
-          <li><strong>Pintu Utama:</strong> Jika tombol pintu bergegar, tahan <strong>Kunci Pintu</strong> sampai dia beredar (menggunakan kuasa elektrik).</li>
-          <li><strong>Telefon &amp; Panik:</strong> Matikan telefon berdering segera dan gunakan <strong>Tarik Nafas</strong> jika panik tinggi.</li>
-        </ul>
-      </div>
-      <div style="display: flex; gap: 10px; justify-content: flex-end;">
-        <button class="btn" onclick="returnToMenu()">Batal</button>
-        <button class="btn btn-danger" onclick="startChapter2()">Masuk Bilik Kawalan (12:00 AM)</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- CHAPTER 2 GAMEPLAY SCREEN -->
-  <div id="ch2Screen" class="screen">
-    <div class="card" id="ch2Card">
-      <div class="title-header" style="margin-bottom: 10px; padding-bottom: 10px;">
-        <div>
-          <h2 style="margin: 0; font-size: 1.3rem;">Chapter 2: Malam Sama Zahid</h2>
-          <span style="color: var(--muted); font-size: 0.8rem;">Bilik Kawalan Tingkat 14 • Bertahan hingga 6:00 AM</span>
-        </div>
-        <button class="btn" style="padding: 6px 12px; font-size: 0.82rem;" onclick="returnToMenu()">Keluar Syif</button>
-      </div>
-
-      <!-- HUD -->
-      <div class="hud-bar">
-        <div class="hud-stat">
-          <div class="label">Jam Semasa</div>
-          <div class="val" id="ch2Clock" style="color: #fff;">12:00 AM</div>
-        </div>
-        <div class="hud-stat">
-          <div class="label">Fail Sulit</div>
-          <div class="val" id="ch2Docs" style="color: var(--cyan);">0 / 12</div>
-        </div>
-        <div class="hud-stat">
-          <div class="label">Kuasa Elektrik</div>
-          <div class="val" id="ch2Power" style="color: var(--green);">100%</div>
-        </div>
-        <div class="hud-stat">
-          <div class="label">Kadar Panik</div>
-          <div class="val" id="ch2Panic" style="color: var(--amber);">0%</div>
-        </div>
-      </div>
-
-      <!-- STORY SUBTITLE BANNER -->
-      <div class="story-banner">
-        <span id="ch2StoryText">12:00 AM — Pintu lif tertutup rapat. Bunyi tapak kaki perlahan bergema di hujung koridor...</span>
-      </div>
-
-      <!-- DYNAMIC ALERTS -->
-      <div id="alertWindow" class="alert-strip alert-danger">⚠️ KELIBAT DI CERMIN TINGKAP! Tutup bidai sekarang!</div>
-      <div id="alertSilence" class="alert-strip alert-warn">🤫 DIAM! Zahid sedang mengintai di luar bidai. Jangan tekan apa-apa! (<span id="silenceTimer">3</span>s)</div>
-      <div id="alertDoor" class="alert-strip alert-danger">🚪 TOMBOL PINTU DIPULAS! Kunci pintu sekarang sebelum dia masuk!</div>
-      <div id="alertPhone" class="alert-strip alert-warn">☎️ TELEFON BERDERING KUAT! Matikan talian sebelum dia dengar!</div>
-      <div id="alertGlitch" class="alert-strip alert-warn">⚡ SISTEM TERGANGGU! Klik "Stabilkan Sistem" segera!</div>
-
-      <!-- MAIN INTERACTIVE DESK & ROOM -->
-      <div class="ch2-grid">
-        <!-- LEFT COLUMN: WINDOW, DOOR & CCTV -->
-        <div style="display: flex; flex-direction: column; gap: 12px;">
-          <div class="room-box">
-            <h3>
-              <span>Tingkap &amp; Pintu Bilik</span>
-              <span id="doorStatusBadge" style="color: var(--green); font-size: 0.78rem;">PINTU: TERBUKA</span>
-            </h3>
-
-            <div class="window-frame">
-              <img id="windowGhostImg" class="window-ghost" src="zahid.png" alt="Kelibat Zahid" onerror="handleImgFallback(this, 'ZAHID')" />
-              <div id="blindsCover" class="blinds-cover">BIDAI DITUTUP</div>
+        <div class="chapters-grid">
+          <!-- CHAPTER 1: MALAM SAMA ANWAR -->
+          <div class="panel chapter-card featured">
+            <div>
+              <div class="chapter-top">
+                <span class="chapter-num" data-i18n="ch1Label">BAB 1 • TINGKAT 14</span>
+                <span class="pill-tag red" data-i18n="ch1Playable">BOLEH MAIN</span>
+              </div>
+              <h3 class="chapter-title">MALAM SAMA ANWAR</h3>
+              <p class="chapter-desc" data-i18n="ch1Desc">Cari kunci berwarna untuk membuka pintu berkunci, kumpul 4 Fail Audit Sulit, hidupkan 2 suis janakuasa kecemasan, dan melarikan diri melalui Lif Utama.</p>
             </div>
 
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
-              <button id="btnBlinds" class="btn" onclick="toggleBlinds()">🪟 Tutup Bidai</button>
-              <button id="btnDoor" class="btn btn-amber" onclick="toggleDoorLock()">🔒 Kunci Pintu</button>
+            <div>
+              <label class="field-label" data-i18n="selectDiffLabel">Pilih Tahap Kesukaran</label>
+              <div class="diff-group">
+                <button type="button" class="diff-btn" data-diff="mudah">
+                  <strong>Easy Mode</strong>
+                  <span data-i18n="diffEasyDesc">Santai & mudah melepaskan diri</span>
+                </button>
+                <button type="button" class="diff-btn active" data-diff="sederhana">
+                  <strong>Normal Mode</strong>
+                  <span data-i18n="diffNormalDesc">Seimbang & adil untuk lari</span>
+                </button>
+                <button type="button" class="diff-btn" data-diff="sukar">
+                  <strong>Hard Mode</strong>
+                  <span data-i18n="diffHardDesc">Pantas — tutup pintu & sorok!</span>
+                </button>
+              </div>
+
+              <div class="action-buttons">
+                <button type="button" id="btn-start" class="btn-primary" data-i18n="btnStartCh1">MULA BAB 1</button>
+                <button type="button" id="btn-start-skip" class="btn-secondary" data-i18n="btnSkipStartCh1">TERUS MAIN (LANGKAU INTRO)</button>
+              </div>
+
+              <div class="mini-controls-box" data-i18n-html="quickControlsHtml">
+                <strong>Kawalan PC:</strong> <kbd>WASD</kbd> Gerak • <kbd>Tetikus</kbd> Pandang • <kbd>E</kbd> Buka Pintu / Kunci / Ambil / Loker
+              </div>
             </div>
           </div>
 
-          <div class="room-box">
-            <h3>
-              <span>Monitor CCTV</span>
-              <span id="camLabel" style="color: #4ade80; font-size: 0.78rem;">CAM 01: KORIDOR</span>
-            </h3>
-
-            <div class="cctv-screen">
-              <div id="cctvFeedText">[CAM 01] Koridor sunyi... lampu berkelip di hujung lorong.</div>
-              <img id="cctvGhostImg" class="cctv-ghost" src="zahid.png" alt="CCTV Zahid" style="display:none;" onerror="handleImgFallback(this, 'ZAHID')" />
-              <div style="font-size: 0.72rem; opacity: 0.75;">REC ● LIVE FEED — TINGKAT 14</div>
+          <!-- CHAPTER 2: MALAM SAMA ZAHID (3D CONTROL ROOM) -->
+          <div class="panel chapter-card featured-blue">
+            <div>
+              <div class="chapter-top">
+                <span class="chapter-num blue" data-i18n="ch2Label">BAB 2 • BILIK KAWALAN B1</span>
+                <span class="pill-tag blue" data-i18n="ch2Badge">BAHARU • 3D</span>
+              </div>
+              <h3 class="chapter-title">MALAM SAMA ZAHID</h3>
+              <p class="chapter-desc" data-i18n="ch2Desc">Duduk di kerusi Bilik Kawalan Keselamatan (12:00 AM – 6:00 AM). Pusing pandangan kiri-kanan untuk periksa tingkap & pintu, pantau monitor CCTV, dan jimatkan kuasa bateri tanpa perlu berlari.</p>
             </div>
 
-            <div class="cam-btns">
-              <button id="camBtn1" class="btn active-cam" onclick="switchCam(1)">CAM 01</button>
-              <button id="camBtn2" class="btn" onclick="switchCam(2)">CAM 02</button>
-              <button id="camBtn3" class="btn" onclick="switchCam(3)">CAM 03</button>
-            </div>
-          </div>
-        </div>
+            <div>
+              <label class="field-label" data-i18n="selectDiffLabel">Pilih Tahap Kesukaran</label>
+              <div class="diff-group">
+                <button type="button" class="diff-btn" data-diff="mudah">
+                  <strong>Easy Mode</strong>
+                  <span data-i18n="ch2DiffEasy">Zahid perlahan & bateri jimat</span>
+                </button>
+                <button type="button" class="diff-btn active" data-diff="sederhana">
+                  <strong>Normal Mode</strong>
+                  <span data-i18n="ch2DiffNormal">Syif seimbang & mencabar</span>
+                </button>
+                <button type="button" class="diff-btn" data-diff="sukar">
+                  <strong>Hard Mode</strong>
+                  <span data-i18n="ch2DiffHard">Agresif — pantau CCTV & pintu!</span>
+                </button>
+              </div>
 
-        <!-- RIGHT COLUMN: DOCUMENT WORK & ROOM CONTROLS -->
-        <div style="display: flex; flex-direction: column; gap: 12px;">
-          <div class="room-box">
-            <h3>
-              <span>Meja Semakan Fail Sulit</span>
-              <span style="color: var(--cyan); font-size: 0.78rem;">TUGAS UTAMA</span>
-            </h3>
+              <div class="action-buttons">
+                <button type="button" id="btn-start-ch2" class="btn-blue" data-i18n="btnStartCh2">MULA BAB 2</button>
+                <button type="button" id="btn-start-ch2-skip" class="btn-secondary" data-i18n="btnSkipStartCh2">TERUS MAIN (LANGKAU INTRO)</button>
+              </div>
 
-            <div id="docRuleNote" class="sticky-rule">
-              NOTA 12:00 AM: LULUSKAN fail jika Nombor Kod GENAP dan Cop bertulis "SAH". Selain itu, TOLAK.
-            </div>
-
-            <div class="doc-paper">
-              <div style="font-size: 0.75rem; color: #52525b;">ARKIB SULIT KERAJAAN // TINGKAT 14</div>
-              <div style="font-size: 1.05rem; font-weight: 800; margin: 4px 0;" id="docCode">KOD FAIL: #402</div>
-              <div style="font-size: 0.9rem;" id="docStamp">STATUS COP: <strong>SAH</strong></div>
-              <div style="font-size: 0.8rem; color: #3f3f46; margin-top: 4px;" id="docSubject">Perkara: Rekod Syif Malam</div>
-            </div>
-
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
-              <button class="btn btn-success" onclick="processDocument(true)">✔ LULUSKAN</button>
-              <button class="btn btn-danger" onclick="processDocument(false)">✖ TOLAK</button>
-            </div>
-          </div>
-
-          <div class="room-box">
-            <h3><span>Kawalan Bilik &amp; Mental</span></h3>
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
-              <button class="btn" onclick="calmDown()">🫁 Tarik Nafas (-15% Panik)</button>
-              <button id="btnGenPower" class="btn" onclick="generatePower()">🔋 Jana Kuasa (+18%)</button>
-              <button id="btnPhone" class="btn" onclick="answerPhone()" disabled>☎️ Matikan Telefon</button>
-              <button id="btnStabilize" class="btn" onclick="fixSystemGlitch()" disabled>🛠️ Stabilkan Sistem</button>
+              <div class="mini-controls-box" data-i18n-html="ch2ControlsHtml">
+                <strong>Kawalan 3D:</strong> Pusing kiri/kanan (<kbd>A</kbd>/<kbd>D</kbd> atau Seret) • <kbd>E</kbd> Suis / CCTV • Klik Butang Kawalan
+              </div>
             </div>
           </div>
         </div>
       </div>
+
+      <!-- VIEW C: SHOP (COMING SOON) -->
+      <div id="lobby-view-shop" class="lobby-view">
+        <div class="subview-header">
+          <button type="button" class="btn-back" data-back-home>&larr; <span data-i18n="btnBack">KEMBALI</span></button>
+          <h2><span data-i18n="menuShop">KEDAI</span> • <span style="color:#fde047;">COMING SOON</span></h2>
+          <div style="width:74px;"></div>
+        </div>
+
+        <div class="shop-grid">
+          <div class="shop-card">
+            <div class="shop-icon">🔑</div>
+            <h3 data-i18n="shopItem1Title">Pengesan Kunci</h3>
+            <p data-i18n="shopItem1Desc">Menunjukkan arah lokasi kunci terdekat pada pelan Tingkat 14.</p>
+            <span class="pill-tag" data-i18n="comingSoon">COMING SOON</span>
+          </div>
+          <div class="shop-card">
+            <div class="shop-icon">🛡️</div>
+            <h3 data-i18n="shopItem2Title">Azimat Pelindung</h3>
+            <p data-i18n="shopItem2Desc">Memberi satu peluang kedua untuk melepaskan diri jika ditangkap.</p>
+            <span class="pill-tag" data-i18n="comingSoon">COMING SOON</span>
+          </div>
+          <div class="shop-card">
+            <div class="shop-icon">👟</div>
+            <h3 data-i18n="shopItem3Title">Kasut Pantas</h3>
+            <p data-i18n="shopItem3Desc">Meningkatkan kelajuan langkah kaki di semua koridor.</p>
+            <span class="pill-tag" data-i18n="comingSoon">COMING SOON</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- VIEW D: UPDATE LOG -->
+      <div id="lobby-view-updates" class="lobby-view">
+        <div class="subview-header">
+          <button type="button" class="btn-back" data-back-home>&larr; <span data-i18n="btnBack">KEMBALI</span></button>
+          <h2 data-i18n="updateLogTitle">LOG KEMAS KINI (UPDATE LOG)</h2>
+          <div style="width:74px;"></div>
+        </div>
+
+        <div id="update-log-container" class="update-log-list"></div>
+      </div>
+
+      <!-- VIEW E: SETTINGS -->
+      <div id="lobby-view-settings" class="lobby-view">
+        <div class="subview-header">
+          <button type="button" class="btn-back" data-back-home>&larr; <span data-i18n="btnBack">KEMBALI</span></button>
+          <h2 data-i18n="settingsTitle">TETAPAN PERMAINAN</h2>
+          <div style="width:74px;"></div>
+        </div>
+
+        <div class="settings-stack">
+          <div class="panel">
+            <label class="field-label" data-i18n="langSettingLabel">Bahasa / Language (BM & BI)</label>
+            <div class="lang-choice-row">
+              <button type="button" class="lang-choice-btn active" data-lang-switch="bm">Bahasa Melayu (BM)</button>
+              <button type="button" class="lang-choice-btn" data-lang-switch="en">English (BI)</button>
+            </div>
+          </div>
+
+          <div class="panel">
+            <label class="field-label" for="sens-slider">
+              <span data-i18n="sensLabel">Sensitiviti Kamera</span>: <span id="sens-val">1.0</span>x
+            </label>
+            <input type="range" id="sens-slider" min="0.4" max="2.2" step="0.1" value="1.0" />
+          </div>
+
+          <div class="panel">
+            <label class="field-label" data-i18n="assetTitle">Aset Entiti Bab 1 & Bab 2 (Muka & Suara)</label>
+            <div class="asset-box">
+              <p class="asset-hint" data-i18n-html="assetHintHtml">Automatik baca <code>anwar.png</code>, <code>sakau.mp3</code> (Bab 1) serta <code>zahid.png</code>, <code>zahid.mp3</code> (Bab 2) dari GitHub, atau pilih fail tersuai:</p>
+              <div class="upload-row">
+                <label class="file-btn">
+                  <span data-i18n="uploadFaceBtn">Bab 1: Gambar Anwar</span>
+                  <input type="file" id="face-upload" accept="image/*" />
+                </label>
+                <label class="file-btn">
+                  <span data-i18n="uploadAudioBtn">Bab 1: Audio Anwar</span>
+                  <input type="file" id="audio-upload" accept="audio/*" />
+                </label>
+              </div>
+              <div class="upload-row">
+                <label class="file-btn">
+                  <span data-i18n="uploadZahidFaceBtn">Bab 2: Gambar Zahid</span>
+                  <input type="file" id="zahid-face-upload" accept="image/*" />
+                </label>
+                <label class="file-btn">
+                  <span data-i18n="uploadZahidAudioBtn">Bab 2: Audio Zahid</span>
+                  <input type="file" id="zahid-audio-upload" accept="audio/*" />
+                </label>
+              </div>
+              <div id="asset-status" class="asset-status" data-i18n="assetReady">Status: Sedia dimainkan</div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-  </div>
+  </section>
 
-  <!-- UPDATE LOG MODAL -->
-  <div id="updateLogModal" class="modal-backdrop" onclick="if(event.target===this) toggleUpdateLog(false)">
-    <div class="modal-box">
-      <div class="title-header" style="margin-bottom: 14px; padding-bottom: 10px;">
-        <h3 style="margin: 0;">📋 Sejarah Update Log</h3>
-        <button class="btn" style="padding: 5px 10px;" onclick="toggleUpdateLog(false)">Tutup</button>
+  <!-- ================= 2. BABAK INTRO SINEMATIK ================= -->
+  <section id="intro-screen" class="screen">
+    <div class="letterbox top"></div>
+    <div class="intro-hud">
+      <div class="rec-tag"><span class="dot"></span> <span id="intro-rec-tag" data-i18n="recTag">RAKAMAN CCTV • 02:17:04</span></div>
+      <button type="button" id="btn-skip-intro" class="btn-skip" data-i18n="btnSkipIntro">LANGKAU INTRO &raquo;</button>
+    </div>
+    <div class="subtitle-box">
+      <div id="intro-speaker" class="speaker">AIMAN (JURUAUDIT DALAMAN)</div>
+      <p id="intro-text">Jam sudah 2:17 pagi... Semua staf dah balik, tinggal aku seorang di Tingkat 14 Menara Perdana.</p>
+      <div class="intro-progress"><div id="intro-bar"></div></div>
+    </div>
+    <div class="letterbox bottom"></div>
+  </section>
+
+  <!-- ================= 3. HUD DALAM PERMAINAN ================= -->
+  <section id="hud-screen" class="screen">
+    <!-- HUD BAB 1 -->
+    <div id="ch1-hud-group" class="hud-top-left">
+      <div class="mission-card">
+        <div class="mission-label" data-i18n="missionLabel">OBJEKTIF SEMASA</div>
+        <div id="mission-text" class="mission-text">Fasa 1: Kumpul Fail Audit Sulit (0 / 4)</div>
+        <div id="room-name" class="room-badge">Lokasi: Lobi Lif Utama</div>
       </div>
 
-      <p style="font-size: 0.82rem; color: var(--muted); margin-top: 0;">
-        Format Versi: Update kecil naik angka belakang (<code>V 0.0.1</code>) • Update besar naik angka tengah (<code>V 0.1.0</code>).
-      </p>
-
-      <div class="log-item">
-        <div style="font-weight: 800; color: #ff6b8b;">V 0.1.0 — Update Besar (Terkini)</div>
-        <div style="font-size: 0.88rem; color: #d1d5db; margin-top: 4px;">
-          • Tambah <strong>Chapter 2: Malam Sama Zahid</strong> (tanpa pilihan mod, jalan cerita 12:00 AM – 6:00 AM).<br>
-          • Gameplay baharu di Bilik Kawalan: semakan 12 fail sulit, CCTV 3 saluran, bidai tingkap, kunci pintu magnetik, telefon misteri, kawalan kuasa &amp; tahap panik.<br>
-          • Sistem penomboran versi dikemas kini kepada format <code>V 0.x.x</code>.
+      <div class="keys-card">
+        <div class="mission-label" data-i18n="keysLabel">KOLEKSI KUNCI</div>
+        <div class="keys-row">
+          <span id="key-badge-red" class="key-badge red" data-i18n="keyRedTag">🔑 Merah</span>
+          <span id="key-badge-blue" class="key-badge blue" data-i18n="keyBlueTag">🔑 Biru</span>
+          <span id="key-badge-green" class="key-badge green" data-i18n="keyGreenTag">🔑 Hijau</span>
+          <span id="key-badge-gold" class="key-badge gold" data-i18n="keyGoldTag">🔑 Emas</span>
         </div>
       </div>
 
-      <div class="log-item minor">
-        <div style="font-weight: 700; color: var(--cyan);">V 0.0.3 — Update Kecil</div>
-        <div style="font-size: 0.86rem; color: var(--muted); margin-top: 3px;">
-          • Penambahbaikan kesan bunyi ambien seram dan skrin tamat permainan.
+      <div id="danger-banner" class="danger-banner hidden" data-i18n="dangerBanner">
+        AMARAN: BELIAU SEMAKIN HAMPIR!
+      </div>
+    </div>
+
+    <!-- HUD BAB 2 (BILIK KAWALAN 3D) -->
+    <div id="ch2-hud-group" class="hud-top-left hidden">
+      <div class="mission-card">
+        <div class="mission-label" data-i18n="ch2ShiftLabel">SYIF MALAM • BILIK KAWALAN B1</div>
+        <div class="ch2-clock-row">
+          <div id="ch2-clock-text" class="ch2-clock-val">12:00 AM</div>
+          <div style="font-size:0.74rem;color:#93c5fd;font-weight:700;" data-i18n="ch2TargetTime">SASARAN: 6:00 AM</div>
+        </div>
+        <div class="ch2-power-bar-wrap">
+          <div id="ch2-power-fill" class="ch2-power-fill"></div>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;font-size:0.76rem;">
+          <span><strong data-i18n="ch2PowerLabel">Kuasa Bateri</strong>: <strong id="ch2-power-pct">100%</strong></span>
+          <div class="ch2-usage-dots" id="ch2-usage-dots">
+            <span class="ch2-dot on low"></span>
+            <span class="ch2-dot"></span>
+            <span class="ch2-dot"></span>
+            <span class="ch2-dot"></span>
+            <span class="ch2-dot"></span>
+          </div>
         </div>
       </div>
 
-      <div class="log-item minor">
-        <div style="font-weight: 700; color: var(--cyan);">V 0.0.2 — Update Kecil</div>
-        <div style="font-size: 0.86rem; color: var(--muted); margin-top: 3px;">
-          • Tambah pilihan tahap kelajuan (Mod Biasa, Laju, Mimpi Ngeri) untuk Chapter 1.
-        </div>
+      <div id="ch2-danger-banner" class="danger-banner hidden" data-i18n="ch2DangerBanner">
+        AMARAN: ADA KELIBAT DI LUAR PINTU!
       </div>
+    </div>
 
-      <div class="log-item minor">
-        <div style="font-weight: 700; color: var(--cyan);">V 0.0.1 — Versi Awal</div>
-        <div style="font-size: 0.86rem; color: var(--muted); margin-top: 3px;">
-          • Pelancaran awal game dengan Chapter 1: Malam Sama Anwar.
+    <div class="hud-top-right">
+      <div id="ch1-minimap-wrap" class="minimap-wrap">
+        <canvas id="minimap-canvas" width="160" height="160"></canvas>
+        <div class="minimap-label" data-i18n="minimapLabel">PELAN TINGKAT 14</div>
+      </div>
+      <button type="button" id="btn-pause" class="hud-icon-btn" title="Pause">II</button>
+    </div>
+
+    <div id="crosshair" class="crosshair"></div>
+    <div id="interact-prompt" class="interact-prompt hidden">
+      Tekan <strong>[E]</strong>
+    </div>
+    <div id="hiding-banner" class="hiding-banner hidden" data-i18n-html="hidingBannerHtml">
+      ANDA SEDANG BERSEMBUNYI DI DALAM LOKER — Tekan <strong>[E]</strong> atau <strong>AKSI</strong> untuk keluar
+    </div>
+    <div id="toast-msg" class="toast-msg hidden"></div>
+
+    <!-- KAWALAN BAB 2 (3D LOOK ZONE + DOCK BUTANG BILIK KAWALAN) -->
+    <div id="ch2-look-zone" class="ch2-look-zone hidden"></div>
+    <div id="ch2-control-dock" class="ch2-control-dock hidden">
+      <button type="button" id="ch2-btn-left-door" class="ch2-dock-btn">🚪 <span data-i18n="ch2LeftDoor">Pintu Kiri</span></button>
+      <button type="button" id="ch2-btn-left-light" class="ch2-dock-btn">💡 <span data-i18n="ch2LeftLight">Lampu Kiri</span></button>
+      <button type="button" id="ch2-btn-cctv" class="ch2-dock-btn cctv-btn">📹 <span data-i18n="ch2CctvBtn">Monitor CCTV</span></button>
+      <button type="button" id="ch2-btn-right-light" class="ch2-dock-btn">💡 <span data-i18n="ch2RightLight">Lampu Kanan</span></button>
+      <button type="button" id="ch2-btn-right-door" class="ch2-dock-btn">🚪 <span data-i18n="ch2RightDoor">Pintu Kanan</span></button>
+    </div>
+
+    <!-- OVERLAY MONITOR CCTV BAB 2 -->
+    <div id="ch2-cctv-modal" class="ch2-cctv-modal hidden">
+      <div class="ch2-cctv-frame">
+        <div class="ch2-cctv-top">
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span class="dot" style="width:9px;height:9px;border-radius:50%;background:#ef4444;display:inline-block;"></span>
+            <strong id="ch2-cam-title" style="font-family:monospace;color:#38bdf8;">CAM 01 • DEWAN UTAMA</strong>
+          </div>
+          <button type="button" id="ch2-btn-close-cctv" class="btn-back" data-i18n="ch2CloseCctv">TUTUP CCTV [E]</button>
+        </div>
+        <div class="ch2-cctv-screen-wrap">
+          <canvas id="ch2-cctv-canvas" width="640" height="360"></canvas>
+        </div>
+        <div class="ch2-cam-grid" id="ch2-cam-grid">
+          <button type="button" class="ch2-cam-btn active" data-cam="0">CAM 01</button>
+          <button type="button" class="ch2-cam-btn" data-cam="1">CAM 02</button>
+          <button type="button" class="ch2-cam-btn" data-cam="2">CAM 03</button>
+          <button type="button" class="ch2-cam-btn" data-cam="3">CAM 04 (KIRI)</button>
+          <button type="button" class="ch2-cam-btn" data-cam="4">CAM 05 (KANAN)</button>
+        </div>
+        <div class="ch2-cctv-actions">
+          <button type="button" id="ch2-btn-audio-lure" class="btn-blue" style="padding:10px 14px;font-size:0.84rem;" data-i18n="ch2AudioLureBtn">🔊 MAIN UMPAN BUNYI DI KAMERA INI</button>
         </div>
       </div>
     </div>
-  </div>
 
-  <!-- JUMPSCARE / ENDING OVERLAY -->
-  <div id="endOverlay" class="jumpscare-overlay">
-    <img id="endImg" class="jumpscare-img" src="zahid.png" alt="Entity" />
-    <h1 id="endTitle" style="color: var(--red); margin: 18px 0 8px; font-size: 2rem;">ANDA DITANGKAP!</h1>
-    <p id="endDesc" style="color: #e5e7eb; max-width: 480px; margin: 0 0 20px; line-height: 1.5;"></p>
-    <div style="display: flex; gap: 10px;">
-      <button id="btnRetry" class="btn btn-danger" onclick="retryLastChapter()">Cuba Lagi</button>
-      <button class="btn" onclick="returnToMenu()">Kembali ke Menu</button>
+    <!-- KAWALAN TELEFON BAB 1 -->
+    <div id="mobile-controls" class="mobile-controls">
+      <div id="joystick-zone" class="joystick-zone">
+        <div id="joystick-base" class="joystick-base">
+          <div id="joystick-stick" class="joystick-stick"></div>
+        </div>
+      </div>
+      <div id="look-zone" class="look-zone"></div>
+      <div class="mobile-buttons">
+        <button type="button" id="mob-interact" class="mob-btn accent" data-i18n="mobAction">AKSI</button>
+      </div>
     </div>
-  </div>
+  </section>
+
+  <!-- ================= 4. MENU JEDA ================= -->
+  <section id="pause-screen" class="screen overlay-modal">
+    <div class="modal-card">
+      <h2 data-i18n="pauseTitle">PERMAINAN DIJEDA</h2>
+      <p id="pause-sub-text" style="color:#cbd5e1;margin-bottom:16px;" data-i18n="pauseSub">Tarik nafas sekejap. Beliau masih meronda di Tingkat 14.</p>
+      <div class="modal-actions">
+        <button type="button" id="btn-resume" class="btn-primary" data-i18n="btnResume">SAMBUNG MAIN</button>
+        <button type="button" id="btn-toggle-touch" class="btn-secondary" data-i18n="btnToggleTouch">TOGOL KAWALAN TELEFON</button>
+        <button type="button" id="btn-quit" class="btn-danger" data-i18n="btnQuit">KELUAR KE MENU UTAMA</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= 5. SKRIN JUMPSCARE ================= -->
+  <section id="jumpscare-screen" class="screen">
+    <div class="jumpscare-flash"></div>
+    <div id="jumpscare-face-wrap" class="jumpscare-face-wrap">
+      <img id="jumpscare-img" alt="Entiti" />
+      <div id="jumpscare-caption" class="jumpscare-caption">SAKAUUUU!!</div>
+    </div>
+  </section>
+
+  <!-- ================= 6. SKRIN KALAH ================= -->
+  <section id="death-screen" class="screen overlay-modal">
+    <div class="modal-card death-card">
+      <div class="status-pill danger" data-i18n="deathPill">MISI GAGAL</div>
+      <h1 id="death-title-text" data-i18n="deathTitle">ANDA TELAH DISAKAU!</h1>
+      <p id="death-sub-text" class="death-sub" data-i18n="deathSub">Beliau berjaya menangkap anda sebelum fail audit sempat dibawa keluar dari Tingkat 14.</p>
+
+      <div class="stats-grid">
+        <div class="stat-item">
+          <span id="stat-d1-label" data-i18n="statRoomLabel">Lokasi Ditangkap</span>
+          <strong id="stat-death-room">-</strong>
+        </div>
+        <div class="stat-item">
+          <span id="stat-d2-label" data-i18n="statTimeLabel">Masa Bertahan</span>
+          <strong id="stat-death-time">00:00</strong>
+        </div>
+        <div class="stat-item">
+          <span id="stat-d3-label" data-i18n="statFilesLabel">Fail Audit Diperoleh</span>
+          <strong id="stat-death-files">0 / 4</strong>
+        </div>
+        <div class="stat-item">
+          <span id="stat-d4-label" data-i18n="statSwitchesLabel">Suis Kuasa Dihidupkan</span>
+          <strong id="stat-death-switches">0 / 2</strong>
+        </div>
+      </div>
+
+      <div class="modal-actions">
+        <button type="button" id="btn-retry" class="btn-primary" data-i18n="btnRetry">CUBA LAGI</button>
+        <button type="button" id="btn-death-lobby" class="btn-secondary" data-i18n="btnMainMenu">MENU UTAMA</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= 7. SKRIN MENANG ================= -->
+  <section id="win-screen" class="screen overlay-modal">
+    <div class="modal-card win-card">
+      <div class="status-pill success" data-i18n="winPill">MISI BERJAYA</div>
+      <h1 id="win-title-text" data-i18n="winTitle">BERJAYA MELARIKAN DIRI!</h1>
+      <p id="win-sub-text" class="death-sub" data-i18n="winSub">Pintu lif tertutup rapat tepat pada masanya. Semua 4 Fail Audit Sulit kini selamat di tangan anda.</p>
+
+      <div class="stats-grid">
+        <div class="stat-item">
+          <span data-i18n="statDiffLabel">Tahap Kesukaran</span>
+          <strong id="stat-win-diff">Normal Mode</strong>
+        </div>
+        <div class="stat-item">
+          <span id="stat-w2-label" data-i18n="statWinTimeLabel">Masa Selesai</span>
+          <strong id="stat-win-time">00:00</strong>
+        </div>
+      </div>
+
+      <div class="modal-actions">
+        <button type="button" id="btn-win-again" class="btn-primary" data-i18n="btnPlayAgain">MAIN SEMULA</button>
+        <button type="button" id="btn-win-lobby" class="btn-secondary" data-i18n="btnMainMenu">MENU UTAMA</button>
+      </div>
+    </div>
+  </section>
 
   <script>
-    // ================= AUDIO & FALLBACK HELPERS =================
-    const sakauAudio = new Audio('sakau.mp3');
-    sakauAudio.loop = true;
-
-    const zahidAudio = new Audio('zahid.mp3');
-    zahidAudio.loop = true;
-
-    let audioCtx = null;
-    function playTone(freq, type, duration, vol = 0.12) {
-      try {
-        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        if (audioCtx.state === 'suspended') audioCtx.resume();
-        const osc = audioCtx.createOscillator();
-        const gain = audioCtx.createGain();
-        osc.type = type;
-        osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
-        gain.gain.setValueAtTime(vol, audioCtx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
-        osc.connect(gain);
-        gain.connect(audioCtx.destination);
-        osc.start();
-        osc.stop(audioCtx.currentTime + duration);
-      } catch (e) {}
-    }
-
-    function handleImgFallback(imgEl, label) {
-      const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200' viewBox='0 0 200 200'>
-        <rect width='200' height='200' fill='#14080c'/>
-        <circle cx='100' cy='78' r='36' fill='#3f121e'/>
-        <circle cx='87' cy='72' r='5' fill='#ff2a5f'/>
-        <circle cx='113' cy='72' r='5' fill='#ff2a5f'/>
-        <path d='M55 175 C55 130, 145 130, 145 175' fill='#2b0c14'/>
-        <text x='100' y='192' font-family='monospace' font-size='14' fill='#ff6b8b' text-anchor='middle'>${label}.PNG</text>
-      </svg>`;
-      imgEl.src = 'data:image/svg+xml;utf8,' + encodeURIComponent(svg);
-    }
-
-    // ================= SCREEN NAVIGATION =================
-    let lastPlayedChapter = 1;
-    let lastCh1Mode = 'normal';
-
-    function showScreen(id) {
-      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-      document.getElementById(id).classList.add('active');
-    }
-
-    function toggleUpdateLog(show) {
-      document.getElementById('updateLogModal').classList.toggle('active', show);
-    }
-
-    function stopAllAudioAndTimers() {
-      clearInterval(ch1TimerInt);
-      clearInterval(ch1SpawnInt);
-      clearInterval(ch2MainInt);
-      sakauAudio.pause();
-      sakauAudio.currentTime = 0;
-      zahidAudio.pause();
-      zahidAudio.currentTime = 0;
-      document.getElementById('endOverlay').classList.remove('active');
-      document.getElementById('ch2Card').classList.remove('shake');
-    }
-
-    function returnToMenu() {
-      stopAllAudioAndTimers();
-      showScreen('menuScreen');
-    }
-
-    function retryLastChapter() {
-      if (lastPlayedChapter === 1) {
-        startChapter1(lastCh1Mode);
-      } else {
-        startChapter2();
-      }
-    }
-
-    // ================= CHAPTER 1: MALAM SAMA ANWAR =================
-    let ch1TimerInt = null;
-    let ch1SpawnInt = null;
-    let ch1TimeLeft = 60;
-    let ch1Score = 0;
-    let ch1Danger = 0;
-
-    function startChapter1(mode) {
-      stopAllAudioAndTimers();
-      lastPlayedChapter = 1;
-      lastCh1Mode = mode;
-      showScreen('ch1Screen');
-
-      const config = {
-        normal: { label: 'Mod Biasa', spawnMs: 1150, dangerStep: 7 },
-        laju: { label: 'Mod Laju', spawnMs: 850, dangerStep: 10 },
-        gila: { label: 'Mod Mimpi Ngeri', spawnMs: 620, dangerStep: 13 }
-      }[mode];
-
-      document.getElementById('ch1ModeLabel').textContent = 'Mod: ' + config.label;
-      ch1TimeLeft = 60;
-      ch1Score = 0;
-      ch1Danger = 0;
-      updateCh1HUD();
-
-      sakauAudio.play().catch(() => {});
-
-      const arena = document.getElementById('ch1Arena');
-      const target = document.getElementById('anwarTarget');
-      target.style.display = 'block';
-
-      function moveTarget() {
-        const maxX = Math.max(20, arena.clientWidth - 130);
-        const maxY = Math.max(20, arena.clientHeight - 130);
-        target.style.left = Math.floor(Math.random() * maxX) + 'px';
-        target.style.top = Math.floor(Math.random() * maxY) + 'px';
-      }
-      moveTarget();
-
-      ch1SpawnInt = setInterval(() => {
-        moveTarget();
-        ch1Danger = Math.min(100, ch1Danger + config.dangerStep);
-        updateCh1HUD();
-        if (ch1Danger >= 100) {
-          triggerEnding(false, 'anwar.png', 'ANWAR MENANGKAP ANDA!', 'Meter bahaya mencecah 100% dalam Chapter 1.');
-        }
-      }, config.spawnMs);
-
-      ch1TimerInt = setInterval(() => {
-        ch1TimeLeft--;
-        updateCh1HUD();
-        if (ch1TimeLeft <= 0) {
-          triggerEnding(true, 'anwar.png', 'SELAMAT DARI MALAM PERTAMA!', `Anda berjaya bertahan 60 saat dengan skor ${ch1Score}. Bersedia untuk Chapter 2!`);
-        }
-      }, 1000);
-    }
-
-    function hitAnwar() {
-      playTone(520, 'triangle', 0.08, 0.15);
-      ch1Score++;
-      ch1Danger = Math.max(0, ch1Danger - 12);
-      updateCh1HUD();
-      const arena = document.getElementById('ch1Arena');
-      const target = document.getElementById('anwarTarget');
-      target.style.left = Math.floor(Math.random() * Math.max(20, arena.clientWidth - 130)) + 'px';
-      target.style.top = Math.floor(Math.random() * Math.max(20, arena.clientHeight - 130)) + 'px';
-    }
-
-    function updateCh1HUD() {
-      document.getElementById('ch1Timer').textContent = ch1TimeLeft + 's';
-      document.getElementById('ch1Score').textContent = ch1Score;
-      document.getElementById('ch1Danger').textContent = ch1Danger + '%';
-    }
-
-    // ================= CHAPTER 2: MALAM SAMA ZAHID =================
-    let ch2MainInt = null;
-    let ch2State = {};
-
-    const STORY_BEATS = [
-      "12:00 AM — Pintu lif Tingkat 14 terkunci. Semak fail di meja, tapi awasi bayang di luar...",
-      "1:00 AM — Sesuatu sedang berjalan di koridor utama. Jangan biarkan tingkap terbuka kalau dia mendekat.",
-      "2:00 AM — Suhu bilik menjunam. Panggilan telefon misteri mula mengganggu talian dalaman.",
-      "3:00 AM — AMARAN 3 PAGI: Peraturan semakan fail telah bertukar! Baca nota kuning dengan teliti!",
-      "4:00 AM — Zahid semakin agresif. Dia cuba memulas tombol pintu dan mengintai di balik bidai.",
-      "5:00 AM — Satu jam terakhir sebelum subuh! Kekalkan kuasa elektrik dan jangan panik!"
-    ];
-
-    const DOC_SUBJECTS = [
-      "Rekod Syif Malam",
-      "Laporan Lif Tingkat 14",
-      "Fail Akses Bilik Kebal",
-      "Log Keselamatan Koridor",
-      "Memo Pengawal Terdahulu",
-      "Senarai Kunci Arkib"
-    ];
-
-    function startChapter2Intro() {
-      stopAllAudioAndTimers();
-      showScreen('ch2IntroScreen');
-    }
-
-    function startChapter2() {
-      stopAllAudioAndTimers();
-      lastPlayedChapter = 2;
-      showScreen('ch2Screen');
-
-      // Reset all Chapter 2 variables
-      ch2State = {
-        elapsedSec: 0,
-        hourDuration: 35, // 6 hours * 35s = 210s (~3.5 min gameplay)
-        currentHour: 0,
-        docsDone: 0,
-        docsTarget: 12,
-        power: 100,
-        panic: 0,
-        blindsClosed: false,
-        doorLocked: false,
-        activeCam: 1,
-        zahidLoc: 'CAM1', // CAM1, CAM2, CAM3, WINDOW, SILENCE_CHECK, DOOR
-        threatTimer: 0,
-        silenceCountdown: 0,
-        phoneRinging: false,
-        systemGlitched: false,
-        genCooldown: 0,
-        currentDoc: null
-      };
-
-      zahidAudio.volume = 0.45;
-      zahidAudio.play().catch(() => {});
-
-      generateNewDocument();
-      updateCh2UI();
-
-      ch2MainInt = setInterval(tickChapter2, 1000);
-    }
-
-    function generateNewDocument() {
-      const codeNum = Math.floor(100 + Math.random() * 899);
-      const isValidStamp = Math.random() > 0.45;
-      const subject = DOC_SUBJECTS[Math.floor(Math.random() * DOC_SUBJECTS.length)];
-      ch2State.currentDoc = {
-        code: codeNum,
-        stamp: isValidStamp ? 'SAH' : 'TIDAK SAH',
-        subject: subject
-      };
-
-      document.getElementById('docCode').textContent = `KOD FAIL: #${codeNum}`;
-      document.getElementById('docStamp').innerHTML = `STATUS COP: <strong>${ch2State.currentDoc.stamp}</strong>`;
-      document.getElementById('docSubject').textContent = `Perkara: ${subject}`;
-    }
-
-    function checkSilenceViolation() {
-      if (ch2State.zahidLoc === 'SILENCE_CHECK') {
-        triggerEnding(
-          false,
-          'zahid.png',
-          'ZAHID MENDENGAR BUNYI ANDA!',
-          'Anda membuat bising semasa Zahid sedang mengintai di balik bidai tingkap.'
-        );
-        return true;
-      }
-      return false;
-    }
-
-    function processDocument(approvedByPlayer) {
-      if (checkSilenceViolation()) return;
-
-      const doc = ch2State.currentDoc;
-      const isEven = doc.code % 2 === 0;
-      const hasValidStamp = doc.stamp === 'SAH';
-
-      // Rule changes at 3:00 AM (currentHour >= 3)
-      let shouldApprove = false;
-      if (ch2State.currentHour < 3) {
-        shouldApprove = isEven && hasValidStamp;
-      } else {
-        shouldApprove = !isEven && hasValidStamp;
-      }
-
-      if (approvedByPlayer === shouldApprove) {
-        playTone(640, 'sine', 0.1, 0.12);
-        ch2State.docsDone = Math.min(ch2State.docsTarget, ch2State.docsDone + 1);
-        ch2State.panic = Math.max(0, ch2State.panic - 6);
-        // Completing documents advances time slightly as reward
-        ch2State.elapsedSec += 3;
-      } else {
-        playTone(140, 'sawtooth', 0.3, 0.2);
-        ch2State.panic = Math.min(100, ch2State.panic + 16);
-        document.getElementById('ch2StoryText').textContent = "❌ SALAH COP FAIL! Bunyi penggera menarik Zahid menghampiri bilik!";
-        if (ch2State.zahidLoc.startsWith('CAM')) {
-          ch2State.zahidLoc = 'DOOR';
-          ch2State.threatTimer = 6;
-        }
-      }
-
-      generateNewDocument();
-      updateCh2UI();
-    }
-
-    function toggleBlinds() {
-      if (ch2State.zahidLoc === 'SILENCE_CHECK') {
-        checkSilenceViolation();
-        return;
-      }
-      ch2State.blindsClosed = !ch2State.blindsClosed;
-      playTone(280, 'triangle', 0.12, 0.1);
-
-      // If Zahid was at WINDOW and player just closed blinds, enter SILENCE_CHECK
-      if (ch2State.blindsClosed && ch2State.zahidLoc === 'WINDOW') {
-        ch2State.zahidLoc = 'SILENCE_CHECK';
-        ch2State.silenceCountdown = 3;
-      }
-      updateCh2UI();
-    }
-
-    function toggleDoorLock() {
-      if (checkSilenceViolation()) return;
-      if (!ch2State.doorLocked && ch2State.power <= 5) {
-        document.getElementById('ch2StoryText').textContent = "⚠️ Kuasa elektrik terlalu rendah untuk mengunci pintu!";
-        return;
-      }
-      ch2State.doorLocked = !ch2State.doorLocked;
-      playTone(ch2State.doorLocked ? 210 : 170, 'square', 0.12, 0.12);
-      updateCh2UI();
-    }
-
-    function switchCam(camNum) {
-      if (checkSilenceViolation()) return;
-      ch2State.activeCam = camNum;
-      playTone(440, 'sine', 0.05, 0.08);
-      updateCh2UI();
-    }
-
-    function calmDown() {
-      if (checkSilenceViolation()) return;
-      playTone(320, 'sine', 0.18, 0.08);
-      ch2State.panic = Math.max(0, ch2State.panic - 15);
-      updateCh2UI();
-    }
-
-    function generatePower() {
-      if (checkSilenceViolation()) return;
-      if (ch2State.genCooldown > 0) return;
-      playTone(390, 'triangle', 0.2, 0.12);
-      ch2State.power = Math.min(100, ch2State.power + 18);
-      ch2State.genCooldown = 4;
-      updateCh2UI();
-    }
-
-    function answerPhone() {
-      if (checkSilenceViolation()) return;
-      if (!ch2State.phoneRinging) return;
-      playTone(500, 'sine', 0.1, 0.1);
-      ch2State.phoneRinging = false;
-      updateCh2UI();
-    }
-
-    function fixSystemGlitch() {
-      if (checkSilenceViolation()) return;
-      if (!ch2State.systemGlitched) return;
-      playTone(580, 'sine', 0.12, 0.12);
-      ch2State.systemGlitched = false;
-      document.getElementById('ch2Card').classList.remove('shake');
-      updateCh2UI();
-    }
-
-    function tickChapter2() {
-      ch2State.elapsedSec++;
-      if (ch2State.genCooldown > 0) ch2State.genCooldown--;
-
-      // Update hour (0 to 5 -> 12 AM to 5 AM; 6 AM = Win)
-      const newHour = Math.floor(ch2State.elapsedSec / ch2State.hourDuration);
-      if (newHour >= 6) {
-        triggerEnding(
-          true,
-          'zahid.png',
-          '6:00 AM — ANDA SELAMAT!',
-          `Pintu lif terbuka semula dan cahaya matahari menyinari Tingkat 14. Fail diselesaikan: ${ch2State.docsDone}/${ch2State.docsTarget}.`
-        );
+    (function () {
+      if (typeof THREE === 'undefined') {
+        document.getElementById('asset-status').style.color = '#f87171';
+        document.getElementById('asset-status').textContent = 'Error / Ralat: Internet connection required for 3D engine.';
         return;
       }
 
-      if (newHour !== ch2State.currentHour) {
-        ch2State.currentHour = newHour;
-        document.getElementById('ch2StoryText').textContent = STORY_BEATS[newHour];
-        playTone(190, 'sawtooth', 0.35, 0.15);
-        if (newHour === 3) {
-          document.getElementById('docRuleNote').textContent =
-            'NOTA 3:00 AM (BARU!): LULUSKAN fail jika Nombor Kod GANJIL dan Cop bertulis "SAH". Selain itu, TOLAK.';
-        }
-      }
-
-      // Power drain
-      let drain = 0.55;
-      if (ch2State.doorLocked) drain += 3.2;
-      if (ch2State.systemGlitched) drain += 1.5;
-      ch2State.power = Math.max(0, +(ch2State.power - drain).toFixed(1));
-
-      if (ch2State.power <= 0) {
-        ch2State.doorLocked = false;
-        ch2State.panic = Math.min(100, ch2State.panic + 5);
-        document.getElementById('ch2StoryText').textContent = "🌑 BLACKOUT! Kuasa elektrik habis! Tekan 'Jana Kuasa' segera!";
-      }
-
-      // Random Phone & Glitch events
-      if (!ch2State.phoneRinging && Math.random() < 0.055 + ch2State.currentHour * 0.01) {
-        ch2State.phoneRinging = true;
-        playTone(760, 'square', 0.25, 0.12);
-      }
-      if (ch2State.phoneRinging) {
-        ch2State.panic = Math.min(100, ch2State.panic + 3.5);
-        playTone(760, 'square', 0.14, 0.08);
-      }
-
-      if (!ch2State.systemGlitched && Math.random() < 0.045 + ch2State.currentHour * 0.01) {
-        ch2State.systemGlitched = true;
-        document.getElementById('ch2Card').classList.add('shake');
-      }
-      if (ch2State.systemGlitched) {
-        ch2State.panic = Math.min(100, ch2State.panic + 2.5);
-      }
-
-      // Zahid AI Movement & Threats
-      if (ch2State.zahidLoc === 'WINDOW') {
-        ch2State.panic = Math.min(100, ch2State.panic + 4);
-        ch2State.threatTimer--;
-        if (ch2State.blindsClosed) {
-          ch2State.zahidLoc = 'SILENCE_CHECK';
-          ch2State.silenceCountdown = 3;
-        } else if (ch2State.threatTimer <= 0) {
-          triggerEnding(false, 'zahid.png', 'ZAHID MEREMPUH CERMIN TINGKAP!', 'Anda terlambat menutup bidai semasa dia memerhati dari luar.');
-          return;
-        }
-      } else if (ch2State.zahidLoc === 'SILENCE_CHECK') {
-        ch2State.silenceCountdown--;
-        if (ch2State.silenceCountdown <= 0) {
-          ch2State.zahidLoc = 'CAM1';
-          document.getElementById('ch2StoryText').textContent = "Bayang di luar bidai akhirnya berlalu pergi...";
-        }
-      } else if (ch2State.zahidLoc === 'DOOR') {
-        playTone(95, 'sawtooth', 0.2, 0.2);
-        if (ch2State.doorLocked) {
-          ch2State.threatTimer--;
-          if (ch2State.threatTimer <= 0) {
-            ch2State.zahidLoc = 'CAM2';
-            document.getElementById('ch2StoryText').textContent = "Bunyi tombol pintu berhenti. Zahid berundur ke arah lif.";
-          }
-        } else {
-          ch2State.threatTimer--;
-          ch2State.panic = Math.min(100, ch2State.panic + 4);
-          if (ch2State.threatTimer <= 0) {
-            triggerEnding(false, 'zahid.png', 'PINTU TERBUKA LUAS!', 'Anda gagal mengunci pintu semasa Zahid berada di luar.');
-            return;
-          }
-        }
-      } else {
-        // Roaming between CAM1, CAM2, CAM3 before attacking
-        if (Math.random() < 0.26 + ch2State.currentHour * 0.04) {
-          const nextRoll = Math.random();
-          if (nextRoll < 0.42) {
-            ch2State.zahidLoc = 'WINDOW';
-            ch2State.threatTimer = Math.max(4, 6 - Math.floor(ch2State.currentHour / 2));
-            playTone(130, 'sawtooth', 0.3, 0.18);
-          } else if (nextRoll < 0.78) {
-            ch2State.zahidLoc = 'DOOR';
-            ch2State.threatTimer = Math.max(4, 6 - Math.floor(ch2State.currentHour / 2));
-            playTone(100, 'square', 0.3, 0.18);
-          } else {
-            const cams = ['CAM1', 'CAM2', 'CAM3'];
-            ch2State.zahidLoc = cams[Math.floor(Math.random() * cams.length)];
-          }
-        }
-      }
-
-      // Panic check
-      if (ch2State.panic >= 100) {
-        triggerEnding(false, 'zahid.png', 'ANDA HILANG KAWALAN (PANIK 100%)!', 'Tekanan melampau membuatkan anda rebah di kerusi kawalan.');
-        return;
-      }
-
-      updateCh2UI();
-    }
-
-    function updateCh2UI() {
-      const hourLabels = ['12:00 AM', '1:00 AM', '2:00 AM', '3:00 AM', '4:00 AM', '5:00 AM'];
-      document.getElementById('ch2Clock').textContent = hourLabels[ch2State.currentHour] || '5:00 AM';
-      document.getElementById('ch2Docs').textContent = `${ch2State.docsDone} / ${ch2State.docsTarget}`;
-
-      const powerEl = document.getElementById('ch2Power');
-      powerEl.textContent = Math.ceil(ch2State.power) + '%';
-      powerEl.style.color = ch2State.power > 35 ? 'var(--green)' : 'var(--red)';
-
-      const panicEl = document.getElementById('ch2Panic');
-      panicEl.textContent = Math.floor(ch2State.panic) + '%';
-      panicEl.style.color = ch2State.panic < 65 ? 'var(--amber)' : 'var(--red)';
-
-      // Blinds & Window Ghost
-      const blindsEl = document.getElementById('blindsCover');
-      const winGhost = document.getElementById('windowGhostImg');
-      const btnBlinds = document.getElementById('btnBlinds');
-      blindsEl.classList.toggle('closed', ch2State.blindsClosed);
-      winGhost.classList.toggle('visible', ch2State.zahidLoc === 'WINDOW');
-      btnBlinds.textContent = ch2State.blindsClosed ? '🪟 Buka Bidai' : '🪟 Tutup Bidai';
-
-      // Door Lock
-      const doorBadge = document.getElementById('doorStatusBadge');
-      const btnDoor = document.getElementById('btnDoor');
-      doorBadge.textContent = ch2State.doorLocked ? 'PINTU: BERKUNCI' : 'PINTU: TERBUKA';
-      doorBadge.style.color = ch2State.doorLocked ? 'var(--amber)' : 'var(--green)';
-      btnDoor.textContent = ch2State.doorLocked ? '🔓 Buka Kunci' : '🔒 Kunci Pintu';
-
-      // CCTV Feed
-      const camNames = {
-        1: ['CAM 01: KORIDOR', '[CAM 01] Koridor panjang Tingkat 14...'],
-        2: ['CAM 02: LIF UTAMA', '[CAM 02] Pintu lif besi berkunci rapat...'],
-        3: ['CAM 03: LUAR BILIK', '[CAM 03] Kawasan hadapan pintu Bilik Kawalan...']
-      };
-      document.getElementById('camLabel').textContent = camNames[ch2State.activeCam][0];
-      [1, 2, 3].forEach(n => {
-        document.getElementById('camBtn' + n).classList.toggle('active-cam', ch2State.activeCam === n);
-      });
-
-      const cctvGhost = document.getElementById('cctvGhostImg');
-      const isZahidOnThisCam = ch2State.zahidLoc === 'CAM' + ch2State.activeCam;
-      cctvGhost.style.display = isZahidOnThisCam ? 'block' : 'none';
-      document.getElementById('cctvFeedText').textContent = isZahidOnThisCam
-        ? `[AMARAN] KELIBAT ZAHID DIKESAN DI CAM 0${ch2State.activeCam}!`
-        : camNames[ch2State.activeCam][1];
-
-      // Alerts & Action Buttons
-      document.getElementById('alertWindow').classList.toggle('show', ch2State.zahidLoc === 'WINDOW');
-      document.getElementById('alertSilence').classList.toggle('show', ch2State.zahidLoc === 'SILENCE_CHECK');
-      document.getElementById('silenceTimer').textContent = ch2State.silenceCountdown;
-      document.getElementById('alertDoor').classList.toggle('show', ch2State.zahidLoc === 'DOOR' && !ch2State.doorLocked);
-      document.getElementById('alertPhone').classList.toggle('show', ch2State.phoneRinging);
-      document.getElementById('alertGlitch').classList.toggle('show', ch2State.systemGlitched);
-
-      document.getElementById('btnPhone').disabled = !ch2State.phoneRinging;
-      document.getElementById('btnPhone').classList.toggle('btn-amber', ch2State.phoneRinging);
-
-      document.getElementById('btnStabilize').disabled = !ch2State.systemGlitched;
-      document.getElementById('btnStabilize').classList.toggle('btn-danger', ch2State.systemGlitched);
-
-      const btnGen = document.getElementById('btnGenPower');
-      btnGen.disabled = ch2State.genCooldown > 0;
-      btnGen.textContent = ch2State.genCooldown > 0 ? `🔋 Tunggu (${ch2State.genCooldown}s)` : '🔋 Jana Kuasa (+18%)';
-    }
-
-    // ================= ENDING / JUMPSCARE HANDLER =================
-    function triggerEnding(isWin, imgFile, title, desc) {
-      stopAllAudioAndTimers();
-      const overlay = document.getElementById('endOverlay');
-      const img = document.getElementById('endImg');
-      const titleEl = document.getElementById('endTitle');
-      const descEl = document.getElementById('endDesc');
-
-      img.src = imgFile;
-      img.onerror = () => handleImgFallback(img, imgFile.replace('.png', '').toUpperCase());
-      titleEl.textContent = title;
-      titleEl.style.color = isWin ? 'var(--green)' : 'var(--red)';
-      img.style.borderColor = isWin ? 'var(--green)' : 'var(--red)';
-      img.style.boxShadow = isWin ? '0 0 40px rgba(16,185,129,0.5)' : '0 0 60px var(--red)';
-      if (isWin) img.style.animation = 'none';
-      else img.style.animation = 'shake 0.12s infinite';
-
-      descEl.textContent = desc;
-      overlay.classList.add('active');
-
-      if (!isWin) {
-        playTone(75, 'sawtooth', 0.8, 0.35);
-        if (lastPlayedChapter === 2) {
-          zahidAudio.volume = 1.0;
-          zahidAudio.play().catch(() => {});
-        } else {
-          sakauAudio.volume = 1.0;
-          sakauAudio.play().catch(() => {});
-        }
-      } else {
-        playTone(523, 'sine', 0.25, 0.15);
-        setTimeout(() => playTone(659, 'sine', 0.35, 0.15), 180);
-      }
-    }
-  </script>
-</body>
-</html>
+      /* ================= KAMUS DWI-BAHASA (BM & BI) ================= */
+      const I18N = {
+        bm: {
+          heroBadge: 'EDISI SERAM 3D • MENARA PERDANA',
+          heroSubtitle: 'Terperangkap di dalam menara selepas waktu pejabat. Selesaikan setiap bab dan selamatkan diri sebelum ditangkap.',
+          menuPlay: 'MAIN',
+          menuPlayTag: 'PILIH BAB »',
+          menuShop: 'KEDAI',
+          comingSoon: 'COMING SOON',
+          topUpdateChip: 'V 0.1.0 • LOG KEMAS KINI',
+          menuUpdates: 'LOG KEMAS KINI',
+          menuUpdatesTag: 'V 0.1.0 BARU',
+          updateLogTitle: 'LOG KEMAS KINI (UPDATE LOG)',
+          updateLatestBadge: 'TERKINI',
+          updateLogs: [
+            {
+              version: 'V 0.1.0',
+              date: 'Kemas Kini Baharu (Bab 2)',
+              latest: true,
+              title: 'Pelancaran Bab 2: Malam Sama Zahid (3D Bilik Kawalan)',
+              items: [
+                'Tambah Bab 2: Malam Sama Zahid dalam dunia 3D Bilik Kawalan Keselamatan (12:00 AM hingga 6:00 AM).',
+                'Duduk di kerusi kawalan 3D dan pusing pandangan kiri-kanan untuk memantau tingkap hadapan, pintu keselamatan kiri/kanan, monitor CCTV 3D, dan meja fail tanpa perlu berlari.',
+                'Tambah sistem kamera CCTV 5 saluran dengan fungsi Umpan Bunyi (Audio Lure) serta pengurusan kuasa bateri dan lampu pintu.',
+                'Tambah sokongan aset automatik Bab 2 (zahid.png & zahid.mp3) di samping mengekalkan Bab 1: Malam Sama Anwar 100% utuh.'
+              ]
+            },
+            {
+              version: 'v1.3',
+              date: 'Kemas Kini Terdahulu',
+              latest: false,
+              title: 'Log Kemas Kini, Fix Skrin Telefon & Naik Taraf Model 3D',
+              items: [
+                'Tambah paparan Log Kemas Kini (Update Log) terus di menu utama dengan sokongan penuh BM & BI.',
+                'Betulkan saiz gambar & teks jumpscare (SAKAUUUU!!) supaya muat kemas di skrin telefon (mod potret & landskap).',
+                'Naik taraf tekstur PBR beresolusi tinggi (marmar berurat, papan kayu, permaidani, dinding panel kayu & siling akustik) serta perabot 3D lebih terperinci.'
+              ]
+            },
+            {
+              version: 'v1.2',
+              date: 'Kemas Kini Gameplay',
+              latest: false,
+              title: 'Bot Anti-Sangkut, 4 Kunci & Lokasi Rawak',
+              items: [
+                'Baiki laluan navigasi bot supaya tidak lagi tersangkut pada meja pejabat dan melangkau pintu berkunci secara dinamik.',
+                'Tambah Kunci Hijau bersama 2 pintu pintas (shortcut) di sayap kiri dan sayap kanan.',
+                'Lokasi keempat-empat kunci kini bertukar secara rawak setiap kali permainan dimulakan semula.'
+              ]
+            },
+            {
+              version: 'v1.1',
+              date: 'Kemas Kini Antaramuka',
+              latest: false,
+              title: 'Menu Utama Baharu, Dwi-Bahasa & Mangga Kunci',
+              items: [
+                'Susunan Menu Utama baharu (Main / Pilih Bab, Kedai, Tetapan) dengan penukar bahasa BM / BI.',
+                'Tambah pintu berengsel yang boleh dibuka/ditutup serta sistem mangga kunci berwarna.'
+              ]
+            },
+            {
+              version: 'v1.0',
+              date: 'Pelancaran Awal',
+              latest: false,
+              title: 'Bab 1: Malam Sama Anwar',
+              items: [
+                'Pelancaran asal Tingkat 14 Menara Perdana dengan misi 4 Fail Audit Sulit, 2 suis janakuasa dan loker persembunyian.'
+              ]
+            }
+          ],
+          menuSettings: 'TETAPAN',
+          menuSettingsHint: 'BM / BI • Kamera',
+          btnBack: 'KEMBALI',
+          chapterSelectTitle: 'PILIH BAB PERMAINAN',
+          ch1Label: 'BAB 1 • TINGKAT 14',
+          ch1Playable: 'BOLEH MAIN',
+          ch1Desc: 'Cari kunci berwarna untuk membuka pintu berkunci, kumpul 4 Fail Audit Sulit, hidupkan 2 suis janakuasa kecemasan, dan melarikan diri melalui Lif Utama.',
+          selectDiffLabel: 'Pilih Tahap Kesukaran',
+          diffEasyDesc: 'Santai & mudah melepaskan diri',
+          diffNormalDesc: 'Seimbang & adil untuk lari',
+          diffHardDesc: 'Pantas — tutup pintu & sorok!',
+          btnStartCh1: 'MULA BAB 1',
+          btnSkipStartCh1: 'TERUS MAIN (LANGKAU INTRO)',
+          quickControlsHtml: '<strong>Kawalan PC:</strong> <kbd>WASD</kbd> Gerak • <kbd>Tetikus</kbd> Pandang • <kbd>E</kbd> Buka Pintu / Kunci / Ambil / Loker',
+          ch2Label: 'BAB 2 • BILIK KAWALAN B1',
+          ch2Badge: 'BAHARU • 3D',
+          ch2Desc: 'Duduk di kerusi Bilik Kawalan Keselamatan (12:00 AM – 6:00 AM). Pusing pandangan kiri-kanan untuk periksa tingkap & pintu, pantau monitor CCTV, dan jimatkan kuasa bateri tanpa perlu berlari.',
+          ch2DiffEasy: 'Zahid perlahan & bateri jimat',
+          ch2DiffNormal: 'Syif seimbang & mencabar',
+          ch2DiffHard: 'Agresif — pantau CCTV & pintu!',
+          btnStartCh2: 'MULA BAB 2',
+          btnSkipStartCh2: 'TERUS MAIN (LANGKAU INTRO)',
+          ch2ControlsHtml: '<strong>Kawalan 3D:</strong> Pusing kiri/kanan (<kbd>A</kbd>/<kbd>D</kbd> atau Seret) • <kbd>E</kbd> Suis / CCTV • Klik Butang Kawalan',
+          ch2ShiftLabel: 'SYIF MALAM • BILIK KAWALAN B1',
+          ch2TargetTime: 'SASARAN: 6:00 AM',
+          ch2PowerLabel: 'Kuasa Bateri',
+          ch2DangerBanner: 'AMARAN: ADA KELIBAT DI LUAR PINTU!',
+          ch2LeftDoor: 'Pintu Kiri',
+          ch2LeftLight: 'Lampu Kiri',
+          ch2CctvBtn: 'Monitor CCTV',
+          ch2RightLight: 'Lampu Kanan',
+          ch2RightDoor: 'Pintu Kanan',
+          ch2CloseCctv: 'TUTUP CCTV [E]',
+          ch2AudioLureBtn: '🔊 MAIN UMPAN BUNYI DI KAMERA INI',
+          shopItem1Title: 'Pengesan Kunci',
+          shopItem1Desc: 'Menunjukkan arah lokasi kunci terdekat pada pelan Tingkat 14.',
+          shopItem2Title: 'Azimat Pelindung',
+          shopItem2Desc: 'Memberi satu peluang kedua untuk melepaskan diri jika ditangkap.',
+          shopItem3Title: 'Kasut Pantas',
+          shopItem3Desc: 'Meningkatkan kelajuan langkah kaki di semua koridor.',
+          settingsTitle: 'TETAPAN PERMAINAN',
+          langSettingLabel: 'Bahasa / Language (BM & BI)',
+          sensLabel: 'Sensitiviti Kamera',
+          assetTitle: 'Aset Entiti Bab 1 & Bab 2 (Muka & Suara)',
+          assetHintHtml: 'Automatik baca <code>anwar.png</code>, <code>sakau.mp3</code> (Bab 1) serta <code>zahid.png</code>, <code>zahid.mp3</code> (Bab 2) dari GitHub, atau pilih fail tersuai:',
+          uploadFaceBtn: 'Bab 1: Gambar Anwar',
+          uploadAudioBtn: 'Bab 1: Audio Anwar',
+          uploadZahidFaceBtn: 'Bab 2: Gambar Zahid',
+          uploadZahidAudioBtn: 'Bab 2: Audio Zahid',
+          assetReady: 'Status: Sedia dimainkan',
+          recTag: 'RAKAMAN CCTV • 02:17:04',
+          recTagCh2: 'BILIK KAWALAN B1 • 11:58:40 PM',
+          btnSkipIntro: 'LANGKAU INTRO »',
+          missionLabel: 'OBJEKTIF SEMASA',
+          keysLabel: 'KOLEKSI KUNCI',
+          keyRedTag: '🔑 Merah',
+          keyBlueTag: '🔑 Biru',
+          keyGreenTag: '🔑 Hijau',
+          keyGoldTag: '🔑 Emas',
+          dangerBanner: 'AMARAN: BELIAU SEMAKIN HAMPIR!',
+          minimapLabel: 'PELAN TINGKAT 14',
+          hidingBannerHtml: 'ANDA SEDANG BERSEMBUNYI DI DALAM LOKER — Tekan <strong>[E]</strong> atau <strong>AKSI</strong> untuk keluar',
+          mobAction: 'AKSI',
+          pauseTitle: 'PERMAINAN DIJEDA',
+          pauseSub: 'Tarik nafas sekejap. Beliau masih meronda di Tingkat 14.',
+          pauseSubCh2: 'Syif malam dijeda sementara. Zahid masih berlegar di luar Bilik Kawalan.',
+          btnResume: 'SAMBUNG MAIN',
+          btnToggleTouch: 'TOGOL KAWALAN TELEFON',
+          btnQuit: 'KELUAR KE MENU UTAMA',
+          deathPill: 'MISI GAGAL',
+          deathTitle: 'ANDA TELAH DISAKAU!',
+          deathSub: 'Beliau berjaya menangkap anda sebelum fail audit sempat dibawa keluar dari Tingkat 14.',
+          deathTitleCh2: 'BILIK KAWALAN DITEMBUSI!',
+          deathSubCh2: 'Zahid berjaya menyusup masuk ke Bilik Kawalan sebelum syif berakhir pada jam 6:00 AM.',
+          statRoomLabel: 'Lokasi Ditangkap',
+          statTimeLabel: 'Masa Bertahan',
+          statFilesLabel: 'Fail Audit Diperoleh',
+          statSwitchesLabel: 'Suis Kuasa Dihidupkan',
+          statCh2ShiftTime: 'Jam Bertahan',
+          statCh2PowerLeft: 'Baki Bateri',
+          statCh2DoorsBlocked: 'Serangan Dihalau',
+          statCh2LuresUsed: 'Umpan Bunyi',
+          btnRetry: 'CUBA LAGI',
+          btnMainMenu: 'MENU UTAMA',
+          winPill: 'MISI BERJAYA',
+          winTitle: 'BERJAYA MELARIKAN DIRI!',
+          winSub: 'Pintu lif tertutup rapat tepat pada masanya. Semua 4 Fail Audit Sulit kini selamat di tangan anda.',
+          winTitleCh2: 'SYIF 6:00 AM TAMAT!',
+          winSubCh2: 'Loceng syif pagi berbunyi! Anda berjaya bertahan di Bilik Kawalan dan mengawal meja fail sehingga subuh.',
+          statDiffLabel: 'Tahap Kesukaran',
+          statWinTimeLabel: 'Masa Selesai',
+          statWinPowerLabel: 'Baki Kuasa Bateri',
+          btnPlayAgain: 'MAIN SEMULA',
+          phase1: (c) => `Fasa 1: Kumpul Fail Audit Sulit (${c} / 4)`,
+          phase2: (c) => `Fasa 2: Hidupkan Suis Janakuasa (${c} / 2)`,
+          phase3: 'Fasa 3: Kembali ke Lobi Lif Utama & Melarikan Diri!',
+          locationPrefix: 'Lokasi',
+          pressInteract: (lbl) => `Tekan <strong>[E]</strong> / <strong>AKSI</strong>: ${lbl}`,
+          toastTouchOn: 'Kawalan Telefon Diaktifkan',
+          toastTouchOff: 'Kawalan Telefon Dimatikan',
+          toastFileGot: (c) => `Fail Audit Sulit diperoleh (${c}/4)!`,
+          toastNeedFiles: 'Kumpul kesemua 4 Fail Audit Sulit dahulu!',
+          toastSwitchOn: (c) => `Suis Janakuasa dihidupkan (${c}/2)!`,
+          toastElevatorLocked: 'Lif terkunci! Lengkapkan fail audit & suis janakuasa dahulu.',
+          toastKeyGot: (colorName) => `${colorName} diperoleh!`,
+          toastDoorLocked: (colorName) => `Pintu berkunci! Perlukan ${colorName}.`,
+          toastDoorUnlocked: (colorName) => `Mangga ${colorName} berjaya dibuka!`,
+          toastCh2PowerOut: 'BEKALAN KUASA HABIS! Semua sistem terpadam...',
+          toastCh2LureSent: (camName) => `Umpan bunyi dimainkan di ${camName}!`,
+          toastCh2LureWait: 'Sistem audio sedang mengecas semula...',
+          toastCh2FilesNote: 'Meja Fail Sulit selamat diawasi. Jangan biarkan Zahid masuk!',
+          keyNames: {
+            red: 'Kunci Merah',
+            blue: 'Kunci Biru',
+            green: 'Kunci Hijau',
+            gold: 'Kunci Emas'
+          },
+          lockNames: {
+            red: 'Mangga Merah',
+            blue: 'Mangga Biru',
+            green: 'Mangga Hijau',
+            gold: 'Mangga Emas'
+          },
+          itemLabels: {
+            elevator: 'Aktifkan Lif Utama',
+            locker: 'Sembunyi Dalam Loker',
+            file: (n) => `Ambil Fail Audit Sulit #${n}`,
+            switch: (n) => `Hidupkan Suis Janakuasa #${n}`,
+            key: (colorName) => `Ambil ${colorName}`,
+            doorOpen: 'Buka Pintu',
+            doorClose: 'Tutup Pintu',
+            doorUnlock: (keyName) => `Buka Kunci (${keyName})`,
+            doorLocked: (keyName) => `Berkunci — Perlukan ${keyName}`,
+            ch2LeftDoor: 'Suis Pintu Kiri',
+            ch2RightDoor: 'Suis Pintu Kanan',
+            ch2LeftLight: 'Suis Lampu Kiri',
+            ch2RightLight: 'Suis Lampu Kanan',
+            ch2Monitor: 'Buka Monitor CCTV',
+            ch2DeskFiles: 'Periksa Meja Fail Sulit'
+          },
+          rooms: {
+            'Lobi Lif Utama': 'Lobi Lif Utama',
+            'Koridor Utama': 'Koridor Utama',
+            'Bilik Fail & Arkib': 'Bilik Fail & Arkib',
+            'Pantri & Ruang Rehat': 'Pantri & Ruang Rehat',
+            'Bilik Mesyuarat Eksekutif': 'Bilik Mesyuarat Eksekutif',
+            'Bilik Server & Janakuasa': 'Bilik Server & Janakuasa',
+            'Pejabat Pengarah': 'Pejabat Pengarah',
+            'Koridor Tingkat 14': 'Koridor Tingkat 14'
+          },
+          introShots: [
+            {
+              speaker: 'AIMAN (JURUAUDIT DALAMAN)',
+              text: 'Jam sudah 2:17 pagi... Semua staf dah balik, tinggal aku seorang di Tingkat 14 Menara Perdana.'
+            },
+            {
+              speaker: 'SISTEM KESELAMATAN MENARA',
+              text: 'AMARAN: Beberapa pintu bilik telah dikunci dengan mangga keselamatan. Cari kunci berwarna untuk membukanya.'
+            },
+            {
+              speaker: 'AIMAN (JURUAUDIT DALAMAN)',
+              text: '4 Fail Audit Sulit tu ada di dalam bilik-bilik pejabat. Aku kena cari kunci, ambil semua fail, dan hidupkan janakuasa!'
+            },
+            {
+              speaker: 'SUARA DARI HUJUNG KORIDOR',
+              text: '"SAKAU... SAKAU... MANA KAU NAK LARI?!" — Jangan biarkan dia nampak kau, tutup pintu atau menyorok dalam loker!'
+            }
+          ],
+          ch2IntroShots: [
+            {
+              speaker: 'AIMAN (PENGAWAL SYIF MALAM)',
+              text: 'Malam kedua... Aku ditugaskan menjaga Bilik Kawalan Keselamatan B1 dari jam 12:00 tengah malam hingga 6:00 pagi.'
+            },
+            {
+              speaker: 'MANUAL KESELAMATAN B1',
+              text: 'Duduk di kerusi kawalan. Pusing kiri dan kanan untuk memeriksa tingkap, pintu keluli, monitor CCTV, serta meja fail sulit.'
+            },
+            {
+              speaker: 'SISTEM KUASA BATERI',
+              text: 'Menutup pintu keselamatan dan menyalakan lampu lorong menggunakan tenaga bateri. Jangan biarkan bateri jatuh ke 0%!'
+            },
+            {
+              speaker: 'AMARAN KAMERA CCTV',
+              text: 'Kelibat Zahid dikesan bergerak di koridor! Gunakan CCTV & umpan bunyi, dan tutup pintu tepat pada masanya!'
+            }
+          ]
+        },
+        en: {
+          heroBadge: '3D HORROR EDITION • PERDANA TOWER',
+          heroSubtitle: 'Trapped inside the tower after office hours. Complete each chapter and escape before getting caught.',
+          menuPlay: 'PLAY',
+          menuPlayTag: 'CHAPTERS »',
+          menuShop: 'SHOP',
+          comingSoon: 'COMING SOON',
+          topUpdateChip: 'V 0.1.0 • UPDATE LOG',
+          menuUpdates: 'UPDATE LOG',
+          menuUpdatesTag: 'V 0.1.0 NEW',
+          updateLogTitle: 'GAME UPDATE LOG',
+          updateLatestBadge: 'LATEST',
+          updateLogs: [
+            {
+              version: 'V 0.1.0',
+              date: 'New Chapter Update',
+              latest: true,
+              title: 'Chapter 2 Launch: Malam Sama Zahid (3D Control Room)',
+              items: [
+                'Added Chapter 2: Malam Sama Zahid set inside a 3D Security Control Room (12:00 AM to 6:00 AM).',
+                'Seated 3D swivel chair perspective—look left and right to inspect the front observation window, left/right blast doors, 3D CCTV monitor, and case files desk without running.',
+                'Added a 5-camera CCTV system with Audio Lure distraction mechanics, doorway blindspot lights, and battery power management.',
+                'Added automatic asset support for Chapter 2 (zahid.png & zahid.mp3) while keeping Chapter 1: Malam Sama Anwar 100% intact.'
+              ]
+            },
+            {
+              version: 'v1.3',
+              date: 'Previous Patch',
+              latest: false,
+              title: 'Update Log, Mobile Jumpscare Fit & 3D Model Upgrade',
+              items: [
+                'Added an interactive Update Log directly in the Main Menu with full BM & English support.',
+                'Fixed the jumpscare image & caption scaling so it fits cleanly on mobile screens in both portrait and landscape modes.',
+                'Upgraded 3D visuals with 512x512 procedural PBR textures (veined marble, hardwood planks, wainscoting walls, acoustic ceilings) and multi-part 3D furniture, doors, keys & props.'
+              ]
+            },
+            {
+              version: 'v1.2',
+              date: 'Gameplay Patch',
+              latest: false,
+              title: 'Anti-Stuck Bot AI, 4 Keys & Randomized Spawns',
+              items: [
+                'Fixed bot spawn and navigation waypoints so he patrols smoothly without getting stuck on office desks.',
+                'Added the Green Key and 2 shortcut doors connecting the west and east wings.',
+                'All 4 key locations now randomize automatically every round.'
+              ]
+            },
+            {
+              version: 'v1.1',
+              date: 'UI & Mechanics Patch',
+              latest: false,
+              title: 'Redesigned Main Menu, Bilingual Support & Padlocks',
+              items: [
+                'Added structured Main Menu (Play / Chapters, Shop, Settings) with instant BM / EN language switching.',
+                'Added interactive hinged office doors and color-coded security padlocks.'
+              ]
+            },
+            {
+              version: 'v1.0',
+              date: 'Initial Release',
+              latest: false,
+              title: 'Chapter 1: Malam Sama Anwar',
+              items: [
+                'Original launch of Floor 14 Perdana Tower featuring 4 Confidential Audit Files, 2 emergency generators, hiding lockers, and 3D proximity audio.'
+              ]
+            }
+          ],
+          menuSettings: 'SETTINGS',
+          menuSettingsHint: 'BM / BI • Camera',
+          btnBack: 'BACK',
+          chapterSelectTitle: 'SELECT CHAPTER',
+          ch1Label: 'CHAPTER 1 • FLOOR 14',
+          ch1Playable: 'PLAYABLE',
+          ch1Desc: 'Find colored keys to unlock padlocked doors, collect 4 Confidential Audit Files, activate 2 emergency generators, and escape via the Main Elevator.',
+          selectDiffLabel: 'Select Difficulty Mode',
+          diffEasyDesc: 'Relaxed & easy to escape',
+          diffNormalDesc: 'Balanced & fair chase speed',
+          diffHardDesc: 'Fast — shut doors & hide!',
+          btnStartCh1: 'START CHAPTER 1',
+          btnSkipStartCh1: 'PLAY NOW (SKIP INTRO)',
+          quickControlsHtml: '<strong>PC Controls:</strong> <kbd>WASD</kbd> Move • <kbd>Mouse</kbd> Look • <kbd>E</kbd> Open Door / Unlock / Take / Hide',
+          ch2Label: 'CHAPTER 2 • CONTROL ROOM B1',
+          ch2Badge: 'NEW • 3D',
+          ch2Desc: 'Seated in the Security Control Room (12:00 AM – 6:00 AM). Swivel left and right to check windows & doors, monitor CCTV cameras, and conserve battery power—no running needed.',
+          ch2DiffEasy: 'Slower Zahid & generous battery',
+          ch2DiffNormal: 'Balanced & tense night shift',
+          ch2DiffHard: 'Aggressive — watch CCTV & doors!',
+          btnStartCh2: 'START CHAPTER 2',
+          btnSkipStartCh2: 'PLAY NOW (SKIP INTRO)',
+          ch2ControlsHtml: '<strong>3D Controls:</strong> Swivel Left/Right (<kbd>A</kbd>/<kbd>D</kbd> or Drag) • <kbd>E</kbd> Switch / CCTV • Click Control Buttons',
+          ch2ShiftLabel: 'NIGHT SHIFT • CONTROL ROOM B1',
+          ch2TargetTime: 'TARGET: 6:00 AM',
+          ch2PowerLabel: 'Battery Power',
+          ch2DangerBanner: 'WARNING: MOVEMENT OUTSIDE THE DOOR!',
+          ch2LeftDoor: 'Left Door',
+          ch2LeftLight: 'Left Light',
+          ch2CctvBtn: 'CCTV Monitor',
+          ch2RightLight: 'Right Light',
+          ch2RightDoor: 'Right Door',
+          ch2CloseCctv: 'CLOSE CCTV [E]',
+          ch2AudioLureBtn: '🔊 PLAY AUDIO LURE ON THIS CAMERA',
+          shopItem1Title: 'Key Radar',
+          shopItem1Desc: 'Highlights the nearest key direction on the Floor 14 map.',
+          shopItem2Title: 'Guardian Charm',
+          shopItem2Desc: 'Grants one second chance to break free if caught.',
+          shopItem3Title: 'Swift Sneakers',
+          shopItem3Desc: 'Increases base walking speed across all corridors.',
+          settingsTitle: 'GAME SETTINGS',
+          langSettingLabel: 'Language / Bahasa (BM & BI)',
+          sensLabel: 'Camera Sensitivity',
+          assetTitle: 'Chapter 1 & 2 Entity Assets (Face & Voice)',
+          assetHintHtml: 'Automatically loads <code>anwar.png</code>, <code>sakau.mp3</code> (Ch 1) and <code>zahid.png</code>, <code>zahid.mp3</code> (Ch 2) from GitHub, or upload custom files:',
+          uploadFaceBtn: 'Ch 1: Anwar Face',
+          uploadAudioBtn: 'Ch 1: Anwar Audio',
+          uploadZahidFaceBtn: 'Ch 2: Zahid Face',
+          uploadZahidAudioBtn: 'Ch 2: Zahid Audio',
+          assetReady: 'Status: Ready to play',
+          recTag: 'CCTV FOOTAGE • 02:17:04',
+          recTagCh2: 'CONTROL ROOM B1 • 11:58:40 PM',
+          btnSkipIntro: 'SKIP INTRO »',
+          missionLabel: 'CURRENT OBJECTIVE',
+          keysLabel: 'KEY INVENTORY',
+          keyRedTag: '🔑 Red',
+          keyBlueTag:
