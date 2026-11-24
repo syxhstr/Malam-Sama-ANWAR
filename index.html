@@ -739,6 +739,12 @@
       color: #bfdbfe;
     }
 
+    .key-badge.owned.green {
+      background: rgba(22, 163, 74, 0.28);
+      border-color: #4ade80;
+      color: #bbf7d0;
+    }
+
     .key-badge.owned.gold {
       background: rgba(234, 179, 8, 0.28);
       border-color: #facc15;
@@ -1257,6 +1263,7 @@
         <div class="keys-row">
           <span id="key-badge-red" class="key-badge red" data-i18n="keyRedTag">🔑 Merah</span>
           <span id="key-badge-blue" class="key-badge blue" data-i18n="keyBlueTag">🔑 Biru</span>
+          <span id="key-badge-green" class="key-badge green" data-i18n="keyGreenTag">🔑 Hijau</span>
           <span id="key-badge-gold" class="key-badge gold" data-i18n="keyGoldTag">🔑 Emas</span>
         </div>
       </div>
@@ -1431,6 +1438,7 @@
           keysLabel: 'KOLEKSI KUNCI',
           keyRedTag: '🔑 Merah',
           keyBlueTag: '🔑 Biru',
+          keyGreenTag: '🔑 Hijau',
           keyGoldTag: '🔑 Emas',
           dangerBanner: 'AMARAN: BELIAU SEMAKIN HAMPIR!',
           minimapLabel: 'PELAN TINGKAT 14',
@@ -1473,11 +1481,13 @@
           keyNames: {
             red: 'Kunci Merah',
             blue: 'Kunci Biru',
+            green: 'Kunci Hijau',
             gold: 'Kunci Emas'
           },
           lockNames: {
             red: 'Mangga Merah',
             blue: 'Mangga Biru',
+            green: 'Mangga Hijau',
             gold: 'Mangga Emas'
           },
           itemLabels: {
@@ -1565,6 +1575,7 @@
           keysLabel: 'KEY INVENTORY',
           keyRedTag: '🔑 Red',
           keyBlueTag: '🔑 Blue',
+          keyGreenTag: '🔑 Green',
           keyGoldTag: '🔑 Gold',
           dangerBanner: 'WARNING: HE IS GETTING CLOSE!',
           minimapLabel: 'FLOOR 14 MAP',
@@ -1607,11 +1618,13 @@
           keyNames: {
             red: 'Red Key',
             blue: 'Blue Key',
+            green: 'Green Key',
             gold: 'Gold Key'
           },
           lockNames: {
             red: 'Red Lock',
             blue: 'Blue Lock',
+            green: 'Green Lock',
             gold: 'Gold Lock'
           },
           itemLabels: {
@@ -1854,6 +1867,7 @@
       const LOCK_COLORS = {
         red: { hex: 0xef4444, emissive: 0x7f1d1d, css: '#ef4444' },
         blue: { hex: 0x3b82f6, emissive: 0x1e3a8a, css: '#3b82f6' },
+        green: { hex: 0x22c55e, emissive: 0x14532d, css: '#22c55e' },
         gold: { hex: 0xfacc15, emissive: 0x854d0e, css: '#facc15' }
       };
 
@@ -1969,7 +1983,7 @@
             { name: 'Pejabat Pengarah', x: 0, z: -26, w: 32, d: 16, style: 'wood' }
           ];
 
-          // Graf navigasi lengkap dengan nod di kedua-dua belah setiap pintu supaya bot tidak tersangkut
+          // Graf navigasi lengkap dengan nod bebas daripada meja supaya bot bergerak lancar tanpa tersangkut
           this.navNodes = [
             { id: 0, pos: new THREE.Vector3(0, 0, 25), links: [1] },
             { id: 1, pos: new THREE.Vector3(0, 0, 20.2), links: [0, 2], doorId: 'door_lobby' },
@@ -1980,23 +1994,25 @@
             { id: 6, pos: new THREE.Vector3(0, 0, -15.8), links: [5, 21], doorId: 'door_director' },
             { id: 7, pos: new THREE.Vector3(-3.8, 0, 9), links: [3, 8], doorId: 'door_archive' },
             { id: 8, pos: new THREE.Vector3(-8.2, 0, 9), links: [7, 9], doorId: 'door_archive' },
-            { id: 9, pos: new THREE.Vector3(-18, 0, 9), links: [8, 10] },
+            { id: 9, pos: new THREE.Vector3(-11.5, 0, 9), links: [8, 10] },
             { id: 10, pos: new THREE.Vector3(-18, 0, 2.2), links: [9, 11], doorId: 'door_west_conn' },
             { id: 11, pos: new THREE.Vector3(-18, 0, -2.2), links: [10, 12], doorId: 'door_west_conn' },
-            { id: 12, pos: new THREE.Vector3(-18, 0, -9), links: [11, 13] },
+            { id: 12, pos: new THREE.Vector3(-11.5, 0, -9), links: [11, 13] },
             { id: 13, pos: new THREE.Vector3(-8.2, 0, -9), links: [12, 14], doorId: 'door_pantry' },
             { id: 14, pos: new THREE.Vector3(-3.8, 0, -9), links: [5, 13], doorId: 'door_pantry' },
             { id: 15, pos: new THREE.Vector3(3.8, 0, 9), links: [3, 16], doorId: 'door_meeting' },
             { id: 16, pos: new THREE.Vector3(8.2, 0, 9), links: [15, 17], doorId: 'door_meeting' },
-            { id: 17, pos: new THREE.Vector3(18, 0, 9), links: [16] },
+            { id: 17, pos: new THREE.Vector3(11.5, 0, 9), links: [16, 23] },
             { id: 18, pos: new THREE.Vector3(3.8, 0, -9), links: [5, 19], doorId: 'door_server' },
             { id: 19, pos: new THREE.Vector3(8.2, 0, -9), links: [18, 20], doorId: 'door_server' },
-            { id: 20, pos: new THREE.Vector3(18, 0, -9), links: [19] },
+            { id: 20, pos: new THREE.Vector3(13.5, 0, -9), links: [19, 24] },
             { id: 21, pos: new THREE.Vector3(0, 0, -20.2), links: [6, 22], doorId: 'door_director' },
-            { id: 22, pos: new THREE.Vector3(0, 0, -25), links: [21] }
+            { id: 22, pos: new THREE.Vector3(0, 0, -24.5), links: [21] },
+            { id: 23, pos: new THREE.Vector3(18, 0, 2.2), links: [17, 24], doorId: 'door_east_conn' },
+            { id: 24, pos: new THREE.Vector3(18, 0, -2.2), links: [23, 20], doorId: 'door_east_conn' }
           ];
 
-          this.patrolNodeIds = [9, 12, 4, 17, 20, 22, 3];
+          this.patrolNodeIds = [9, 3, 4, 5, 12, 20, 17, 22];
           this.wallMat = new THREE.MeshStandardMaterial({ map: createWallTexture(), roughness: 0.75 });
 
           this.buildArchitecture();
@@ -2074,8 +2090,9 @@
           this.addBox(-24.95, H / 2, 0, 10.7, H, 0.6, this.wallMat);
           this.addBox(-11.2, H / 2, 0, 10.4, H, 0.6, this.wallMat);
 
-          // Dinding Pemisah Sayap Kanan (z = 0) - tertutup supaya Kunci Biru wajib digunakan
-          this.addBox(18.15, H / 2, 0, 24.3, H, 0.6, this.wallMat);
+          // Dinding Pemisah Sayap Kanan (z = 0), bukaan pintu pintas di x = 18 (lebar 3.2)
+          this.addBox(11.35, H / 2, 0, 10.1, H, 0.6, this.wallMat);
+          this.addBox(24.8, H / 2, 0, 10.4, H, 0.6, this.wallMat);
 
           // Pejabat Pengarah (z = -18 hingga -34.3), 1 bukaan pintu utama di x=0, z=-18 (lebar 3.2)
           this.addBox(0, H / 2, -34.3, 32.6, H, 0.6, this.wallMat);
@@ -2103,14 +2120,15 @@
         }
 
         buildDoors() {
-          // Campuran pintu: ada yang TIADA LOCK (null), ada yang BERKUNCI ala Roblox Piggy ('red', 'blue', 'gold')
+          // Campuran pintu terbuka + 4 mangga berwarna ala Roblox Piggy ('red', 'blue', 'green', 'gold') + pintu pintas
           const doorDefs = [
             { id: 'door_lobby', x: 0, z: 18, axis: 'x', lockColor: null },
             { id: 'door_archive', x: -6, z: 9, axis: 'z', lockColor: null },
             { id: 'door_pantry', x: -6, z: -9, axis: 'z', lockColor: null },
-            { id: 'door_west_conn', x: -18, z: 0, axis: 'x', lockColor: null },
+            { id: 'door_west_conn', x: -18, z: 0, axis: 'x', lockColor: 'green' },
             { id: 'door_meeting', x: 6, z: 9, axis: 'z', lockColor: 'red' },
-            { id: 'door_server', x: 6, z: -9, axis: 'z', lockColor: 'blue' },
+            { id: 'door_server', x: 6, z: -9, axis: 'z', lockColor: null },
+            { id: 'door_east_conn', x: 18, z: 0, axis: 'x', lockColor: 'blue' },
             { id: 'door_director', x: 0, z: -18, axis: 'x', lockColor: 'gold' }
           ];
 
@@ -2306,22 +2324,37 @@
             });
           });
 
-          // 2. 3 Kunci Berwarna ala Roblox Piggy
-          const keySpots = [
-            { color: 'red', x: -15.0, y: 1.15, z: -9.0 },   // Kunci Merah di Pantri (pintu tiada lock) -> buka Bilik Mesyuarat
-            { color: 'blue', x: 17.5, y: 1.15, z: 9.0 },   // Kunci Biru di Bilik Mesyuarat -> buka Bilik Server & Janakuasa
-            { color: 'gold', x: 20.5, y: 1.15, z: -9.0 }   // Kunci Emas di Bilik Server -> buka Pejabat Pengarah
+          // 2. 4 Kunci Berwarna dengan 3 variasi lokasi rawak setiap pusingan
+          this.keyPresets = [
+            [
+              { color: 'red', x: -26.5, z: 14.5 },
+              { color: 'green', x: -25.5, z: -13.5 },
+              { color: 'blue', x: 24.5, z: 13.5 },
+              { color: 'gold', x: 26.5, z: -12.0 }
+            ],
+            [
+              { color: 'red', x: -26.0, z: -5.0 },
+              { color: 'blue', x: -25.0, z: 4.5 },
+              { color: 'green', x: 25.0, z: 4.5 },
+              { color: 'gold', x: 26.5, z: -4.5 }
+            ],
+            [
+              { color: 'red', x: -12.5, z: -14.5 },
+              { color: 'blue', x: 13.5, z: -14.5 },
+              { color: 'green', x: -12.5, z: 14.5 },
+              { color: 'gold', x: 13.5, z: 14.5 }
+            ]
           ];
 
-          keySpots.forEach((k) => {
+          this.keyPresets[0].forEach((k) => {
             const mesh = createKeyMesh(k.color);
-            mesh.position.set(k.x, k.y, k.z);
+            mesh.position.set(k.x, 1.15, k.z);
             this.scene.add(mesh);
             const keyObj = {
               id: `key_${k.color}`,
               type: 'key',
               color: k.color,
-              position: new THREE.Vector3(k.x, k.y, k.z),
+              position: new THREE.Vector3(k.x, 1.15, k.z),
               mesh,
               done: false
             };
@@ -2348,6 +2381,17 @@
               done: false
             });
           });
+        }
+
+        randomizeKeyPositions() {
+          const preset = this.keyPresets[Math.floor(Math.random() * this.keyPresets.length)];
+          for (const spot of preset) {
+            const keyObj = this.keysList.find((k) => k.color === spot.color);
+            if (keyObj) {
+              keyObj.position.set(spot.x, 1.15, spot.z);
+              keyObj.mesh.position.copy(keyObj.position);
+            }
+          }
         }
 
         updateDoors(dt) {
@@ -2446,7 +2490,7 @@
           this.scene = scene;
           this.map = officeMap;
           this.patrolIndex = 0;
-          this.position = new THREE.Vector3(-18, 0, 9);
+          this.position = new THREE.Vector3(-11.5, 0, 9);
           this.facingAngle = 0;
           this.state = 'RONDA';
           this.baseSpeed = 3.8;
@@ -2516,7 +2560,7 @@
         }
 
         reset() {
-          this.position.set(-18, 0, 9);
+          this.position.set(-11.5, 0, 9);
           this.group.position.copy(this.position);
           this.facingAngle = 0;
           this.state = 'RONDA';
@@ -2717,16 +2761,24 @@
             let patrolNodeId = this.map.patrolNodeIds[this.patrolIndex];
             let patrolGoal = this.map.navNodes[patrolNodeId].pos;
 
-            if (this.position.distanceTo(patrolGoal) < 1.4) {
+            if (this.position.distanceTo(patrolGoal) < 1.35) {
               this.patrolIndex = (this.patrolIndex + 1) % this.map.patrolNodeIds.length;
               patrolNodeId = this.map.patrolNodeIds[this.patrolIndex];
               patrolGoal = this.map.navNodes[patrolNodeId].pos;
             }
 
-            const nextStep = this.getNextWaypointToward(patrolGoal);
-            // Jika laluan ke titik rondaan disekat pintu berkunci, tukar ke titik rondaan seterusnya
-            if (nextStep.distanceTo(this.position) < 0.6 && this.position.distanceTo(patrolGoal) > 2.0) {
+            let nextStep = this.getNextWaypointToward(patrolGoal);
+            let guard = 0;
+            while (
+              guard < this.map.patrolNodeIds.length &&
+              nextStep.distanceTo(this.position) < 0.75 &&
+              this.position.distanceTo(patrolGoal) > 1.8
+            ) {
               this.patrolIndex = (this.patrolIndex + 1) % this.map.patrolNodeIds.length;
+              patrolNodeId = this.map.patrolNodeIds[this.patrolIndex];
+              patrolGoal = this.map.navNodes[patrolNodeId].pos;
+              nextStep = this.getNextWaypointToward(patrolGoal);
+              guard++;
             }
             steerTarget = nextStep;
           }
@@ -2805,7 +2857,7 @@
         currentLocker: null,
         filesCollected: 0,
         switchesOn: 0,
-        keysOwned: { red: false, blue: false, gold: false },
+        keysOwned: { red: false, blue: false, green: false, gold: false },
         elapsedTime: 0,
         introTimer: 0,
         touchEnabled: ('ontouchstart' in window) || navigator.maxTouchPoints > 0
@@ -2896,6 +2948,7 @@
       function updateKeysHUD() {
         document.getElementById('key-badge-red').classList.toggle('owned', state.keysOwned.red);
         document.getElementById('key-badge-blue').classList.toggle('owned', state.keysOwned.blue);
+        document.getElementById('key-badge-green').classList.toggle('owned', state.keysOwned.green);
         document.getElementById('key-badge-gold').classList.toggle('owned', state.keysOwned.gold);
       }
 
@@ -3020,7 +3073,7 @@
         state.currentLocker = null;
         state.filesCollected = 0;
         state.switchesOn = 0;
-        state.keysOwned = { red: false, blue: false, gold: false };
+        state.keysOwned = { red: false, blue: false, green: false, gold: false };
         state.elapsedTime = 0;
 
         officeMap.doors.forEach((d) => {
@@ -3039,6 +3092,8 @@
             item.mesh.material.emissive.setHex(0x991b1b);
           }
         });
+
+        officeMap.randomizeKeyPositions();
 
         anwar.setDifficulty(state.difficulty);
         anwar.reset();
