@@ -84,9 +84,98 @@
 
     .top-quick-bar {
       display: flex;
-      justify-content: flex-end;
+      justify-content: space-between;
+      align-items: center;
       gap: 8px;
       margin-bottom: 12px;
+    }
+
+    .version-chip-btn {
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(250, 204, 21, 0.42);
+      color: #fde047;
+      font-weight: 800;
+      font-size: 0.76rem;
+      padding: 6px 12px;
+      border-radius: 999px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s ease;
+    }
+
+    .version-chip-btn:hover {
+      background: rgba(30, 41, 59, 0.95);
+      border-color: #facc15;
+      transform: translateY(-1px);
+    }
+
+    /* --- UPDATE LOG VIEW --- */
+    .update-log-list {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      max-height: 68vh;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+
+    .update-card {
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(148, 163, 184, 0.24);
+      border-radius: 14px;
+      padding: 16px 18px;
+      text-align: left;
+    }
+
+    .update-card.latest {
+      border-color: rgba(239, 68, 68, 0.55);
+      box-shadow: 0 10px 26px rgba(220, 38, 38, 0.16);
+    }
+
+    .update-card-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .update-ver {
+      font-size: 1.05rem;
+      font-weight: 900;
+      color: #f8fafc;
+    }
+
+    .update-date {
+      font-size: 0.75rem;
+      color: #94a3b8;
+      font-weight: 600;
+    }
+
+    .update-title {
+      font-size: 0.92rem;
+      font-weight: 800;
+      color: #fca5a5;
+      margin-bottom: 8px;
+    }
+
+    .update-bullets {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      font-size: 0.84rem;
+      color: #cbd5e1;
+      line-height: 1.45;
+    }
+
+    .update-bullets li::before {
+      content: "• ";
+      color: #ef4444;
+      font-weight: 900;
     }
 
     .lang-pill-group {
@@ -1002,6 +1091,8 @@
       background: #000;
       align-items: center;
       justify-content: center;
+      overflow: hidden;
+      padding: 12px;
       z-index: 30;
     }
 
@@ -1026,33 +1117,43 @@
 
     .jumpscare-face-wrap {
       position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      max-width: 92vw;
+      max-height: 92dvh;
       text-align: center;
-      animation: shakeHard 0.07s infinite;
+      animation: shakeHard 0.08s infinite;
     }
 
     #jumpscare-img {
-      width: min(76vw, 440px);
-      height: min(76vw, 440px);
+      width: min(62vw, 52dvh, 340px);
+      height: min(62vw, 52dvh, 340px);
+      max-width: 100%;
+      max-height: 60dvh;
       object-fit: contain;
-      filter: contrast(1.4) saturate(1.3);
-      transform: scale(1.15);
+      filter: contrast(1.38) saturate(1.28) drop-shadow(0 0 22px rgba(220, 38, 38, 0.85));
     }
 
     .jumpscare-caption {
-      font-size: clamp(2.2rem, 7vw, 4.2rem);
+      font-size: clamp(1.6rem, min(6.5vw, 7dvh), 3.4rem);
       font-weight: 900;
       color: #ef4444;
       text-shadow: 0 0 24px #000, 0 0 12px #dc2626;
-      letter-spacing: 3px;
-      margin-top: -12px;
+      letter-spacing: 2px;
+      line-height: 1.05;
+      margin-top: 4px;
+      max-width: 92vw;
     }
 
     @keyframes shakeHard {
-      0% { transform: translate(-8px, 6px) scale(1.12); }
-      25% { transform: translate(9px, -7px) scale(1.18); }
-      50% { transform: translate(-6px, -8px) scale(1.15); }
-      75% { transform: translate(8px, 7px) scale(1.2); }
-      100% { transform: translate(0, 0) scale(1.14); }
+      0% { transform: translate(-5px, 4px) scale(1.02); }
+      25% { transform: translate(6px, -4px) scale(1.06); }
+      50% { transform: translate(-4px, -5px) scale(1.04); }
+      75% { transform: translate(5px, 4px) scale(1.07); }
+      100% { transform: translate(0, 0) scale(1.03); }
     }
   </style>
   <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
@@ -1066,6 +1167,11 @@
   <section id="lobby-screen" class="screen active">
     <div class="lobby-container">
       <div class="top-quick-bar">
+        <button type="button" id="btn-top-updates" class="version-chip-btn">
+          <span>📋</span>
+          <span data-i18n="topUpdateChip">v1.3 • LOG KEMAS KINI</span>
+        </button>
+
         <div class="lang-pill-group" role="group" aria-label="Language Switcher">
           <button type="button" class="lang-pill active" data-lang-switch="bm">BM</button>
           <button type="button" class="lang-pill" data-lang-switch="en">BI</button>
@@ -1088,6 +1194,11 @@
             <button type="button" id="btn-nav-shop" class="menu-btn">
               <span data-i18n="menuShop">KEDAI</span>
               <span class="pill-tag" data-i18n="comingSoon">COMING SOON</span>
+            </button>
+
+            <button type="button" id="btn-nav-updates" class="menu-btn">
+              <span data-i18n="menuUpdates">LOG KEMAS KINI</span>
+              <span class="pill-tag red" data-i18n="menuUpdatesTag">v1.3 BARU</span>
             </button>
 
             <button type="button" id="btn-nav-settings" class="menu-btn">
@@ -1188,7 +1299,18 @@
         </div>
       </div>
 
-      <!-- VIEW D: SETTINGS -->
+      <!-- VIEW D: UPDATE LOG -->
+      <div id="lobby-view-updates" class="lobby-view">
+        <div class="subview-header">
+          <button type="button" class="btn-back" data-back-home>&larr; <span data-i18n="btnBack">KEMBALI</span></button>
+          <h2 data-i18n="updateLogTitle">LOG KEMAS KINI (UPDATE LOG)</h2>
+          <div style="width:74px;"></div>
+        </div>
+
+        <div id="update-log-container" class="update-log-list"></div>
+      </div>
+
+      <!-- VIEW E: SETTINGS -->
       <div id="lobby-view-settings" class="lobby-view">
         <div class="subview-header">
           <button type="button" class="btn-back" data-back-home>&larr; <span data-i18n="btnBack">KEMBALI</span></button>
@@ -1400,6 +1522,54 @@
           menuPlayTag: 'PILIH BAB »',
           menuShop: 'KEDAI',
           comingSoon: 'COMING SOON',
+          topUpdateChip: 'v1.3 • LOG KEMAS KINI',
+          menuUpdates: 'LOG KEMAS KINI',
+          menuUpdatesTag: 'v1.3 BARU',
+          updateLogTitle: 'LOG KEMAS KINI',
+          updateLatestBadge: 'TERKINI',
+          updateLogs: [
+            {
+              version: 'v1.3',
+              date: 'Kemas Kini Terbaharu',
+              latest: true,
+              title: 'Log Kemas Kini, Fix Skrin Telefon & Naik Taraf Model 3D',
+              items: [
+                'Tambah paparan Log Kemas Kini (Update Log) terus di menu utama dengan sokongan penuh BM & BI.',
+                'Betulkan saiz gambar & teks jumpscare (SAKAUUUU!!) supaya muat kemas di skrin telefon (mod potret & landskap).',
+                'Naik taraf tekstur PBR beresolusi tinggi (marmar berurat, papan kayu, permaidani, dinding panel kayu & siling akustik) serta perabot 3D lebih terperinci.'
+              ]
+            },
+            {
+              version: 'v1.2',
+              date: 'Kemas Kini Gameplay',
+              latest: false,
+              title: 'Bot Anti-Sangkut, 4 Kunci & Lokasi Rawak',
+              items: [
+                'Baiki laluan navigasi bot supaya tidak lagi tersangkut pada meja pejabat dan melangkau pintu berkunci secara dinamik.',
+                'Tambah Kunci Hijau bersama 2 pintu pintas (shortcut) di sayap kiri dan sayap kanan.',
+                'Lokasi keempat-empat kunci kini bertukar secara rawak setiap kali permainan dimulakan semula.'
+              ]
+            },
+            {
+              version: 'v1.1',
+              date: 'Kemas Kini Antaramuka',
+              latest: false,
+              title: 'Menu Utama Baharu, Dwi-Bahasa & Mangga Kunci',
+              items: [
+                'Susunan Menu Utama baharu (Main / Pilih Bab, Kedai, Tetapan) dengan penukar bahasa BM / BI.',
+                'Tambah pintu berengsel yang boleh dibuka/ditutup serta sistem mangga kunci berwarna.'
+              ]
+            },
+            {
+              version: 'v1.0',
+              date: 'Pelancaran Awal',
+              latest: false,
+              title: 'Bab 1: Malam Sama Anwar',
+              items: [
+                'Pelancaran asal Tingkat 14 Menara Perdana dengan misi 4 Fail Audit Sulit, 2 suis janakuasa dan loker persembunyian.'
+              ]
+            }
+          ],
           menuSettings: 'TETAPAN',
           menuSettingsHint: 'BM / BI • Kamera',
           btnBack: 'KEMBALI',
@@ -1537,6 +1707,54 @@
           menuPlayTag: 'CHAPTERS »',
           menuShop: 'SHOP',
           comingSoon: 'COMING SOON',
+          topUpdateChip: 'v1.3 • UPDATE LOG',
+          menuUpdates: 'UPDATE LOG',
+          menuUpdatesTag: 'v1.3 NEW',
+          updateLogTitle: 'GAME UPDATE LOG',
+          updateLatestBadge: 'LATEST',
+          updateLogs: [
+            {
+              version: 'v1.3',
+              date: 'Latest Patch',
+              latest: true,
+              title: 'Update Log, Mobile Jumpscare Fit & 3D Model Upgrade',
+              items: [
+                'Added an interactive Update Log directly in the Main Menu with full BM & English support.',
+                'Fixed the jumpscare image & caption scaling so it fits cleanly on mobile screens in both portrait and landscape modes.',
+                'Upgraded 3D visuals with 512x512 procedural PBR textures (veined marble, hardwood planks, wainscoting walls, acoustic ceilings) and multi-part 3D furniture, doors, keys & props.'
+              ]
+            },
+            {
+              version: 'v1.2',
+              date: 'Gameplay Patch',
+              latest: false,
+              title: 'Anti-Stuck Bot AI, 4 Keys & Randomized Spawns',
+              items: [
+                'Fixed bot spawn and navigation waypoints so he patrols smoothly without getting stuck on office desks.',
+                'Added the Green Key and 2 shortcut doors connecting the west and east wings.',
+                'All 4 key locations now randomize automatically every round.'
+              ]
+            },
+            {
+              version: 'v1.1',
+              date: 'UI & Mechanics Patch',
+              latest: false,
+              title: 'Redesigned Main Menu, Bilingual Support & Padlocks',
+              items: [
+                'Added structured Main Menu (Play / Chapters, Shop, Settings) with instant BM / EN language switching.',
+                'Added interactive hinged office doors and color-coded security padlocks.'
+              ]
+            },
+            {
+              version: 'v1.0',
+              date: 'Initial Release',
+              latest: false,
+              title: 'Chapter 1: Malam Sama Anwar',
+              items: [
+                'Original launch of Floor 14 Perdana Tower featuring 4 Confidential Audit Files, 2 emergency generators, hiding lockers, and 3D proximity audio.'
+              ]
+            }
+          ],
           menuSettings: 'SETTINGS',
           menuSettingsHint: 'BM / BI • Camera',
           btnBack: 'BACK',
@@ -1871,64 +2089,306 @@
         gold: { hex: 0xfacc15, emissive: 0x854d0e, css: '#facc15' }
       };
 
-      function createFloorTexture(style) {
-        const c = document.createElement('canvas');
-        c.width = 256; c.height = 256;
-        const ctx = c.getContext('2d');
-
-        if (style === 'marble') {
-          ctx.fillStyle = '#e2e8f0'; ctx.fillRect(0, 0, 256, 256);
-          ctx.fillStyle = '#1e293b'; ctx.fillRect(0, 0, 128, 128); ctx.fillRect(128, 128, 128, 128);
-        } else if (style === 'wood') {
-          ctx.fillStyle = '#78350f'; ctx.fillRect(0, 0, 256, 256);
-          ctx.fillStyle = '#92400e';
-          for (let y = 0; y < 256; y += 32) ctx.fillRect(0, y, 256, 28);
-        } else if (style === 'carpet') {
-          ctx.fillStyle = '#581c2c'; ctx.fillRect(0, 0, 256, 256);
-          ctx.fillStyle = 'rgba(255,255,255,0.06)';
-          for (let i = 0; i < 400; i++) ctx.fillRect(Math.random() * 256, Math.random() * 256, 3, 3);
-        } else if (style === 'tile') {
-          ctx.fillStyle = '#115e59'; ctx.fillRect(0, 0, 256, 256);
-          ctx.strokeStyle = '#ccfbf1'; ctx.lineWidth = 3;
-          for (let x = 0; x <= 256; x += 64) {
-            ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, 256); ctx.stroke();
-            ctx.beginPath(); ctx.moveTo(0, x); ctx.lineTo(256, x); ctx.stroke();
-          }
-        } else {
-          ctx.fillStyle = '#334155'; ctx.fillRect(0, 0, 256, 256);
-          ctx.fillStyle = '#eab308'; ctx.fillRect(0, 232, 256, 24);
-        }
-
-        const tex = new THREE.CanvasTexture(c);
+      function configureTex(tex, rx = 1, ry = 1, isColor = true) {
         tex.wrapS = THREE.RepeatWrapping;
         tex.wrapT = THREE.RepeatWrapping;
-        tex.repeat.set(6, 6);
+        tex.repeat.set(rx, ry);
+        tex.anisotropy = 4;
+        if (isColor && THREE.SRGBColorSpace) tex.colorSpace = THREE.SRGBColorSpace;
         return tex;
       }
 
-      function createWallTexture() {
+      function createFloorMaterial(style, roomW = 20, roomD = 20) {
+        const S = 512;
         const c = document.createElement('canvas');
-        c.width = 256; c.height = 256;
+        c.width = S; c.height = S;
         const ctx = c.getContext('2d');
-        ctx.fillStyle = '#e7e5e4'; ctx.fillRect(0, 0, 256, 175);
-        ctx.fillStyle = '#451a03'; ctx.fillRect(0, 175, 256, 81);
-        ctx.fillStyle = '#78350f'; ctx.fillRect(0, 172, 256, 8);
-        const tex = new THREE.CanvasTexture(c);
-        tex.wrapS = THREE.RepeatWrapping;
-        tex.wrapT = THREE.ClampToEdgeWrapping;
-        return tex;
+
+        const b = document.createElement('canvas');
+        b.width = S; b.height = S;
+        const bctx = b.getContext('2d');
+        bctx.fillStyle = '#808080';
+        bctx.fillRect(0, 0, S, S);
+
+        let roughness = 0.55;
+        let metalness = 0.06;
+
+        if (style === 'marble') {
+          roughness = 0.26;
+          metalness = 0.12;
+          const half = S / 2;
+          // Jubin marmar cerah & gelap berselang-seli
+          ctx.fillStyle = '#e5e7eb';
+          ctx.fillRect(0, 0, S, S);
+          ctx.fillStyle = '#1e293b';
+          ctx.fillRect(0, 0, half, half);
+          ctx.fillRect(half, half, half, half);
+
+          // Urat marmar halus
+          for (let i = 0; i < 24; i++) {
+            ctx.strokeStyle = i % 2 === 0 ? 'rgba(255,255,255,0.14)' : 'rgba(15,23,42,0.12)';
+            ctx.lineWidth = 1.5 + (i % 3);
+            ctx.beginPath();
+            let px = (i * 47) % S;
+            let py = (i * 83) % S;
+            ctx.moveTo(px, py);
+            for (let s = 0; s < 5; s++) {
+              px += ((i * 19 + s * 31) % 70) - 35;
+              py += 36;
+              ctx.lineTo(px, py);
+            }
+            ctx.stroke();
+          }
+
+          // Garis grout antara jubin
+          ctx.strokeStyle = '#64748b';
+          ctx.lineWidth = 4;
+          ctx.strokeRect(2, 2, half - 4, half - 4);
+          ctx.strokeRect(half + 2, 2, half - 4, half - 4);
+          ctx.strokeRect(2, half + 2, half - 4, half - 4);
+          ctx.strokeRect(half + 2, half + 2, half - 4, half - 4);
+
+          bctx.strokeStyle = '#303030';
+          bctx.lineWidth = 5;
+          bctx.strokeRect(0, 0, half, half);
+          bctx.strokeRect(half, 0, half, half);
+          bctx.strokeRect(0, half, half, half);
+          bctx.strokeRect(half, half, half, half);
+        } else if (style === 'wood') {
+          roughness = 0.42;
+          metalness = 0.05;
+          const plankH = 64;
+          const tones = ['#78350f', '#854d0e', '#6b2d0c', '#92400e'];
+          for (let row = 0; row < S / plankH; row++) {
+            const y = row * plankH;
+            ctx.fillStyle = tones[row % tones.length];
+            ctx.fillRect(0, y, S, plankH);
+
+            // Ira kayu (wood grain)
+            ctx.strokeStyle = 'rgba(30, 12, 3, 0.24)';
+            ctx.lineWidth = 1.4;
+            for (let g = 6; g < plankH; g += 8) {
+              ctx.beginPath();
+              ctx.moveTo(0, y + g);
+              ctx.bezierCurveTo(170, y + g - 3, 340, y + g + 3, S, y + g);
+              ctx.stroke();
+            }
+
+            // Garis sambungan papan
+            ctx.fillStyle = '#3b1706';
+            ctx.fillRect(0, y + plankH - 3, S, 3);
+            const jointX = ((row * 160) + 96) % S;
+            ctx.fillRect(jointX, y, 3, plankH);
+
+            bctx.fillStyle = '#282828';
+            bctx.fillRect(0, y + plankH - 3, S, 3);
+            bctx.fillRect(jointX, y, 3, plankH);
+          }
+        } else if (style === 'carpet') {
+          roughness = 0.88;
+          metalness = 0.0;
+          ctx.fillStyle = '#4c1324';
+          ctx.fillRect(0, 0, S, S);
+          // Corak tenunan berlian pejabat eksekutif
+          ctx.strokeStyle = 'rgba(251, 191, 36, 0.14)';
+          ctx.lineWidth = 2;
+          for (let y = 0; y < S; y += 64) {
+            for (let x = 0; x < S; x += 64) {
+              ctx.beginPath();
+              ctx.moveTo(x + 32, y + 6);
+              ctx.lineTo(x + 58, y + 32);
+              ctx.lineTo(x + 32, y + 58);
+              ctx.lineTo(x + 6, y + 32);
+              ctx.closePath();
+              ctx.stroke();
+            }
+          }
+          for (let i = 0; i < 1600; i++) {
+            const rx = (i * 73) % S;
+            const ry = (i * 139) % S;
+            ctx.fillStyle = i % 2 === 0 ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.12)';
+            ctx.fillRect(rx, ry, 2, 2);
+            bctx.fillStyle = i % 2 === 0 ? '#969696' : '#686868';
+            bctx.fillRect(rx, ry, 2, 2);
+          }
+        } else if (style === 'tile') {
+          roughness = 0.3;
+          metalness = 0.08;
+          ctx.fillStyle = '#0f766e';
+          ctx.fillRect(0, 0, S, S);
+          const step = 128;
+          for (let y = 0; y < S; y += step) {
+            for (let x = 0; x < S; x += step) {
+              ctx.fillStyle = ((x + y) / step) % 2 === 0 ? '#115e59' : '#134e4a';
+              ctx.fillRect(x + 4, y + 4, step - 8, step - 8);
+              ctx.strokeStyle = '#99f6e4';
+              ctx.lineWidth = 3;
+              ctx.strokeRect(x + 2, y + 2, step - 4, step - 4);
+              bctx.strokeStyle = '#252525';
+              bctx.lineWidth = 5;
+              bctx.strokeRect(x, y, step, step);
+            }
+          }
+        } else {
+          // Lantai keluli industri bilik server + jalur amaran kuning/hitam
+          roughness = 0.42;
+          metalness = 0.45;
+          ctx.fillStyle = '#334155';
+          ctx.fillRect(0, 0, S, S);
+          ctx.strokeStyle = 'rgba(148, 163, 184, 0.22)';
+          ctx.lineWidth = 2;
+          for (let y = 0; y < S; y += 32) {
+            for (let x = 0; x < S; x += 32) {
+              ctx.beginPath();
+              ctx.moveTo(x + 8, y + 16);
+              ctx.lineTo(x + 24, y + 16);
+              ctx.moveTo(x + 16, y + 8);
+              ctx.lineTo(x + 16, y + 24);
+              ctx.stroke();
+              bctx.fillStyle = '#a8a8a8';
+              bctx.fillRect(x + 14, y + 14, 4, 4);
+            }
+          }
+          // Jalur keselamatan kuning-hitam di bahagian bawah jubin
+          ctx.fillStyle = '#eab308';
+          ctx.fillRect(0, S - 42, S, 42);
+          ctx.fillStyle = '#0f172a';
+          for (let x = -48; x < S + 48; x += 48) {
+            ctx.beginPath();
+            ctx.moveTo(x, S);
+            ctx.lineTo(x + 24, S);
+            ctx.lineTo(x + 44, S - 42);
+            ctx.lineTo(x + 20, S - 42);
+            ctx.closePath();
+            ctx.fill();
+          }
+        }
+
+        const repX = Math.max(2, Math.round(roomW / 3.4));
+        const repY = Math.max(2, Math.round(roomD / 3.4));
+        const map = configureTex(new THREE.CanvasTexture(c), repX, repY, true);
+        const bumpMap = configureTex(new THREE.CanvasTexture(b), repX, repY, false);
+
+        return new THREE.MeshStandardMaterial({
+          map,
+          bumpMap,
+          bumpScale: 0.025,
+          roughness,
+          metalness
+        });
+      }
+
+      function createWallMaterial() {
+        const S = 512;
+        const c = document.createElement('canvas');
+        c.width = S; c.height = S;
+        const ctx = c.getContext('2d');
+
+        const b = document.createElement('canvas');
+        b.width = S; b.height = S;
+        const bctx = b.getContext('2d');
+        bctx.fillStyle = '#808080';
+        bctx.fillRect(0, 0, S, S);
+
+        // Bahagian atas: Dinding plaster pejabat bertekstur halus
+        ctx.fillStyle = '#e7e5e4';
+        ctx.fillRect(0, 0, S, 336);
+        for (let i = 0; i < 1800; i++) {
+          const px = (i * 97) % S;
+          const py = (i * 53) % 336;
+          ctx.fillStyle = i % 2 === 0 ? 'rgba(0,0,0,0.035)' : 'rgba(255,255,255,0.22)';
+          ctx.fillRect(px, py, 2, 2);
+        }
+
+        // Kumai siling (crown molding)
+        ctx.fillStyle = '#cbd5e1';
+        ctx.fillRect(0, 0, S, 18);
+        ctx.fillStyle = '#94a3b8';
+        ctx.fillRect(0, 18, S, 5);
+
+        // Rel kerusi kayu (chair rail)
+        ctx.fillStyle = '#78350f';
+        ctx.fillRect(0, 326, S, 14);
+        ctx.fillStyle = '#b45309';
+        ctx.fillRect(0, 328, S, 4);
+        bctx.fillStyle = '#d0d0d0';
+        bctx.fillRect(0, 326, S, 14);
+
+        // Bahagian bawah: Panel kayu mahogani (wainscoting)
+        ctx.fillStyle = '#451a03';
+        ctx.fillRect(0, 340, S, 172);
+        for (let x = 0; x < S; x += 128) {
+          ctx.strokeStyle = '#78350f';
+          ctx.lineWidth = 4;
+          ctx.strokeRect(x + 14, 354, 100, 134);
+          ctx.strokeStyle = '#290f02';
+          ctx.lineWidth = 2;
+          ctx.strokeRect(x + 20, 360, 88, 122);
+
+          bctx.strokeStyle = '#b5b5b5';
+          bctx.lineWidth = 4;
+          bctx.strokeRect(x + 14, 354, 100, 134);
+        }
+
+        // Skirting lantai bawah
+        ctx.fillStyle = '#1c1917';
+        ctx.fillRect(0, 494, S, 18);
+
+        const map = new THREE.CanvasTexture(c);
+        map.wrapS = THREE.RepeatWrapping;
+        map.wrapT = THREE.ClampToEdgeWrapping;
+        map.anisotropy = 4;
+        if (THREE.SRGBColorSpace) map.colorSpace = THREE.SRGBColorSpace;
+
+        const bumpMap = new THREE.CanvasTexture(b);
+        bumpMap.wrapS = THREE.RepeatWrapping;
+        bumpMap.wrapT = THREE.ClampToEdgeWrapping;
+
+        return new THREE.MeshStandardMaterial({
+          map,
+          bumpMap,
+          bumpScale: 0.03,
+          roughness: 0.68
+        });
+      }
+
+      function createCeilingMaterial(roomW = 20, roomD = 20) {
+        const S = 256;
+        const c = document.createElement('canvas');
+        c.width = S; c.height = S;
+        const ctx = c.getContext('2d');
+        ctx.fillStyle = '#1e293b';
+        ctx.fillRect(0, 0, S, S);
+        ctx.strokeStyle = '#334155';
+        ctx.lineWidth = 4;
+        ctx.strokeRect(2, 2, S - 4, S - 4);
+        ctx.strokeStyle = '#0f172a';
+        ctx.lineWidth = 2;
+        ctx.strokeRect(10, 10, S - 20, S - 20);
+
+        const repX = Math.max(3, Math.round(roomW / 2.2));
+        const repY = Math.max(3, Math.round(roomD / 2.2));
+        const map = configureTex(new THREE.CanvasTexture(c), repX, repY, true);
+        return new THREE.MeshStandardMaterial({ map, roughness: 0.85 });
       }
 
       function createPlaqueTexture(text) {
         const c = document.createElement('canvas');
         c.width = 512; c.height = 128;
         const ctx = c.getContext('2d');
-        ctx.fillStyle = '#0f172a'; ctx.fillRect(0, 0, 512, 128);
-        ctx.strokeStyle = '#facc15'; ctx.lineWidth = 8; ctx.strokeRect(8, 8, 496, 112);
-        ctx.fillStyle = '#f8fafc'; ctx.font = 'bold 34px sans-serif';
+        const grad = ctx.createLinearGradient(0, 0, 0, 128);
+        grad.addColorStop(0, '#1e293b');
+        grad.addColorStop(1, '#090d16');
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 0, 512, 128);
+        ctx.strokeStyle = '#facc15'; ctx.lineWidth = 7; ctx.strokeRect(8, 8, 496, 112);
+        ctx.strokeStyle = 'rgba(250, 204, 21, 0.35)'; ctx.lineWidth = 2; ctx.strokeRect(16, 16, 480, 96);
+        ctx.fillStyle = '#f8fafc'; ctx.font = 'bold 32px sans-serif';
         ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
         ctx.fillText(text, 256, 66);
-        return new THREE.CanvasTexture(c);
+        const tex = new THREE.CanvasTexture(c);
+        if (THREE.SRGBColorSpace) tex.colorSpace = THREE.SRGBColorSpace;
+        return tex;
       }
 
       function createKeyMesh(colorKey) {
@@ -1937,29 +2397,39 @@
         const mat = new THREE.MeshStandardMaterial({
           color: cfg.hex,
           emissive: cfg.emissive,
-          emissiveIntensity: 0.9,
-          metalness: 0.65,
-          roughness: 0.25
+          emissiveIntensity: 0.95,
+          metalness: 0.72,
+          roughness: 0.2
         });
 
-        // Kepala kunci (ring)
-        const ring = new THREE.Mesh(new THREE.TorusGeometry(0.16, 0.045, 10, 20), mat);
-        ring.position.set(-0.18, 0, 0);
+        // Kepala kunci berukir (bow ring + inner trim)
+        const ring = new THREE.Mesh(new THREE.TorusGeometry(0.16, 0.042, 12, 24), mat);
+        ring.position.set(-0.2, 0, 0);
         group.add(ring);
 
-        // Batang kunci
-        const shaft = new THREE.Mesh(new THREE.BoxGeometry(0.36, 0.06, 0.06), mat);
-        shaft.position.set(0.12, 0, 0);
+        const collar = new THREE.Mesh(new THREE.CylinderGeometry(0.055, 0.055, 0.06, 12), mat);
+        collar.rotation.z = Math.PI / 2;
+        collar.position.set(-0.03, 0, 0);
+        group.add(collar);
+
+        // Batang kunci silinder berkilat
+        const shaft = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.03, 0.36, 12), mat);
+        shaft.rotation.z = Math.PI / 2;
+        shaft.position.set(0.15, 0, 0);
         group.add(shaft);
 
-        // Gigi kunci
-        const tooth1 = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.12, 0.06), mat);
-        tooth1.position.set(0.2, -0.07, 0);
+        // Gigi kunci bertingkat
+        const tooth1 = new THREE.Mesh(new THREE.BoxGeometry(0.055, 0.13, 0.045), mat);
+        tooth1.position.set(0.21, -0.075, 0);
         group.add(tooth1);
 
-        const tooth2 = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.1, 0.06), mat);
-        tooth2.position.set(0.28, -0.06, 0);
+        const tooth2 = new THREE.Mesh(new THREE.BoxGeometry(0.045, 0.09, 0.045), mat);
+        tooth2.position.set(0.27, -0.055, 0);
         group.add(tooth2);
+
+        const tooth3 = new THREE.Mesh(new THREE.BoxGeometry(0.055, 0.12, 0.045), mat);
+        tooth3.position.set(0.32, -0.07, 0);
+        group.add(tooth3);
 
         return group;
       }
@@ -2013,7 +2483,7 @@
           ];
 
           this.patrolNodeIds = [9, 3, 4, 5, 12, 20, 17, 22];
-          this.wallMat = new THREE.MeshStandardMaterial({ map: createWallTexture(), roughness: 0.75 });
+          this.wallMat = createWallMaterial();
 
           this.buildArchitecture();
           this.buildDoors();
@@ -2036,12 +2506,29 @@
           return mesh;
         }
 
+        addCeilingFixture(x, y, z) {
+          const frameMat = new THREE.MeshStandardMaterial({ color: 0x334155, metalness: 0.6, roughness: 0.35 });
+          const panelMat = new THREE.MeshStandardMaterial({
+            color: 0xfffbeb,
+            emissive: 0xfef3c7,
+            emissiveIntensity: 1.2,
+            roughness: 0.2
+          });
+          const frame = new THREE.Mesh(new THREE.BoxGeometry(2.4, 0.08, 1.1), frameMat);
+          frame.position.set(x, y - 0.04, z);
+          this.scene.add(frame);
+
+          const diffuser = new THREE.Mesh(new THREE.BoxGeometry(2.2, 0.04, 0.9), panelMat);
+          diffuser.position.set(x, y - 0.08, z);
+          this.scene.add(diffuser);
+        }
+
         buildArchitecture() {
           const H = 4.6;
           for (const r of this.rooms) {
             const floor = new THREE.Mesh(
               new THREE.PlaneGeometry(r.w, r.d),
-              new THREE.MeshStandardMaterial({ map: createFloorTexture(r.style), roughness: 0.65 })
+              createFloorMaterial(r.style, r.w, r.d)
             );
             floor.rotation.x = -Math.PI / 2;
             floor.position.set(r.x, 0, r.z);
@@ -2049,16 +2536,28 @@
 
             const ceil = new THREE.Mesh(
               new THREE.PlaneGeometry(r.w, r.d),
-              new THREE.MeshStandardMaterial({ color: 0x1e293b, roughness: 0.9 })
+              createCeilingMaterial(r.w, r.d)
             );
             ceil.rotation.x = Math.PI / 2;
             ceil.position.set(r.x, H, r.z);
             this.scene.add(ceil);
 
-            const light = new THREE.PointLight(0xfff3d6, 2.2, 30);
+            this.addCeilingFixture(r.x, H, r.z);
+
+            const light = new THREE.PointLight(0xfff3d6, 2.25, 31);
             light.position.set(r.x, H - 0.35, r.z);
             this.scene.add(light);
           }
+
+          // Lampu siling tambahan di koridor panjang
+          this.addCeilingFixture(0, H, 10);
+          this.addCeilingFixture(0, H, -10);
+
+          // Tiang hiasan seni bina di sudut lobi & persimpangan
+          const pillarMat = new THREE.MeshStandardMaterial({ color: 0x334155, roughness: 0.45, metalness: 0.25 });
+          [[-9.7, 31.7], [9.7, 31.7], [-5.5, 17.5], [5.5, 17.5], [-5.5, -17.5], [5.5, -17.5]].forEach(([px, pz]) => {
+            this.addBox(px, H / 2, pz, 0.55, H, 0.55, pillarMat, false);
+          });
 
           // Lobi Lif Utama
           this.addBox(0, H / 2, 32.3, 20.6, H, 0.6, this.wallMat);
@@ -2163,9 +2662,9 @@
               pivot.position.set(d.x, 0, d.z - 1.44);
             }
 
-            // Daun pintu (2.88 unit lebar)
+            // Daun pintu berpanel (2.88 unit lebar) + bingkai ukiran
             const leaf = new THREE.Mesh(
-              new THREE.BoxGeometry(isX ? 2.88 : 0.16, 2.95, isX ? 0.16 : 2.88),
+              new THREE.BoxGeometry(isX ? 2.88 : 0.15, 2.95, isX ? 0.15 : 2.88),
               leafMat
             );
             if (isX) {
@@ -2175,17 +2674,42 @@
             }
             pivot.add(leaf);
 
-            // Tombol pintu
-            const knobMat = new THREE.MeshStandardMaterial({ color: 0xe2e8f0, metalness: 0.85, roughness: 0.2 });
-            const knob = new THREE.Mesh(new THREE.SphereGeometry(0.11, 12, 12), knobMat);
-            if (isX) {
-              knob.position.set(2.55, 1.35, 0);
-            } else {
-              knob.position.set(0, 1.35, 2.55);
-            }
-            pivot.add(knob);
+            const panelTrimMat = new THREE.MeshStandardMaterial({
+              color: d.lockColor ? LOCK_COLORS[d.lockColor].hex : 0x5c1d0c,
+              roughness: 0.55,
+              metalness: 0.15
+            });
+            [2.12, 0.86].forEach((py) => {
+              const inset = new THREE.Mesh(
+                new THREE.BoxGeometry(isX ? 2.15 : 0.19, 0.85, isX ? 0.19 : 2.15),
+                panelTrimMat
+              );
+              if (isX) inset.position.set(1.44, py, 0);
+              else inset.position.set(0, py, 1.44);
+              pivot.add(inset);
+            });
 
-            // Mangga Kunci (Padlock ala Roblox Piggy) jika pintu berkunci
+            // Pemegang & plat tombol pintu berkembar (depan & belakang)
+            const knobMat = new THREE.MeshStandardMaterial({ color: 0xf1f5f9, metalness: 0.88, roughness: 0.18 });
+            const plate = new THREE.Mesh(
+              new THREE.BoxGeometry(isX ? 0.12 : 0.21, 0.34, isX ? 0.21 : 0.12),
+              knobMat
+            );
+            const lever = new THREE.Mesh(
+              new THREE.BoxGeometry(isX ? 0.22 : 0.28, 0.05, isX ? 0.28 : 0.22),
+              knobMat
+            );
+            if (isX) {
+              plate.position.set(2.54, 1.35, 0);
+              lever.position.set(2.48, 1.38, 0);
+            } else {
+              plate.position.set(0, 1.35, 2.54);
+              lever.position.set(0, 1.38, 2.48);
+            }
+            pivot.add(plate);
+            pivot.add(lever);
+
+            // Mangga Kunci 3D Terperinci (Padlock ala Roblox Piggy) jika pintu berkunci
             let lockGroup = null;
             if (d.lockColor) {
               const cfg = LOCK_COLORS[d.lockColor];
@@ -2193,17 +2717,26 @@
               const bodyMat = new THREE.MeshStandardMaterial({
                 color: cfg.hex,
                 emissive: cfg.emissive,
-                emissiveIntensity: 0.85,
-                roughness: 0.3
+                emissiveIntensity: 0.9,
+                metalness: 0.35,
+                roughness: 0.25
               });
-              const shackleMat = new THREE.MeshStandardMaterial({ color: 0xf8fafc, metalness: 0.85, roughness: 0.2 });
+              const shackleMat = new THREE.MeshStandardMaterial({ color: 0xf8fafc, metalness: 0.9, roughness: 0.15 });
+              const keyholeMat = new THREE.MeshBasicMaterial({ color: 0x090d16 });
 
-              const body = new THREE.Mesh(new THREE.BoxGeometry(0.42, 0.44, 0.26), bodyMat);
-              const shackle = new THREE.Mesh(new THREE.TorusGeometry(0.14, 0.04, 10, 18, Math.PI), shackleMat);
-              shackle.position.y = 0.22;
+              const body = new THREE.Mesh(new THREE.BoxGeometry(0.44, 0.46, 0.26), bodyMat);
+              const band = new THREE.Mesh(new THREE.BoxGeometry(0.46, 0.08, 0.28), shackleMat);
+              band.position.y = -0.14;
+              const shackle = new THREE.Mesh(new THREE.TorusGeometry(0.145, 0.042, 12, 20, Math.PI), shackleMat);
+              shackle.position.y = 0.23;
+
+              const keyholeFront = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.14, 0.28), keyholeMat);
+              keyholeFront.position.y = 0.02;
 
               lockGroup.add(body);
+              lockGroup.add(band);
               lockGroup.add(shackle);
+              lockGroup.add(keyholeFront);
 
               if (isX) {
                 lockGroup.position.set(1.44, 1.45, 0);
@@ -2242,23 +2775,180 @@
           }
         }
 
+        addDetailedDesk(x, z, w, d, topMat, legMat, hasComputer = true, chairSide = 1) {
+          // Collider tepat mengikut dimensi meja asal
+          this.colliders.push({
+            minX: x - w / 2,
+            maxX: x + w / 2,
+            minZ: z - d / 2,
+            maxZ: z + d / 2
+          });
+
+          const g = new THREE.Group();
+          g.position.set(x, 0, z);
+
+          // Permukaan meja tebal + bingkai tepi
+          const top = new THREE.Mesh(new THREE.BoxGeometry(w, 0.09, d), topMat);
+          top.position.y = 0.88;
+          g.add(top);
+
+          // Panel hadapan meja
+          const modesty = new THREE.Mesh(new THREE.BoxGeometry(w - 0.24, 0.52, 0.06), topMat);
+          modesty.position.set(0, 0.56, -chairSide * (d / 2 - 0.14));
+          g.add(modesty);
+
+          // 4 kaki meja keluli
+          const lx = w / 2 - 0.12;
+          const lz = d / 2 - 0.12;
+          [[-lx, -lz], [lx, -lz], [-lx, lz], [lx, lz]].forEach(([px, pz]) => {
+            const leg = new THREE.Mesh(new THREE.BoxGeometry(0.09, 0.84, 0.09), legMat);
+            leg.position.set(px, 0.42, pz);
+            g.add(leg);
+          });
+
+          if (hasComputer) {
+            const bezelMat = new THREE.MeshStandardMaterial({ color: 0x0f172a, roughness: 0.35, metalness: 0.4 });
+            const screenMat = new THREE.MeshStandardMaterial({
+              color: 0x1e3a8a,
+              emissive: 0x1d4ed8,
+              emissiveIntensity: 0.35,
+              roughness: 0.15
+            });
+            const monX = -w * 0.24;
+            const monZ = -chairSide * 0.22;
+
+            const base = new THREE.Mesh(new THREE.BoxGeometry(0.28, 0.03, 0.2), bezelMat);
+            base.position.set(monX, 0.94, monZ);
+            g.add(base);
+
+            const neck = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.22, 0.05), bezelMat);
+            neck.position.set(monX, 1.05, monZ);
+            g.add(neck);
+
+            const monitor = new THREE.Mesh(new THREE.BoxGeometry(0.72, 0.44, 0.05), bezelMat);
+            monitor.position.set(monX, 1.24, monZ);
+            g.add(monitor);
+
+            const display = new THREE.Mesh(new THREE.PlaneGeometry(0.66, 0.38), screenMat);
+            display.position.set(monX, 1.24, monZ + chairSide * 0.028);
+            if (chairSide < 0) display.rotation.y = Math.PI;
+            g.add(display);
+
+            const keyboard = new THREE.Mesh(new THREE.BoxGeometry(0.42, 0.025, 0.16), bezelMat);
+            keyboard.position.set(monX, 0.94, monZ + chairSide * 0.34);
+            g.add(keyboard);
+          }
+
+          this.scene.add(g);
+        }
+
+        addOfficeChair(x, z, rotY = 0) {
+          const g = new THREE.Group();
+          g.position.set(x, 0, z);
+          g.rotation.y = rotY;
+
+          const leatherMat = new THREE.MeshStandardMaterial({ color: 0x1e293b, roughness: 0.55 });
+          const chromeMat = new THREE.MeshStandardMaterial({ color: 0x94a3b8, metalness: 0.85, roughness: 0.2 });
+
+          const base = new THREE.Mesh(new THREE.CylinderGeometry(0.28, 0.32, 0.06, 10), chromeMat);
+          base.position.y = 0.04;
+          g.add(base);
+
+          const stem = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.04, 0.42, 8), chromeMat);
+          stem.position.y = 0.25;
+          g.add(stem);
+
+          const seat = new THREE.Mesh(new THREE.BoxGeometry(0.54, 0.09, 0.52), leatherMat);
+          seat.position.y = 0.48;
+          g.add(seat);
+
+          const back = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.62, 0.08), leatherMat);
+          back.position.set(0, 0.82, -0.23);
+          g.add(back);
+
+          this.scene.add(g);
+        }
+
+        addServerRack(x, z) {
+          this.colliders.push({
+            minX: x - 0.7,
+            maxX: x + 0.7,
+            minZ: z - 2.1,
+            maxZ: z + 2.1
+          });
+
+          const g = new THREE.Group();
+          g.position.set(x, 0, z);
+
+          const cabMat = new THREE.MeshStandardMaterial({ color: 0x1e293b, roughness: 0.38, metalness: 0.65 });
+          const trimMat = new THREE.MeshStandardMaterial({ color: 0x475569, roughness: 0.3, metalness: 0.8 });
+          const ledGreen = new THREE.MeshBasicMaterial({ color: 0x22c55e });
+          const ledAmber = new THREE.MeshBasicMaterial({ color: 0xf59e0b });
+
+          const body = new THREE.Mesh(new THREE.BoxGeometry(1.36, 2.8, 4.16), cabMat);
+          body.position.y = 1.4;
+          g.add(body);
+
+          const topCap = new THREE.Mesh(new THREE.BoxGeometry(1.42, 0.1, 4.22), trimMat);
+          topCap.position.y = 2.82;
+          g.add(topCap);
+
+          // Jalur lampu LED status pelayan di hadapan rak
+          for (let row = 0; row < 6; row++) {
+            const y = 0.45 + row * 0.38;
+            const bar = new THREE.Mesh(
+              new THREE.BoxGeometry(0.04, 0.06, 3.6),
+              row % 3 === 0 ? ledAmber : ledGreen
+            );
+            bar.position.set(-0.69, y, 0);
+            g.add(bar);
+          }
+
+          this.scene.add(g);
+        }
+
         buildFurnitureAndLockers() {
-          const deskMat = new THREE.MeshStandardMaterial({ color: 0x5c2d16, roughness: 0.5 });
-          const metalMat = new THREE.MeshStandardMaterial({ color: 0x475569, roughness: 0.4, metalness: 0.5 });
+          const deskMat = new THREE.MeshStandardMaterial({ color: 0x6b3419, roughness: 0.42, metalness: 0.08 });
+          const execDeskMat = new THREE.MeshStandardMaterial({ color: 0x451a03, roughness: 0.35, metalness: 0.12 });
+          const pantryTopMat = new THREE.MeshStandardMaterial({ color: 0x334155, roughness: 0.3, metalness: 0.45 });
+          const metalMat = new THREE.MeshStandardMaterial({ color: 0x64748b, roughness: 0.35, metalness: 0.7 });
 
-          // Meja-meja bilik pejabat
-          this.addBox(-16, 0.45, 9, 4.0, 0.9, 1.8, deskMat);
-          this.addBox(16, 0.45, 9, 6.2, 0.9, 2.2, deskMat);
-          this.addBox(-16, 0.45, -9, 4.2, 0.9, 1.6, metalMat);
-          this.addBox(0, 0.45, -28.5, 4.8, 0.9, 1.8, deskMat);
+          // Meja-meja bilik pejabat terperinci + komputer + kerusi
+          this.addDetailedDesk(-16, 9, 4.0, 1.8, deskMat, metalMat, true, 1);
+          this.addOfficeChair(-16, 10.35, Math.PI);
 
-          // Rak server bilik janakuasa
-          this.addBox(23.5, 1.4, -12, 1.4, 2.8, 4.2, metalMat);
-          this.addBox(23.5, 1.4, -6, 1.4, 2.8, 4.2, metalMat);
+          this.addDetailedDesk(16, 9, 6.2, 2.2, execDeskMat, metalMat, false, 1);
+          this.addOfficeChair(14.3, 10.55, Math.PI);
+          this.addOfficeChair(17.7, 10.55, Math.PI);
+          this.addOfficeChair(14.3, 7.45, 0);
+          this.addOfficeChair(17.7, 7.45, 0);
 
-          // Lif Utama
-          const liftDoorMat = new THREE.MeshStandardMaterial({ color: 0x94a3b8, metalness: 0.8, roughness: 0.25 });
-          const liftMesh = this.addBox(0, 1.5, 31.8, 3.2, 3.0, 0.3, liftDoorMat, false);
+          this.addDetailedDesk(-16, -9, 4.2, 1.6, pantryTopMat, metalMat, false, -1);
+
+          this.addDetailedDesk(0, -28.5, 4.8, 1.8, execDeskMat, metalMat, true, -1);
+          this.addOfficeChair(0, -29.95, 0);
+
+          // Rak server bilik janakuasa dengan lampu LED
+          this.addServerRack(23.5, -12);
+          this.addServerRack(23.5, -6);
+
+          // Lif Utama Berperincian (Pintu berkembar keluli + penunjuk tingkat bercahaya)
+          const liftFrameMat = new THREE.MeshStandardMaterial({ color: 0x1e293b, metalness: 0.7, roughness: 0.3 });
+          const liftDoorMat = new THREE.MeshStandardMaterial({ color: 0x94a3b8, metalness: 0.85, roughness: 0.22 });
+          const liftSeamMat = new THREE.MeshStandardMaterial({ color: 0x0f172a, roughness: 0.5 });
+
+          this.addBox(0, 1.55, 31.86, 3.5, 3.1, 0.24, liftFrameMat, false);
+          const liftMesh = this.addBox(0, 1.5, 31.78, 3.15, 2.95, 0.22, liftDoorMat, false);
+          this.addBox(0, 1.5, 31.66, 0.06, 2.95, 0.04, liftSeamMat, false);
+
+          const indicatorSign = new THREE.Mesh(
+            new THREE.PlaneGeometry(1.3, 0.34),
+            new THREE.MeshBasicMaterial({ map: createPlaqueTexture('LIF UTAMA • T14') })
+          );
+          indicatorSign.position.set(0, 3.35, 31.65);
+          indicatorSign.rotation.y = Math.PI;
+          this.scene.add(indicatorSign);
+
           this.interactables.push({
             id: 'elevator',
             type: 'elevator',
@@ -2268,7 +2958,7 @@
             done: false
           });
 
-          // Loker Persembunyian
+          // Loker Persembunyian Terperinci (dengan lubang pengudaraan & pemegang keluli)
           const lockerCoords = [
             { x: -8.8, z: 26, rot: Math.PI / 2 },
             { x: -28.8, z: 14, rot: Math.PI / 2 },
@@ -2280,10 +2970,43 @@
             { x: -4.8, z: 0, rot: Math.PI / 2 }
           ];
 
-          const lockerMat = new THREE.MeshStandardMaterial({ color: 0x1d4ed8, roughness: 0.4, metalness: 0.35 });
+          const lockerMat = new THREE.MeshStandardMaterial({ color: 0x1d4ed8, roughness: 0.38, metalness: 0.45 });
+          const lockerDoorMat = new THREE.MeshStandardMaterial({ color: 0x2563eb, roughness: 0.35, metalness: 0.5 });
+          const ventMat = new THREE.MeshStandardMaterial({ color: 0x0f172a, roughness: 0.6 });
+          const handleMat = new THREE.MeshStandardMaterial({ color: 0xe2e8f0, metalness: 0.9, roughness: 0.15 });
 
           lockerCoords.forEach((lc, idx) => {
-            const mesh = this.addBox(lc.x, 1.3, lc.z, 1.2, 2.6, 1.2, lockerMat, true);
+            this.colliders.push({
+              minX: lc.x - 0.6,
+              maxX: lc.x + 0.6,
+              minZ: lc.z - 0.6,
+              maxZ: lc.z + 0.6
+            });
+
+            const lockerGroup = new THREE.Group();
+            lockerGroup.position.set(lc.x, 0, lc.z);
+            lockerGroup.rotation.y = lc.rot;
+
+            const body = new THREE.Mesh(new THREE.BoxGeometry(1.18, 2.6, 1.16), lockerMat);
+            body.position.y = 1.3;
+            lockerGroup.add(body);
+
+            const frontDoor = new THREE.Mesh(new THREE.BoxGeometry(1.04, 2.44, 0.06), lockerDoorMat);
+            frontDoor.position.set(0, 1.3, 0.58);
+            lockerGroup.add(frontDoor);
+
+            [2.18, 2.06, 1.94, 0.56, 0.44].forEach((vy) => {
+              const slot = new THREE.Mesh(new THREE.BoxGeometry(0.66, 0.035, 0.03), ventMat);
+              slot.position.set(0, vy, 0.615);
+              lockerGroup.add(slot);
+            });
+
+            const handle = new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.24, 0.06), handleMat);
+            handle.position.set(0.38, 1.32, 0.625);
+            lockerGroup.add(handle);
+
+            this.scene.add(lockerGroup);
+
             const exitOffset = new THREE.Vector3(Math.sin(lc.rot) * 1.5, 0, Math.cos(lc.rot) * 1.5);
             const lockerObj = {
               id: `locker_${idx}`,
@@ -2293,7 +3016,7 @@
               insidePos: new THREE.Vector3(lc.x, 1.65, lc.z),
               exitPos: new THREE.Vector3(lc.x, 1.65, lc.z).add(exitOffset),
               yaw: lc.rot,
-              mesh
+              mesh: lockerGroup
             };
             this.lockers.push(lockerObj);
             this.interactables.push(lockerObj);
@@ -2301,25 +3024,42 @@
         }
 
         spawnMissionItems() {
-          // 1. 4 Fail Audit Sulit
+          // 1. 4 Fail Audit Sulit (Fail berlapis dengan jalur merah SULIT)
           const fileSpots = [
-            { x: -16, y: 1.02, z: 9 },
-            { x: 16, y: 1.02, z: 9 },
-            { x: -16, y: 1.02, z: -9 },
-            { x: 0, y: 1.02, z: -28.5 }
+            { x: -16, y: 0.96, z: 9 },
+            { x: 16, y: 0.96, z: 9 },
+            { x: -16, y: 0.96, z: -9 },
+            { x: 0, y: 0.96, z: -28.5 }
           ];
-          const fileMat = new THREE.MeshStandardMaterial({ color: 0xfacc15, emissive: 0x854d0e, emissiveIntensity: 0.7 });
+          const folderMat = new THREE.MeshStandardMaterial({ color: 0xfacc15, emissive: 0x854d0e, emissiveIntensity: 0.65, roughness: 0.4 });
+          const paperMat = new THREE.MeshStandardMaterial({ color: 0xf8fafc, roughness: 0.6 });
+          const ribbonMat = new THREE.MeshStandardMaterial({ color: 0xdc2626, emissive: 0x7f1d1d, emissiveIntensity: 0.5 });
 
           fileSpots.forEach((f, i) => {
-            const mesh = new THREE.Mesh(new THREE.BoxGeometry(0.65, 0.1, 0.45), fileMat);
-            mesh.position.set(f.x, f.y, f.z);
-            this.scene.add(mesh);
+            const fileGroup = new THREE.Group();
+            fileGroup.position.set(f.x, f.y, f.z);
+            fileGroup.rotation.y = (i % 2 === 0 ? 0.18 : -0.22);
+
+            const bottomCover = new THREE.Mesh(new THREE.BoxGeometry(0.68, 0.03, 0.48), folderMat);
+            const pages = new THREE.Mesh(new THREE.BoxGeometry(0.64, 0.05, 0.44), paperMat);
+            pages.position.y = 0.035;
+            const topCover = new THREE.Mesh(new THREE.BoxGeometry(0.68, 0.03, 0.48), folderMat);
+            topCover.position.y = 0.07;
+            const redBand = new THREE.Mesh(new THREE.BoxGeometry(0.16, 0.095, 0.5), ribbonMat);
+            redBand.position.set(0.14, 0.035, 0);
+
+            fileGroup.add(bottomCover);
+            fileGroup.add(pages);
+            fileGroup.add(topCover);
+            fileGroup.add(redBand);
+
+            this.scene.add(fileGroup);
             this.interactables.push({
               id: `file_${i}`,
               type: 'file',
               index: i + 1,
-              position: new THREE.Vector3(f.x, f.y, f.z),
-              mesh,
+              position: new THREE.Vector3(f.x, f.y + 0.06, f.z),
+              mesh: fileGroup,
               done: false
             });
           });
@@ -2828,6 +3568,10 @@
       const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
       renderer.setSize(window.innerWidth, window.innerHeight);
       renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      if (THREE.ACESFilmicToneMapping) {
+        renderer.toneMapping = THREE.ACESFilmicToneMapping;
+        renderer.toneMappingExposure = 1.06;
+      }
 
       const scene = new THREE.Scene();
       scene.background = new THREE.Color(0x0b101d);
@@ -2888,6 +3632,7 @@
         home: document.getElementById('lobby-view-home'),
         chapters: document.getElementById('lobby-view-chapters'),
         shop: document.getElementById('lobby-view-shop'),
+        updates: document.getElementById('lobby-view-updates'),
         settings: document.getElementById('lobby-view-settings')
       };
 
@@ -2905,10 +3650,75 @@
         showLobbyView('shop');
       });
 
+      document.getElementById('btn-nav-updates').addEventListener('click', () => {
+        audio.playClick();
+        showLobbyView('updates');
+      });
+
+      document.getElementById('btn-top-updates').addEventListener('click', () => {
+        audio.playClick();
+        showLobbyView('updates');
+      });
+
       document.getElementById('btn-nav-settings').addEventListener('click', () => {
         audio.playClick();
         showLobbyView('settings');
       });
+
+      function renderUpdateLogs() {
+        const container = document.getElementById('update-log-container');
+        if (!container) return;
+        const dict = I18N[state.lang];
+        container.innerHTML = '';
+
+        for (const entry of dict.updateLogs) {
+          const card = document.createElement('div');
+          card.className = 'update-card' + (entry.latest ? ' latest' : '');
+
+          const head = document.createElement('div');
+          head.className = 'update-card-head';
+
+          const ver = document.createElement('span');
+          ver.className = 'update-ver';
+          ver.textContent = entry.version;
+          head.appendChild(ver);
+
+          const rightWrap = document.createElement('div');
+          rightWrap.style.display = 'flex';
+          rightWrap.style.alignItems = 'center';
+          rightWrap.style.gap = '8px';
+
+          const dateSpan = document.createElement('span');
+          dateSpan.className = 'update-date';
+          dateSpan.textContent = entry.date;
+          rightWrap.appendChild(dateSpan);
+
+          if (entry.latest) {
+            const tag = document.createElement('span');
+            tag.className = 'pill-tag red';
+            tag.textContent = dict.updateLatestBadge;
+            rightWrap.appendChild(tag);
+          }
+
+          head.appendChild(rightWrap);
+          card.appendChild(head);
+
+          const title = document.createElement('div');
+          title.className = 'update-title';
+          title.textContent = entry.title;
+          card.appendChild(title);
+
+          const ul = document.createElement('ul');
+          ul.className = 'update-bullets';
+          for (const bullet of entry.items) {
+            const li = document.createElement('li');
+            li.textContent = bullet;
+            ul.appendChild(li);
+          }
+          card.appendChild(ul);
+          container.appendChild(card);
+        }
+      }
 
       document.querySelectorAll('[data-back-home]').forEach((btn) => {
         btn.addEventListener('click', () => {
@@ -2974,6 +3784,7 @@
           }
         });
 
+        renderUpdateLogs();
         updateMissionHUD();
         updateKeysHUD();
         const rawRoom = officeMap.getRoomAt(state.pos.x, state.pos.z);
