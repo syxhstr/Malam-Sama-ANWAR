@@ -2782,6 +2782,7 @@
       scene.fog = new THREE.FogExp2(0x0b101d, 0.018);
 
       const camera = new THREE.PerspectiveCamera(72, window.innerWidth / window.innerHeight, 0.1, 80);
+      camera.rotation.order = 'YXZ';
       scene.add(camera);
 
       // Pencahayaan ambien jelas kerana ciri lampu suluh telah dibuang
@@ -3013,6 +3014,8 @@
         state.pos.set(0, 1.65, 26);
         state.yaw = Math.PI;
         state.pitch = 0;
+        camera.rotation.order = 'YXZ';
+        camera.rotation.set(0, state.yaw, 0);
         state.isHiding = false;
         state.currentLocker = null;
         state.filesCollected = 0;
@@ -3053,20 +3056,25 @@
 
       window.addEventListener('keyup', (e) => { keys[e.code] = false; });
 
+      function applyLookDelta(dx, dy, factor) {
+        if (!Number.isFinite(dx) || !Number.isFinite(dy)) return;
+        const clampedX = Math.max(-90, Math.min(90, dx));
+        const clampedY = Math.max(-90, Math.min(90, dy));
+        state.yaw -= clampedX * factor * state.sensitivity;
+        state.pitch -= clampedY * factor * state.sensitivity;
+        state.pitch = Math.max(-1.15, Math.min(1.15, state.pitch));
+      }
+
       window.addEventListener('mousemove', (e) => {
         if (state.mode !== 'PLAYING') return;
         if (document.pointerLockElement === canvas) {
-          state.yaw -= e.movementX * 0.0022 * state.sensitivity;
-          state.pitch -= e.movementY * 0.0022 * state.sensitivity;
-          state.pitch = Math.max(-1.25, Math.min(1.25, state.pitch));
+          applyLookDelta(e.movementX, e.movementY, 0.0022);
         } else if (isMouseDragging) {
           const dx = e.clientX - lastMouseX;
           const dy = e.clientY - lastMouseY;
           lastMouseX = e.clientX;
           lastMouseY = e.clientY;
-          state.yaw -= dx * 0.004 * state.sensitivity;
-          state.pitch -= dy * 0.004 * state.sensitivity;
-          state.pitch = Math.max(-1.25, Math.min(1.25, state.pitch));
+          applyLookDelta(dx, dy, 0.004);
         }
       });
 
@@ -3148,9 +3156,7 @@
             const dy = t.clientY - lastLookY;
             lastLookX = t.clientX;
             lastLookY = t.clientY;
-            state.yaw -= dx * 0.0055 * state.sensitivity;
-            state.pitch -= dy * 0.0055 * state.sensitivity;
-            state.pitch = Math.max(-1.25, Math.min(1.25, state.pitch));
+            applyLookDelta(dx, dy, 0.0055);
           }
         }
       });
@@ -3341,6 +3347,7 @@
           camera.rotation.order = 'YXZ';
           camera.rotation.y = state.yaw;
           camera.rotation.x = state.pitch;
+          camera.rotation.z = 0;
           return;
         }
 
@@ -3377,6 +3384,7 @@
         camera.rotation.order = 'YXZ';
         camera.rotation.y = state.yaw;
         camera.rotation.x = state.pitch;
+        camera.rotation.z = 0;
 
         nearestInteractable = null;
         let bestDist = 2.9;
