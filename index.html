@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Malam Sama Madani</title>
+  <title>Malam Sama Madani — Permainan Seram 3D</title>
   <style>
     * {
       box-sizing: border-box;
@@ -319,12 +319,6 @@
       color: #ffffff;
     }
 
-    .pill-tag.blue {
-      background: rgba(37, 99, 235, 0.28);
-      border-color: rgba(96, 165, 250, 0.6);
-      color: #bfdbfe;
-    }
-
     /* --- SUB-VIEW HEADER --- */
     .subview-header {
       display: flex;
@@ -361,7 +355,7 @@
     /* --- CHAPTERS VIEW --- */
     .chapters-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: 1.35fr 0.95fr;
       gap: 18px;
     }
 
@@ -381,17 +375,15 @@
 
     .chapter-card.featured {
       border-color: rgba(239, 68, 68, 0.55);
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
     }
 
-    .chapter-card.featured-blue {
-      border-color: rgba(59, 130, 246, 0.65);
-      box-shadow: 0 18px 40px rgba(30, 58, 138, 0.25);
+    .chapter-card.locked {
+      opacity: 0.72;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
+      background: rgba(15, 23, 42, 0.72);
+      border-style: dashed;
     }
 
     .chapter-top {
@@ -406,10 +398,6 @@
       font-weight: 800;
       letter-spacing: 1.4px;
       color: #fca5a5;
-    }
-
-    .chapter-num.blue {
-      color: #93c5fd;
     }
 
     .chapter-title {
@@ -454,13 +442,13 @@
 
     .diff-btn strong {
       display: block;
-      font-size: 0.88rem;
+      font-size: 0.9rem;
       margin-bottom: 3px;
     }
 
     .diff-btn span {
       display: block;
-      font-size: 0.7rem;
+      font-size: 0.71rem;
       color: #94a3b8;
       line-height: 1.3;
     }
@@ -477,7 +465,7 @@
       gap: 9px;
     }
 
-    .btn-primary, .btn-blue, .btn-secondary, .btn-danger {
+    .btn-primary, .btn-secondary, .btn-danger, .btn-locked {
       width: 100%;
       padding: 13px 16px;
       border-radius: 10px;
@@ -499,16 +487,6 @@
       background: linear-gradient(135deg, #ef4444, #b91c1c);
     }
 
-    .btn-blue {
-      background: linear-gradient(135deg, #2563eb, #1d4ed8);
-      color: #fff;
-      box-shadow: 0 8px 20px rgba(37, 99, 235, 0.35);
-    }
-
-    .btn-blue:hover {
-      background: linear-gradient(135deg, #3b82f6, #2563eb);
-    }
-
     .btn-secondary {
       background: #1e293b;
       color: #e2e8f0;
@@ -523,6 +501,13 @@
       background: #450a0a;
       color: #fecaca;
       border: 1px solid #7f1d1d;
+    }
+
+    .btn-locked {
+      background: rgba(30, 41, 59, 0.65);
+      color: #94a3b8;
+      border: 1px solid rgba(148, 163, 184, 0.25);
+      cursor: not-allowed;
     }
 
     .mini-controls-box {
@@ -643,7 +628,6 @@
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 8px;
-      margin-bottom: 8px;
     }
 
     .file-btn {
@@ -670,7 +654,7 @@
     }
 
     .asset-status {
-      margin-top: 6px;
+      margin-top: 8px;
       font-size: 0.76rem;
       color: #34d399;
     }
@@ -786,12 +770,11 @@
       display: flex;
       flex-direction: column;
       gap: 8px;
-      max-width: 320px;
-      z-index: 6;
+      max-width: 310px;
     }
 
     .mission-card, .keys-card {
-      background: rgba(10, 15, 28, 0.84);
+      background: rgba(10, 15, 28, 0.82);
       border: 1px solid rgba(148, 163, 184, 0.28);
       border-radius: 10px;
       padding: 10px 12px;
@@ -881,7 +864,6 @@
       display: flex;
       align-items: flex-start;
       gap: 10px;
-      z-index: 6;
     }
 
     .minimap-wrap {
@@ -938,210 +920,13 @@
       border-radius: 999px;
       font-size: 0.86rem;
       white-space: nowrap;
-      z-index: 6;
     }
 
     .interact-prompt { top: 56%; }
     .hiding-banner { top: 20%; border-color: #38bdf8; color: #bae6fd; }
     .toast-msg { top: 14%; border-color: #34d399; color: #a7f3d0; }
 
-    /* ================= BAB 2: HUD BILIK KAWALAN 3D ================= */
-    .ch2-clock-row {
-      display: flex;
-      align-items: baseline;
-      justify-content: space-between;
-      gap: 12px;
-      margin-top: 2px;
-    }
-
-    .ch2-clock-val {
-      font-size: 1.45rem;
-      font-weight: 900;
-      font-family: monospace;
-      color: #f8fafc;
-      letter-spacing: 1px;
-    }
-
-    .ch2-power-bar-wrap {
-      width: 100%;
-      height: 8px;
-      background: rgba(30, 41, 59, 0.9);
-      border-radius: 999px;
-      overflow: hidden;
-      margin: 6px 0 4px;
-      border: 1px solid rgba(148, 163, 184, 0.25);
-    }
-
-    .ch2-power-fill {
-      height: 100%;
-      width: 100%;
-      background: #22c55e;
-      transition: width 0.2s ease, background 0.2s ease;
-    }
-
-    .ch2-usage-dots {
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      margin-top: 4px;
-    }
-
-    .ch2-dot {
-      width: 14px;
-      height: 7px;
-      border-radius: 3px;
-      background: rgba(51, 65, 85, 0.7);
-    }
-
-    .ch2-dot.on.low { background: #22c55e; }
-    .ch2-dot.on.mid { background: #facc15; }
-    .ch2-dot.on.high { background: #ef4444; }
-
-    .ch2-control-dock {
-      position: absolute;
-      bottom: 16px;
-      left: 50%;
-      transform: translateX(-50%);
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 8px;
-      width: min(780px, 95vw);
-      pointer-events: auto;
-      z-index: 7;
-    }
-
-    .ch2-dock-btn {
-      padding: 10px 13px;
-      border-radius: 11px;
-      background: rgba(15, 23, 42, 0.9);
-      border: 1px solid rgba(148, 163, 184, 0.35);
-      color: #f8fafc;
-      font-weight: 800;
-      font-size: 0.8rem;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.5);
-      transition: all 0.14s ease;
-    }
-
-    .ch2-dock-btn:hover {
-      background: rgba(30, 41, 59, 0.98);
-      transform: translateY(-1px);
-    }
-
-    .ch2-dock-btn.door-closed {
-      background: rgba(185, 28, 28, 0.92);
-      border-color: #fca5a5;
-      color: #fff;
-    }
-
-    .ch2-dock-btn.light-on {
-      background: rgba(202, 138, 4, 0.92);
-      border-color: #fef08a;
-      color: #fff;
-    }
-
-    .ch2-dock-btn.cctv-btn {
-      background: rgba(29, 78, 216, 0.92);
-      border-color: #93c5fd;
-      color: #fff;
-    }
-
-    /* Overlay Monitor CCTV Bab 2 */
-    .ch2-cctv-modal {
-      position: fixed;
-      inset: 0;
-      z-index: 8;
-      background: rgba(3, 7, 18, 0.72);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 16px;
-      pointer-events: auto;
-    }
-
-    .ch2-cctv-frame {
-      width: min(740px, 95vw);
-      background: #090d16;
-      border: 2px solid #38bdf8;
-      border-radius: 14px;
-      padding: 14px;
-      box-shadow: 0 0 40px rgba(56, 189, 248, 0.25);
-    }
-
-    .ch2-cctv-top {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 10px;
-      gap: 8px;
-    }
-
-    .ch2-cctv-screen-wrap {
-      position: relative;
-      width: 100%;
-      aspect-ratio: 16 / 9;
-      max-height: 46vh;
-      background: #020617;
-      border: 1px solid #1e293b;
-      border-radius: 10px;
-      overflow: hidden;
-      margin-bottom: 10px;
-    }
-
-    #ch2-cctv-canvas {
-      width: 100%;
-      height: 100%;
-      display: block;
-    }
-
-    .ch2-cam-grid {
-      display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      gap: 6px;
-      margin-bottom: 10px;
-    }
-
-    @media (max-width: 560px) {
-      .ch2-cam-grid {
-        grid-template-columns: repeat(3, 1fr);
-      }
-    }
-
-    .ch2-cam-btn {
-      padding: 8px 6px;
-      border-radius: 8px;
-      background: #1e293b;
-      border: 1px solid #334155;
-      color: #cbd5e1;
-      font-weight: 800;
-      font-size: 0.74rem;
-      cursor: pointer;
-    }
-
-    .ch2-cam-btn.active {
-      background: #0284c7;
-      border-color: #7dd3fc;
-      color: #ffffff;
-    }
-
-    .ch2-cctv-actions {
-      display: flex;
-      justify-content: space-between;
-      gap: 10px;
-    }
-
-    .ch2-look-zone {
-      position: fixed;
-      inset: 0;
-      z-index: 4;
-      pointer-events: auto;
-    }
-
-    /* ================= KAWALAN TELEFON (BAB 1) ================= */
+    /* ================= KAWALAN TELEFON ================= */
     .mobile-controls {
       position: fixed;
       inset: 0;
@@ -1384,7 +1169,7 @@
       <div class="top-quick-bar">
         <button type="button" id="btn-top-updates" class="version-chip-btn">
           <span>📋</span>
-          <span data-i18n="topUpdateChip">V 0.1.0 • LOG KEMAS KINI</span>
+          <span data-i18n="topUpdateChip">v1.3 • LOG KEMAS KINI</span>
         </button>
 
         <div class="lang-pill-group" role="group" aria-label="Language Switcher">
@@ -1413,7 +1198,7 @@
 
             <button type="button" id="btn-nav-updates" class="menu-btn">
               <span data-i18n="menuUpdates">LOG KEMAS KINI</span>
-              <span class="pill-tag red" data-i18n="menuUpdatesTag">V 0.1.0 BARU</span>
+              <span class="pill-tag red" data-i18n="menuUpdatesTag">v1.3 BARU</span>
             </button>
 
             <button type="button" id="btn-nav-settings" class="menu-btn">
@@ -1435,80 +1220,51 @@
         <div class="chapters-grid">
           <!-- CHAPTER 1: MALAM SAMA ANWAR -->
           <div class="panel chapter-card featured">
-            <div>
-              <div class="chapter-top">
-                <span class="chapter-num" data-i18n="ch1Label">BAB 1 • TINGKAT 14</span>
-                <span class="pill-tag red" data-i18n="ch1Playable">BOLEH MAIN</span>
-              </div>
-              <h3 class="chapter-title">MALAM SAMA ANWAR</h3>
-              <p class="chapter-desc" data-i18n="ch1Desc">Cari kunci berwarna untuk membuka pintu berkunci, kumpul 4 Fail Audit Sulit, hidupkan 2 suis janakuasa kecemasan, dan melarikan diri melalui Lif Utama.</p>
+            <div class="chapter-top">
+              <span class="chapter-num" data-i18n="ch1Label">BAB 1 • TINGKAT 14</span>
+              <span class="pill-tag red" data-i18n="ch1Playable">BOLEH MAIN</span>
+            </div>
+            <h3 class="chapter-title">MALAM SAMA ANWAR</h3>
+            <p class="chapter-desc" data-i18n="ch1Desc">Cari kunci berwarna untuk membuka pintu berkunci, kumpul 4 Fail Audit Sulit, hidupkan 2 suis janakuasa kecemasan, dan melarikan diri melalui Lif Utama.</p>
+
+            <label class="field-label" data-i18n="selectDiffLabel">Pilih Tahap Kesukaran</label>
+            <div class="diff-group" id="difficulty-group">
+              <button type="button" class="diff-btn" data-diff="mudah">
+                <strong>Easy Mode</strong>
+                <span data-i18n="diffEasyDesc">Santai & mudah melepaskan diri</span>
+              </button>
+              <button type="button" class="diff-btn active" data-diff="sederhana">
+                <strong>Normal Mode</strong>
+                <span data-i18n="diffNormalDesc">Seimbang & adil untuk lari</span>
+              </button>
+              <button type="button" class="diff-btn" data-diff="sukar">
+                <strong>Hard Mode</strong>
+                <span data-i18n="diffHardDesc">Pantas — tutup pintu & sorok!</span>
+              </button>
             </div>
 
-            <div>
-              <label class="field-label" data-i18n="selectDiffLabel">Pilih Tahap Kesukaran</label>
-              <div class="diff-group">
-                <button type="button" class="diff-btn" data-diff="mudah">
-                  <strong>Easy Mode</strong>
-                  <span data-i18n="diffEasyDesc">Santai & mudah melepaskan diri</span>
-                </button>
-                <button type="button" class="diff-btn active" data-diff="sederhana">
-                  <strong>Normal Mode</strong>
-                  <span data-i18n="diffNormalDesc">Seimbang & adil untuk lari</span>
-                </button>
-                <button type="button" class="diff-btn" data-diff="sukar">
-                  <strong>Hard Mode</strong>
-                  <span data-i18n="diffHardDesc">Pantas — tutup pintu & sorok!</span>
-                </button>
-              </div>
+            <div class="action-buttons">
+              <button type="button" id="btn-start" class="btn-primary" data-i18n="btnStartCh1">MULA BAB 1</button>
+              <button type="button" id="btn-start-skip" class="btn-secondary" data-i18n="btnSkipStartCh1">TERUS MAIN (LANGKAU INTRO)</button>
+            </div>
 
-              <div class="action-buttons">
-                <button type="button" id="btn-start" class="btn-primary" data-i18n="btnStartCh1">MULA BAB 1</button>
-                <button type="button" id="btn-start-skip" class="btn-secondary" data-i18n="btnSkipStartCh1">TERUS MAIN (LANGKAU INTRO)</button>
-              </div>
-
-              <div class="mini-controls-box" data-i18n-html="quickControlsHtml">
-                <strong>Kawalan PC:</strong> <kbd>WASD</kbd> Gerak • <kbd>Tetikus</kbd> Pandang • <kbd>E</kbd> Buka Pintu / Kunci / Ambil / Loker
-              </div>
+            <div class="mini-controls-box" data-i18n-html="quickControlsHtml">
+              <strong>Kawalan PC:</strong> <kbd>WASD</kbd> Gerak • <kbd>Tetikus</kbd> Pandang • <kbd>E</kbd> Buka Pintu / Kunci / Ambil / Loker
             </div>
           </div>
 
-          <!-- CHAPTER 2: MALAM SAMA ZAHID (3D CONTROL ROOM) -->
-          <div class="panel chapter-card featured-blue">
+          <!-- CHAPTER 2: COMING SOON -->
+          <div class="panel chapter-card locked">
             <div>
               <div class="chapter-top">
-                <span class="chapter-num blue" data-i18n="ch2Label">BAB 2 • BILIK KAWALAN B1</span>
-                <span class="pill-tag blue" data-i18n="ch2Badge">BAHARU • 3D</span>
+                <span class="chapter-num" data-i18n="ch2Label">BAB 2 • MISTERI BAHARU</span>
+                <span class="pill-tag" data-i18n="comingSoon">COMING SOON</span>
               </div>
-              <h3 class="chapter-title">MALAM SAMA ZAHID</h3>
-              <p class="chapter-desc" data-i18n="ch2Desc">Duduk di kerusi Bilik Kawalan Keselamatan (12:00 AM – 6:00 AM). Pusing pandangan kiri-kanan untuk periksa tingkap & pintu, pantau monitor CCTV, dan jimatkan kuasa bateri tanpa perlu berlari.</p>
+              <h3 class="chapter-title" data-i18n="ch2Title">COMING SOON</h3>
+              <p class="chapter-desc" data-i18n="ch2Desc">Bab kedua sedang dalam pembikinan. Lokasi baharu, teka-teki baharu, dan ancaman lebih mencabar bakal tiba tidak lama lagi.</p>
             </div>
 
-            <div>
-              <label class="field-label" data-i18n="selectDiffLabel">Pilih Tahap Kesukaran</label>
-              <div class="diff-group">
-                <button type="button" class="diff-btn" data-diff="mudah">
-                  <strong>Easy Mode</strong>
-                  <span data-i18n="ch2DiffEasy">Zahid perlahan & bateri jimat</span>
-                </button>
-                <button type="button" class="diff-btn active" data-diff="sederhana">
-                  <strong>Normal Mode</strong>
-                  <span data-i18n="ch2DiffNormal">Syif seimbang & mencabar</span>
-                </button>
-                <button type="button" class="diff-btn" data-diff="sukar">
-                  <strong>Hard Mode</strong>
-                  <span data-i18n="ch2DiffHard">Agresif — pantau CCTV & pintu!</span>
-                </button>
-              </div>
-
-              <div class="action-buttons">
-                <button type="button" id="btn-start-ch2" class="btn-blue" data-i18n="btnStartCh2">MULA BAB 2</button>
-                <button type="button" id="btn-start-ch2-skip" class="btn-secondary" data-i18n="btnSkipStartCh2">TERUS MAIN (LANGKAU INTRO)</button>
-              </div>
-
-              <div class="mini-controls-box" data-i18n-html="ch2ControlsHtml">
-                <strong>Kawalan 3D:</strong> Pusing kiri/kanan (<kbd>A</kbd>/<kbd>D</kbd> atau Seret) • <kbd>E</kbd> Suis / CCTV • Klik Butang Kawalan
-              </div>
-            </div>
+            <button type="button" class="btn-locked" disabled data-i18n="ch2LockedBtn">DIKUNCI • COMING SOON</button>
           </div>
         </div>
       </div>
@@ -1579,27 +1335,17 @@
           </div>
 
           <div class="panel">
-            <label class="field-label" data-i18n="assetTitle">Aset Entiti Bab 1 & Bab 2 (Muka & Suara)</label>
+            <label class="field-label" data-i18n="assetTitle">Aset Entiti (Muka & Suara)</label>
             <div class="asset-box">
-              <p class="asset-hint" data-i18n-html="assetHintHtml">Automatik baca <code>anwar.png</code>, <code>sakau.mp3</code> (Bab 1) serta <code>zahid.png</code>, <code>zahid.mp3</code> (Bab 2) dari GitHub, atau pilih fail tersuai:</p>
+              <p class="asset-hint" data-i18n-html="assetHintHtml">Game automatik baca <code>anwar.png</code> & <code>sakau.mp3</code> di GitHub, atau pilih fail terus dari PC/telefon anda:</p>
               <div class="upload-row">
                 <label class="file-btn">
-                  <span data-i18n="uploadFaceBtn">Bab 1: Gambar Anwar</span>
+                  <span data-i18n="uploadFaceBtn">Pilih Gambar Muka</span>
                   <input type="file" id="face-upload" accept="image/*" />
                 </label>
                 <label class="file-btn">
-                  <span data-i18n="uploadAudioBtn">Bab 1: Audio Anwar</span>
+                  <span data-i18n="uploadAudioBtn">Pilih Audio Suara</span>
                   <input type="file" id="audio-upload" accept="audio/*" />
-                </label>
-              </div>
-              <div class="upload-row">
-                <label class="file-btn">
-                  <span data-i18n="uploadZahidFaceBtn">Bab 2: Gambar Zahid</span>
-                  <input type="file" id="zahid-face-upload" accept="image/*" />
-                </label>
-                <label class="file-btn">
-                  <span data-i18n="uploadZahidAudioBtn">Bab 2: Audio Zahid</span>
-                  <input type="file" id="zahid-audio-upload" accept="audio/*" />
                 </label>
               </div>
               <div id="asset-status" class="asset-status" data-i18n="assetReady">Status: Sedia dimainkan</div>
@@ -1614,7 +1360,7 @@
   <section id="intro-screen" class="screen">
     <div class="letterbox top"></div>
     <div class="intro-hud">
-      <div class="rec-tag"><span class="dot"></span> <span id="intro-rec-tag" data-i18n="recTag">RAKAMAN CCTV • 02:17:04</span></div>
+      <div class="rec-tag"><span class="dot"></span> <span data-i18n="recTag">RAKAMAN CCTV • 02:17:04</span></div>
       <button type="button" id="btn-skip-intro" class="btn-skip" data-i18n="btnSkipIntro">LANGKAU INTRO &raquo;</button>
     </div>
     <div class="subtitle-box">
@@ -1627,8 +1373,7 @@
 
   <!-- ================= 3. HUD DALAM PERMAINAN ================= -->
   <section id="hud-screen" class="screen">
-    <!-- HUD BAB 1 -->
-    <div id="ch1-hud-group" class="hud-top-left">
+    <div class="hud-top-left">
       <div class="mission-card">
         <div class="mission-label" data-i18n="missionLabel">OBJEKTIF SEMASA</div>
         <div id="mission-text" class="mission-text">Fasa 1: Kumpul Fail Audit Sulit (0 / 4)</div>
@@ -1650,36 +1395,8 @@
       </div>
     </div>
 
-    <!-- HUD BAB 2 (BILIK KAWALAN 3D) -->
-    <div id="ch2-hud-group" class="hud-top-left hidden">
-      <div class="mission-card">
-        <div class="mission-label" data-i18n="ch2ShiftLabel">SYIF MALAM • BILIK KAWALAN B1</div>
-        <div class="ch2-clock-row">
-          <div id="ch2-clock-text" class="ch2-clock-val">12:00 AM</div>
-          <div style="font-size:0.74rem;color:#93c5fd;font-weight:700;" data-i18n="ch2TargetTime">SASARAN: 6:00 AM</div>
-        </div>
-        <div class="ch2-power-bar-wrap">
-          <div id="ch2-power-fill" class="ch2-power-fill"></div>
-        </div>
-        <div style="display:flex;justify-content:space-between;align-items:center;font-size:0.76rem;">
-          <span><strong data-i18n="ch2PowerLabel">Kuasa Bateri</strong>: <strong id="ch2-power-pct">100%</strong></span>
-          <div class="ch2-usage-dots" id="ch2-usage-dots">
-            <span class="ch2-dot on low"></span>
-            <span class="ch2-dot"></span>
-            <span class="ch2-dot"></span>
-            <span class="ch2-dot"></span>
-            <span class="ch2-dot"></span>
-          </div>
-        </div>
-      </div>
-
-      <div id="ch2-danger-banner" class="danger-banner hidden" data-i18n="ch2DangerBanner">
-        AMARAN: ADA KELIBAT DI LUAR PINTU!
-      </div>
-    </div>
-
     <div class="hud-top-right">
-      <div id="ch1-minimap-wrap" class="minimap-wrap">
+      <div class="minimap-wrap">
         <canvas id="minimap-canvas" width="160" height="160"></canvas>
         <div class="minimap-label" data-i18n="minimapLabel">PELAN TINGKAT 14</div>
       </div>
@@ -1695,43 +1412,6 @@
     </div>
     <div id="toast-msg" class="toast-msg hidden"></div>
 
-    <!-- KAWALAN BAB 2 (3D LOOK ZONE + DOCK BUTANG BILIK KAWALAN) -->
-    <div id="ch2-look-zone" class="ch2-look-zone hidden"></div>
-    <div id="ch2-control-dock" class="ch2-control-dock hidden">
-      <button type="button" id="ch2-btn-left-door" class="ch2-dock-btn">🚪 <span data-i18n="ch2LeftDoor">Pintu Kiri</span></button>
-      <button type="button" id="ch2-btn-left-light" class="ch2-dock-btn">💡 <span data-i18n="ch2LeftLight">Lampu Kiri</span></button>
-      <button type="button" id="ch2-btn-cctv" class="ch2-dock-btn cctv-btn">📹 <span data-i18n="ch2CctvBtn">Monitor CCTV</span></button>
-      <button type="button" id="ch2-btn-right-light" class="ch2-dock-btn">💡 <span data-i18n="ch2RightLight">Lampu Kanan</span></button>
-      <button type="button" id="ch2-btn-right-door" class="ch2-dock-btn">🚪 <span data-i18n="ch2RightDoor">Pintu Kanan</span></button>
-    </div>
-
-    <!-- OVERLAY MONITOR CCTV BAB 2 -->
-    <div id="ch2-cctv-modal" class="ch2-cctv-modal hidden">
-      <div class="ch2-cctv-frame">
-        <div class="ch2-cctv-top">
-          <div style="display:flex;align-items:center;gap:8px;">
-            <span class="dot" style="width:9px;height:9px;border-radius:50%;background:#ef4444;display:inline-block;"></span>
-            <strong id="ch2-cam-title" style="font-family:monospace;color:#38bdf8;">CAM 01 • DEWAN UTAMA</strong>
-          </div>
-          <button type="button" id="ch2-btn-close-cctv" class="btn-back" data-i18n="ch2CloseCctv">TUTUP CCTV [E]</button>
-        </div>
-        <div class="ch2-cctv-screen-wrap">
-          <canvas id="ch2-cctv-canvas" width="640" height="360"></canvas>
-        </div>
-        <div class="ch2-cam-grid" id="ch2-cam-grid">
-          <button type="button" class="ch2-cam-btn active" data-cam="0">CAM 01</button>
-          <button type="button" class="ch2-cam-btn" data-cam="1">CAM 02</button>
-          <button type="button" class="ch2-cam-btn" data-cam="2">CAM 03</button>
-          <button type="button" class="ch2-cam-btn" data-cam="3">CAM 04 (KIRI)</button>
-          <button type="button" class="ch2-cam-btn" data-cam="4">CAM 05 (KANAN)</button>
-        </div>
-        <div class="ch2-cctv-actions">
-          <button type="button" id="ch2-btn-audio-lure" class="btn-blue" style="padding:10px 14px;font-size:0.84rem;" data-i18n="ch2AudioLureBtn">🔊 MAIN UMPAN BUNYI DI KAMERA INI</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- KAWALAN TELEFON BAB 1 -->
     <div id="mobile-controls" class="mobile-controls">
       <div id="joystick-zone" class="joystick-zone">
         <div id="joystick-base" class="joystick-base">
@@ -1749,7 +1429,7 @@
   <section id="pause-screen" class="screen overlay-modal">
     <div class="modal-card">
       <h2 data-i18n="pauseTitle">PERMAINAN DIJEDA</h2>
-      <p id="pause-sub-text" style="color:#cbd5e1;margin-bottom:16px;" data-i18n="pauseSub">Tarik nafas sekejap. Beliau masih meronda di Tingkat 14.</p>
+      <p style="color:#cbd5e1;margin-bottom:16px;" data-i18n="pauseSub">Tarik nafas sekejap. Beliau masih meronda di Tingkat 14.</p>
       <div class="modal-actions">
         <button type="button" id="btn-resume" class="btn-primary" data-i18n="btnResume">SAMBUNG MAIN</button>
         <button type="button" id="btn-toggle-touch" class="btn-secondary" data-i18n="btnToggleTouch">TOGOL KAWALAN TELEFON</button>
@@ -1763,7 +1443,7 @@
     <div class="jumpscare-flash"></div>
     <div id="jumpscare-face-wrap" class="jumpscare-face-wrap">
       <img id="jumpscare-img" alt="Entiti" />
-      <div id="jumpscare-caption" class="jumpscare-caption">SAKAUUUU!!</div>
+      <div class="jumpscare-caption">SAKAUUUU!!</div>
     </div>
   </section>
 
@@ -1771,24 +1451,24 @@
   <section id="death-screen" class="screen overlay-modal">
     <div class="modal-card death-card">
       <div class="status-pill danger" data-i18n="deathPill">MISI GAGAL</div>
-      <h1 id="death-title-text" data-i18n="deathTitle">ANDA TELAH DISAKAU!</h1>
-      <p id="death-sub-text" class="death-sub" data-i18n="deathSub">Beliau berjaya menangkap anda sebelum fail audit sempat dibawa keluar dari Tingkat 14.</p>
+      <h1 data-i18n="deathTitle">ANDA TELAH DISAKAU!</h1>
+      <p class="death-sub" data-i18n="deathSub">Beliau berjaya menangkap anda sebelum fail audit sempat dibawa keluar dari Tingkat 14.</p>
 
       <div class="stats-grid">
         <div class="stat-item">
-          <span id="stat-d1-label" data-i18n="statRoomLabel">Lokasi Ditangkap</span>
+          <span data-i18n="statRoomLabel">Lokasi Ditangkap</span>
           <strong id="stat-death-room">-</strong>
         </div>
         <div class="stat-item">
-          <span id="stat-d2-label" data-i18n="statTimeLabel">Masa Bertahan</span>
+          <span data-i18n="statTimeLabel">Masa Bertahan</span>
           <strong id="stat-death-time">00:00</strong>
         </div>
         <div class="stat-item">
-          <span id="stat-d3-label" data-i18n="statFilesLabel">Fail Audit Diperoleh</span>
+          <span data-i18n="statFilesLabel">Fail Audit Diperoleh</span>
           <strong id="stat-death-files">0 / 4</strong>
         </div>
         <div class="stat-item">
-          <span id="stat-d4-label" data-i18n="statSwitchesLabel">Suis Kuasa Dihidupkan</span>
+          <span data-i18n="statSwitchesLabel">Suis Kuasa Dihidupkan</span>
           <strong id="stat-death-switches">0 / 2</strong>
         </div>
       </div>
@@ -1804,8 +1484,8 @@
   <section id="win-screen" class="screen overlay-modal">
     <div class="modal-card win-card">
       <div class="status-pill success" data-i18n="winPill">MISI BERJAYA</div>
-      <h1 id="win-title-text" data-i18n="winTitle">BERJAYA MELARIKAN DIRI!</h1>
-      <p id="win-sub-text" class="death-sub" data-i18n="winSub">Pintu lif tertutup rapat tepat pada masanya. Semua 4 Fail Audit Sulit kini selamat di tangan anda.</p>
+      <h1 data-i18n="winTitle">BERJAYA MELARIKAN DIRI!</h1>
+      <p class="death-sub" data-i18n="winSub">Pintu lif tertutup rapat tepat pada masanya. Semua 4 Fail Audit Sulit kini selamat di tangan anda.</p>
 
       <div class="stats-grid">
         <div class="stat-item">
@@ -1813,7 +1493,7 @@
           <strong id="stat-win-diff">Normal Mode</strong>
         </div>
         <div class="stat-item">
-          <span id="stat-w2-label" data-i18n="statWinTimeLabel">Masa Selesai</span>
+          <span data-i18n="statWinTimeLabel">Masa Selesai</span>
           <strong id="stat-win-time">00:00</strong>
         </div>
       </div>
@@ -1842,28 +1522,16 @@
           menuPlayTag: 'PILIH BAB »',
           menuShop: 'KEDAI',
           comingSoon: 'COMING SOON',
-          topUpdateChip: 'V 0.1.0 • LOG KEMAS KINI',
+          topUpdateChip: 'v1.3 • LOG KEMAS KINI',
           menuUpdates: 'LOG KEMAS KINI',
-          menuUpdatesTag: 'V 0.1.0 BARU',
-          updateLogTitle: 'LOG KEMAS KINI (UPDATE LOG)',
+          menuUpdatesTag: 'v1.3 BARU',
+          updateLogTitle: 'LOG KEMAS KINI',
           updateLatestBadge: 'TERKINI',
           updateLogs: [
             {
-              version: 'V 0.1.0',
-              date: 'Kemas Kini Baharu (Bab 2)',
-              latest: true,
-              title: 'Pelancaran Bab 2: Malam Sama Zahid (3D Bilik Kawalan)',
-              items: [
-                'Tambah Bab 2: Malam Sama Zahid dalam dunia 3D Bilik Kawalan Keselamatan (12:00 AM hingga 6:00 AM).',
-                'Duduk di kerusi kawalan 3D dan pusing pandangan kiri-kanan untuk memantau tingkap hadapan, pintu keselamatan kiri/kanan, monitor CCTV 3D, dan meja fail tanpa perlu berlari.',
-                'Tambah sistem kamera CCTV 5 saluran dengan fungsi Umpan Bunyi (Audio Lure) serta pengurusan kuasa bateri dan lampu pintu.',
-                'Tambah sokongan aset automatik Bab 2 (zahid.png & zahid.mp3) di samping mengekalkan Bab 1: Malam Sama Anwar 100% utuh.'
-              ]
-            },
-            {
               version: 'v1.3',
-              date: 'Kemas Kini Terdahulu',
-              latest: false,
+              date: 'Kemas Kini Terbaharu',
+              latest: true,
               title: 'Log Kemas Kini, Fix Skrin Telefon & Naik Taraf Model 3D',
               items: [
                 'Tambah paparan Log Kemas Kini (Update Log) terus di menu utama dengan sokongan penuh BM & BI.',
@@ -1916,26 +1584,10 @@
           btnStartCh1: 'MULA BAB 1',
           btnSkipStartCh1: 'TERUS MAIN (LANGKAU INTRO)',
           quickControlsHtml: '<strong>Kawalan PC:</strong> <kbd>WASD</kbd> Gerak • <kbd>Tetikus</kbd> Pandang • <kbd>E</kbd> Buka Pintu / Kunci / Ambil / Loker',
-          ch2Label: 'BAB 2 • BILIK KAWALAN B1',
-          ch2Badge: 'BAHARU • 3D',
-          ch2Desc: 'Duduk di kerusi Bilik Kawalan Keselamatan (12:00 AM – 6:00 AM). Pusing pandangan kiri-kanan untuk periksa tingkap & pintu, pantau monitor CCTV, dan jimatkan kuasa bateri tanpa perlu berlari.',
-          ch2DiffEasy: 'Zahid perlahan & bateri jimat',
-          ch2DiffNormal: 'Syif seimbang & mencabar',
-          ch2DiffHard: 'Agresif — pantau CCTV & pintu!',
-          btnStartCh2: 'MULA BAB 2',
-          btnSkipStartCh2: 'TERUS MAIN (LANGKAU INTRO)',
-          ch2ControlsHtml: '<strong>Kawalan 3D:</strong> Pusing kiri/kanan (<kbd>A</kbd>/<kbd>D</kbd> atau Seret) • <kbd>E</kbd> Suis / CCTV • Klik Butang Kawalan',
-          ch2ShiftLabel: 'SYIF MALAM • BILIK KAWALAN B1',
-          ch2TargetTime: 'SASARAN: 6:00 AM',
-          ch2PowerLabel: 'Kuasa Bateri',
-          ch2DangerBanner: 'AMARAN: ADA KELIBAT DI LUAR PINTU!',
-          ch2LeftDoor: 'Pintu Kiri',
-          ch2LeftLight: 'Lampu Kiri',
-          ch2CctvBtn: 'Monitor CCTV',
-          ch2RightLight: 'Lampu Kanan',
-          ch2RightDoor: 'Pintu Kanan',
-          ch2CloseCctv: 'TUTUP CCTV [E]',
-          ch2AudioLureBtn: '🔊 MAIN UMPAN BUNYI DI KAMERA INI',
+          ch2Label: 'BAB 2 • MISTERI BAHARU',
+          ch2Title: 'COMING SOON',
+          ch2Desc: 'Bab kedua sedang dalam pembikinan. Lokasi baharu, teka-teki baharu, dan ancaman lebih mencabar bakal tiba tidak lama lagi.',
+          ch2LockedBtn: 'DIKUNCI • COMING SOON',
           shopItem1Title: 'Pengesan Kunci',
           shopItem1Desc: 'Menunjukkan arah lokasi kunci terdekat pada pelan Tingkat 14.',
           shopItem2Title: 'Azimat Pelindung',
@@ -1945,15 +1597,12 @@
           settingsTitle: 'TETAPAN PERMAINAN',
           langSettingLabel: 'Bahasa / Language (BM & BI)',
           sensLabel: 'Sensitiviti Kamera',
-          assetTitle: 'Aset Entiti Bab 1 & Bab 2 (Muka & Suara)',
-          assetHintHtml: 'Automatik baca <code>anwar.png</code>, <code>sakau.mp3</code> (Bab 1) serta <code>zahid.png</code>, <code>zahid.mp3</code> (Bab 2) dari GitHub, atau pilih fail tersuai:',
-          uploadFaceBtn: 'Bab 1: Gambar Anwar',
-          uploadAudioBtn: 'Bab 1: Audio Anwar',
-          uploadZahidFaceBtn: 'Bab 2: Gambar Zahid',
-          uploadZahidAudioBtn: 'Bab 2: Audio Zahid',
+          assetTitle: 'Aset Entiti (Muka & Suara)',
+          assetHintHtml: 'Game automatik baca <code>anwar.png</code> & <code>sakau.mp3</code> di GitHub, atau pilih fail terus dari PC/telefon anda:',
+          uploadFaceBtn: 'Pilih Gambar Muka',
+          uploadAudioBtn: 'Pilih Audio Suara',
           assetReady: 'Status: Sedia dimainkan',
           recTag: 'RAKAMAN CCTV • 02:17:04',
-          recTagCh2: 'BILIK KAWALAN B1 • 11:58:40 PM',
           btnSkipIntro: 'LANGKAU INTRO »',
           missionLabel: 'OBJEKTIF SEMASA',
           keysLabel: 'KOLEKSI KUNCI',
@@ -1967,33 +1616,23 @@
           mobAction: 'AKSI',
           pauseTitle: 'PERMAINAN DIJEDA',
           pauseSub: 'Tarik nafas sekejap. Beliau masih meronda di Tingkat 14.',
-          pauseSubCh2: 'Syif malam dijeda sementara. Zahid masih berlegar di luar Bilik Kawalan.',
           btnResume: 'SAMBUNG MAIN',
           btnToggleTouch: 'TOGOL KAWALAN TELEFON',
           btnQuit: 'KELUAR KE MENU UTAMA',
           deathPill: 'MISI GAGAL',
           deathTitle: 'ANDA TELAH DISAKAU!',
           deathSub: 'Beliau berjaya menangkap anda sebelum fail audit sempat dibawa keluar dari Tingkat 14.',
-          deathTitleCh2: 'BILIK KAWALAN DITEMBUSI!',
-          deathSubCh2: 'Zahid berjaya menyusup masuk ke Bilik Kawalan sebelum syif berakhir pada jam 6:00 AM.',
           statRoomLabel: 'Lokasi Ditangkap',
           statTimeLabel: 'Masa Bertahan',
           statFilesLabel: 'Fail Audit Diperoleh',
           statSwitchesLabel: 'Suis Kuasa Dihidupkan',
-          statCh2ShiftTime: 'Jam Bertahan',
-          statCh2PowerLeft: 'Baki Bateri',
-          statCh2DoorsBlocked: 'Serangan Dihalau',
-          statCh2LuresUsed: 'Umpan Bunyi',
           btnRetry: 'CUBA LAGI',
           btnMainMenu: 'MENU UTAMA',
           winPill: 'MISI BERJAYA',
           winTitle: 'BERJAYA MELARIKAN DIRI!',
           winSub: 'Pintu lif tertutup rapat tepat pada masanya. Semua 4 Fail Audit Sulit kini selamat di tangan anda.',
-          winTitleCh2: 'SYIF 6:00 AM TAMAT!',
-          winSubCh2: 'Loceng syif pagi berbunyi! Anda berjaya bertahan di Bilik Kawalan dan mengawal meja fail sehingga subuh.',
           statDiffLabel: 'Tahap Kesukaran',
           statWinTimeLabel: 'Masa Selesai',
-          statWinPowerLabel: 'Baki Kuasa Bateri',
           btnPlayAgain: 'MAIN SEMULA',
           phase1: (c) => `Fasa 1: Kumpul Fail Audit Sulit (${c} / 4)`,
           phase2: (c) => `Fasa 2: Hidupkan Suis Janakuasa (${c} / 2)`,
@@ -2009,10 +1648,6 @@
           toastKeyGot: (colorName) => `${colorName} diperoleh!`,
           toastDoorLocked: (colorName) => `Pintu berkunci! Perlukan ${colorName}.`,
           toastDoorUnlocked: (colorName) => `Mangga ${colorName} berjaya dibuka!`,
-          toastCh2PowerOut: 'BEKALAN KUASA HABIS! Semua sistem terpadam...',
-          toastCh2LureSent: (camName) => `Umpan bunyi dimainkan di ${camName}!`,
-          toastCh2LureWait: 'Sistem audio sedang mengecas semula...',
-          toastCh2FilesNote: 'Meja Fail Sulit selamat diawasi. Jangan biarkan Zahid masuk!',
           keyNames: {
             red: 'Kunci Merah',
             blue: 'Kunci Biru',
@@ -2034,13 +1669,7 @@
             doorOpen: 'Buka Pintu',
             doorClose: 'Tutup Pintu',
             doorUnlock: (keyName) => `Buka Kunci (${keyName})`,
-            doorLocked: (keyName) => `Berkunci — Perlukan ${keyName}`,
-            ch2LeftDoor: 'Suis Pintu Kiri',
-            ch2RightDoor: 'Suis Pintu Kanan',
-            ch2LeftLight: 'Suis Lampu Kiri',
-            ch2RightLight: 'Suis Lampu Kanan',
-            ch2Monitor: 'Buka Monitor CCTV',
-            ch2DeskFiles: 'Periksa Meja Fail Sulit'
+            doorLocked: (keyName) => `Berkunci — Perlukan ${keyName}`
           },
           rooms: {
             'Lobi Lif Utama': 'Lobi Lif Utama',
@@ -2069,24 +1698,6 @@
               speaker: 'SUARA DARI HUJUNG KORIDOR',
               text: '"SAKAU... SAKAU... MANA KAU NAK LARI?!" — Jangan biarkan dia nampak kau, tutup pintu atau menyorok dalam loker!'
             }
-          ],
-          ch2IntroShots: [
-            {
-              speaker: 'AIMAN (PENGAWAL SYIF MALAM)',
-              text: 'Malam kedua... Aku ditugaskan menjaga Bilik Kawalan Keselamatan B1 dari jam 12:00 tengah malam hingga 6:00 pagi.'
-            },
-            {
-              speaker: 'MANUAL KESELAMATAN B1',
-              text: 'Duduk di kerusi kawalan. Pusing kiri dan kanan untuk memeriksa tingkap, pintu keluli, monitor CCTV, serta meja fail sulit.'
-            },
-            {
-              speaker: 'SISTEM KUASA BATERI',
-              text: 'Menutup pintu keselamatan dan menyalakan lampu lorong menggunakan tenaga bateri. Jangan biarkan bateri jatuh ke 0%!'
-            },
-            {
-              speaker: 'AMARAN KAMERA CCTV',
-              text: 'Kelibat Zahid dikesan bergerak di koridor! Gunakan CCTV & umpan bunyi, dan tutup pintu tepat pada masanya!'
-            }
           ]
         },
         en: {
@@ -2096,28 +1707,16 @@
           menuPlayTag: 'CHAPTERS »',
           menuShop: 'SHOP',
           comingSoon: 'COMING SOON',
-          topUpdateChip: 'V 0.1.0 • UPDATE LOG',
+          topUpdateChip: 'v1.3 • UPDATE LOG',
           menuUpdates: 'UPDATE LOG',
-          menuUpdatesTag: 'V 0.1.0 NEW',
+          menuUpdatesTag: 'v1.3 NEW',
           updateLogTitle: 'GAME UPDATE LOG',
           updateLatestBadge: 'LATEST',
           updateLogs: [
             {
-              version: 'V 0.1.0',
-              date: 'New Chapter Update',
-              latest: true,
-              title: 'Chapter 2 Launch: Malam Sama Zahid (3D Control Room)',
-              items: [
-                'Added Chapter 2: Malam Sama Zahid set inside a 3D Security Control Room (12:00 AM to 6:00 AM).',
-                'Seated 3D swivel chair perspective—look left and right to inspect the front observation window, left/right blast doors, 3D CCTV monitor, and case files desk without running.',
-                'Added a 5-camera CCTV system with Audio Lure distraction mechanics, doorway blindspot lights, and battery power management.',
-                'Added automatic asset support for Chapter 2 (zahid.png & zahid.mp3) while keeping Chapter 1: Malam Sama Anwar 100% intact.'
-              ]
-            },
-            {
               version: 'v1.3',
-              date: 'Previous Patch',
-              latest: false,
+              date: 'Latest Patch',
+              latest: true,
               title: 'Update Log, Mobile Jumpscare Fit & 3D Model Upgrade',
               items: [
                 'Added an interactive Update Log directly in the Main Menu with full BM & English support.',
@@ -2170,26 +1769,10 @@
           btnStartCh1: 'START CHAPTER 1',
           btnSkipStartCh1: 'PLAY NOW (SKIP INTRO)',
           quickControlsHtml: '<strong>PC Controls:</strong> <kbd>WASD</kbd> Move • <kbd>Mouse</kbd> Look • <kbd>E</kbd> Open Door / Unlock / Take / Hide',
-          ch2Label: 'CHAPTER 2 • CONTROL ROOM B1',
-          ch2Badge: 'NEW • 3D',
-          ch2Desc: 'Seated in the Security Control Room (12:00 AM – 6:00 AM). Swivel left and right to check windows & doors, monitor CCTV cameras, and conserve battery power—no running needed.',
-          ch2DiffEasy: 'Slower Zahid & generous battery',
-          ch2DiffNormal: 'Balanced & tense night shift',
-          ch2DiffHard: 'Aggressive — watch CCTV & doors!',
-          btnStartCh2: 'START CHAPTER 2',
-          btnSkipStartCh2: 'PLAY NOW (SKIP INTRO)',
-          ch2ControlsHtml: '<strong>3D Controls:</strong> Swivel Left/Right (<kbd>A</kbd>/<kbd>D</kbd> or Drag) • <kbd>E</kbd> Switch / CCTV • Click Control Buttons',
-          ch2ShiftLabel: 'NIGHT SHIFT • CONTROL ROOM B1',
-          ch2TargetTime: 'TARGET: 6:00 AM',
-          ch2PowerLabel: 'Battery Power',
-          ch2DangerBanner: 'WARNING: MOVEMENT OUTSIDE THE DOOR!',
-          ch2LeftDoor: 'Left Door',
-          ch2LeftLight: 'Left Light',
-          ch2CctvBtn: 'CCTV Monitor',
-          ch2RightLight: 'Right Light',
-          ch2RightDoor: 'Right Door',
-          ch2CloseCctv: 'CLOSE CCTV [E]',
-          ch2AudioLureBtn: '🔊 PLAY AUDIO LURE ON THIS CAMERA',
+          ch2Label: 'CHAPTER 2 • NEW MYSTERY',
+          ch2Title: 'COMING SOON',
+          ch2Desc: 'Chapter 2 is currently in development. New environments, new puzzles, and deadlier threats are coming soon.',
+          ch2LockedBtn: 'LOCKED • COMING SOON',
           shopItem1Title: 'Key Radar',
           shopItem1Desc: 'Highlights the nearest key direction on the Floor 14 map.',
           shopItem2Title: 'Guardian Charm',
@@ -2199,17 +1782,2598 @@
           settingsTitle: 'GAME SETTINGS',
           langSettingLabel: 'Language / Bahasa (BM & BI)',
           sensLabel: 'Camera Sensitivity',
-          assetTitle: 'Chapter 1 & 2 Entity Assets (Face & Voice)',
-          assetHintHtml: 'Automatically loads <code>anwar.png</code>, <code>sakau.mp3</code> (Ch 1) and <code>zahid.png</code>, <code>zahid.mp3</code> (Ch 2) from GitHub, or upload custom files:',
-          uploadFaceBtn: 'Ch 1: Anwar Face',
-          uploadAudioBtn: 'Ch 1: Anwar Audio',
-          uploadZahidFaceBtn: 'Ch 2: Zahid Face',
-          uploadZahidAudioBtn: 'Ch 2: Zahid Audio',
+          assetTitle: 'Entity Assets (Face & Voice)',
+          assetHintHtml: 'Automatically loads <code>anwar.png</code> & <code>sakau.mp3</code> from GitHub, or upload custom files directly:',
+          uploadFaceBtn: 'Choose Face Image',
+          uploadAudioBtn: 'Choose Voice Audio',
           assetReady: 'Status: Ready to play',
           recTag: 'CCTV FOOTAGE • 02:17:04',
-          recTagCh2: 'CONTROL ROOM B1 • 11:58:40 PM',
           btnSkipIntro: 'SKIP INTRO »',
           missionLabel: 'CURRENT OBJECTIVE',
           keysLabel: 'KEY INVENTORY',
           keyRedTag: '🔑 Red',
-          keyBlueTag:
+          keyBlueTag: '🔑 Blue',
+          keyGreenTag: '🔑 Green',
+          keyGoldTag: '🔑 Gold',
+          dangerBanner: 'WARNING: HE IS GETTING CLOSE!',
+          minimapLabel: 'FLOOR 14 MAP',
+          hidingBannerHtml: 'YOU ARE HIDING IN A LOCKER — Press <strong>[E]</strong> or <strong>ACTION</strong> to exit',
+          mobAction: 'ACTION',
+          pauseTitle: 'GAME PAUSED',
+          pauseSub: 'Catch your breath. He is still patrolling Floor 14.',
+          btnResume: 'RESUME GAME',
+          btnToggleTouch: 'TOGGLE TOUCH CONTROLS',
+          btnQuit: 'EXIT TO MAIN MENU',
+          deathPill: 'MISSION FAILED',
+          deathTitle: 'YOU GOT CAUGHT!',
+          deathSub: 'He caught you before you could escape Floor 14 with the audit files.',
+          statRoomLabel: 'Caught Location',
+          statTimeLabel: 'Time Survived',
+          statFilesLabel: 'Audit Files Found',
+          statSwitchesLabel: 'Generators Activated',
+          btnRetry: 'TRY AGAIN',
+          btnMainMenu: 'MAIN MENU',
+          winPill: 'MISSION ACCOMPLISHED',
+          winTitle: 'YOU ESCAPED!',
+          winSub: 'The elevator doors closed just in time. All 4 Confidential Audit Files are now safe.',
+          statDiffLabel: 'Difficulty Mode',
+          statWinTimeLabel: 'Completion Time',
+          btnPlayAgain: 'PLAY AGAIN',
+          phase1: (c) => `Phase 1: Collect Confidential Audit Files (${c} / 4)`,
+          phase2: (c) => `Phase 2: Activate Generator Switches (${c} / 2)`,
+          phase3: 'Phase 3: Return to Main Elevator Lobby & Escape!',
+          locationPrefix: 'Location',
+          pressInteract: (lbl) => `Press <strong>[E]</strong> / <strong>ACTION</strong>: ${lbl}`,
+          toastTouchOn: 'Touch Controls Enabled',
+          toastTouchOff: 'Touch Controls Disabled',
+          toastFileGot: (c) => `Confidential Audit File collected (${c}/4)!`,
+          toastNeedFiles: 'Collect all 4 Confidential Audit Files first!',
+          toastSwitchOn: (c) => `Generator Switch activated (${c}/2)!`,
+          toastElevatorLocked: 'Elevator locked! Collect all files & turn on generators first.',
+          toastKeyGot: (colorName) => `${colorName} collected!`,
+          toastDoorLocked: (colorName) => `Door is locked! Requires ${colorName}.`,
+          toastDoorUnlocked: (colorName) => `${colorName} unlocked!`,
+          keyNames: {
+            red: 'Red Key',
+            blue: 'Blue Key',
+            green: 'Green Key',
+            gold: 'Gold Key'
+          },
+          lockNames: {
+            red: 'Red Lock',
+            blue: 'Blue Lock',
+            green: 'Green Lock',
+            gold: 'Gold Lock'
+          },
+          itemLabels: {
+            elevator: 'Activate Main Elevator',
+            locker: 'Hide Inside Locker',
+            file: (n) => `Collect Confidential Audit File #${n}`,
+            switch: (n) => `Activate Generator Switch #${n}`,
+            key: (colorName) => `Pick Up ${colorName}`,
+            doorOpen: 'Open Door',
+            doorClose: 'Close Door',
+            doorUnlock: (keyName) => `Unlock (${keyName})`,
+            doorLocked: (keyName) => `Locked — Requires ${keyName}`
+          },
+          rooms: {
+            'Lobi Lif Utama': 'Main Elevator Lobby',
+            'Koridor Utama': 'Main Corridor',
+            'Bilik Fail & Arkib': 'Filing & Archive Room',
+            'Pantri & Ruang Rehat': 'Pantry & Lounge',
+            'Bilik Mesyuarat Eksekutif': 'Executive Meeting Room',
+            'Bilik Server & Janakuasa': 'Server & Generator Room',
+            'Pejabat Pengarah': "Director's Office",
+            'Koridor Tingkat 14': 'Floor 14 Corridor'
+          },
+          introShots: [
+            {
+              speaker: 'AIMAN (INTERNAL AUDITOR)',
+              text: "It's 2:17 AM... Everyone has gone home, leaving me alone on Floor 14 of Perdana Tower."
+            },
+            {
+              speaker: 'TOWER SECURITY SYSTEM',
+              text: 'WARNING: Several office doors have been secured with colored security padlocks. Find the matching keys.'
+            },
+            {
+              speaker: 'AIMAN (INTERNAL AUDITOR)',
+              text: 'Those 4 Confidential Audit Files are inside the office rooms. I need to find the keys, grab the files, and restore generator power!'
+            },
+            {
+              speaker: 'VOICE FROM THE CORRIDOR',
+              text: '"SAKAU... SAKAU... WHERE CAN YOU RUN?!" — Stay out of his sight, shut doors behind you, or hide in a locker!'
+            }
+          ]
+        }
+      };
+
+      /* ================= 1. SISTEM AUDIO DINAMIK 3D ================= */
+      class HorrorAudio {
+        constructor() {
+          this.ctx = null;
+          this.screamBuffer = null;
+          this.screamSource = null;
+          this.screamGain = null;
+          this.screamPanner = null;
+          this.lastSynthTime = 0;
+          this.ambientStarted = false;
+        }
+
+        init() {
+          if (!this.ctx) {
+            const AudioCtx = window.AudioContext || window.webkitAudioContext;
+            this.ctx = new AudioCtx();
+          }
+          if (this.ctx.state === 'suspended') {
+            this.ctx.resume();
+          }
+          if (!this.ambientStarted) {
+            this.startAmbient();
+            this.loadDefaultScream();
+          }
+          if (this.screamBuffer && !this.screamSource) {
+            this.startContinuousScreamLoop();
+          }
+        }
+
+        async loadDefaultScream() {
+          const paths = ['./sakau.mp3', './assets/sakau.mp3'];
+          for (const path of paths) {
+            try {
+              const res = await fetch(path);
+              if (res.ok) {
+                const arr = await res.arrayBuffer();
+                this.screamBuffer = await this.ctx.decodeAudioData(arr);
+                this.startContinuousScreamLoop();
+                return;
+              }
+            } catch (_) {}
+          }
+        }
+
+        async setCustomAudioFile(file) {
+          this.init();
+          const arr = await file.arrayBuffer();
+          this.screamBuffer = await this.ctx.decodeAudioData(arr);
+          this.startContinuousScreamLoop();
+        }
+
+        startContinuousScreamLoop() {
+          if (!this.ctx || !this.screamBuffer) return;
+
+          if (this.screamSource) {
+            try {
+              this.screamSource.stop();
+              this.screamSource.disconnect();
+            } catch (_) {}
+            this.screamSource = null;
+          }
+
+          const src = this.ctx.createBufferSource();
+          src.buffer = this.screamBuffer;
+          src.loop = true;
+
+          const panner = this.ctx.createStereoPanner ? this.ctx.createStereoPanner() : null;
+          const gain = this.ctx.createGain();
+          gain.gain.value = 0.0;
+
+          if (panner) {
+            src.connect(panner);
+            panner.connect(gain);
+          } else {
+            src.connect(gain);
+          }
+          gain.connect(this.ctx.destination);
+
+          src.start(0);
+          this.screamSource = src;
+          this.screamPanner = panner;
+          this.screamGain = gain;
+        }
+
+        startAmbient() {
+          if (!this.ctx || this.ambientStarted) return;
+          this.ambientStarted = true;
+
+          const bufferSize = this.ctx.sampleRate * 2;
+          const noiseBuffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
+          const data = noiseBuffer.getChannelData(0);
+          for (let i = 0; i < bufferSize; i++) {
+            data[i] = (Math.random() * 2 - 1) * 0.14;
+          }
+
+          const noise = this.ctx.createBufferSource();
+          noise.buffer = noiseBuffer;
+          noise.loop = true;
+
+          const filter = this.ctx.createBiquadFilter();
+          filter.type = 'lowpass';
+          filter.frequency.value = 300;
+
+          const gain = this.ctx.createGain();
+          gain.gain.value = 0.05;
+
+          noise.connect(filter);
+          filter.connect(gain);
+          gain.connect(this.ctx.destination);
+          noise.start();
+        }
+
+        playTone(freq, duration, type = 'sine', volume = 0.2, slideTo = null) {
+          if (!this.ctx) return;
+          const now = this.ctx.currentTime;
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+
+          osc.type = type;
+          osc.frequency.setValueAtTime(freq, now);
+          if (slideTo) {
+            osc.frequency.exponentialRampToValueAtTime(slideTo, now + duration);
+          }
+
+          gain.gain.setValueAtTime(volume, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + duration);
+
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start(now);
+          osc.stop(now + duration);
+        }
+
+        playClick() { this.playTone(620, 0.06, 'triangle', 0.15, 300); }
+        playPickup() {
+          this.playTone(520, 0.12, 'sine', 0.22, 880);
+          setTimeout(() => this.playTone(880, 0.18, 'sine', 0.2, 1180), 90);
+        }
+        playSwitch() { this.playTone(140, 0.25, 'sawtooth', 0.28, 70); }
+        playLocker() { this.playTone(210, 0.18, 'square', 0.16, 110); }
+        playDoorSwing() { this.playTone(185, 0.16, 'triangle', 0.18, 125); }
+        playLockedRattle() {
+          this.playTone(150, 0.07, 'square', 0.22, 110);
+          setTimeout(() => this.playTone(140, 0.08, 'square', 0.22, 100), 85);
+        }
+        playUnlock() {
+          this.playTone(440, 0.1, 'triangle', 0.25, 660);
+          setTimeout(() => this.playTone(660, 0.18, 'sine', 0.25, 990), 95);
+        }
+
+        updateProximityAudio(distance, pan = 0, isPlaying = true, maxHearDist = 28) {
+          if (!this.ctx) return;
+          const now = this.ctx.currentTime;
+
+          if (!isPlaying || distance >= maxHearDist) {
+            if (this.screamGain) {
+              this.screamGain.gain.setTargetAtTime(0.0, now, 0.09);
+            }
+            return;
+          }
+
+          const norm = Math.max(0, Math.min(1, 1 - distance / maxHearDist));
+          const dynamicVol = Math.pow(norm, 1.65) * 1.1;
+
+          if (this.screamGain) {
+            this.screamGain.gain.setTargetAtTime(Math.min(1.0, dynamicVol), now, 0.08);
+            if (this.screamPanner) {
+              this.screamPanner.pan.setTargetAtTime(Math.max(-1, Math.min(1, pan)), now, 0.08);
+            }
+          } else {
+            const ms = performance.now();
+            const interval = Math.max(950, distance * 120);
+            if (ms - this.lastSynthTime >= interval) {
+              this.lastSynthTime = ms;
+              const v = Math.max(0.03, dynamicVol * 0.35);
+              this.playTone(290, 0.16, 'sawtooth', v, 410);
+              setTimeout(() => this.playTone(430, 0.28, 'sawtooth', v * 1.15, 220), 170);
+            }
+          }
+        }
+
+        playJumpscare() {
+          if (!this.ctx) return;
+          const now = this.ctx.currentTime;
+          this.playTone(95, 1.3, 'sawtooth', 0.65, 32);
+          this.playTone(620, 0.9, 'square', 0.45, 140);
+
+          if (this.screamGain) {
+            if (this.screamPanner) this.screamPanner.pan.setValueAtTime(0, now);
+            this.screamGain.gain.setValueAtTime(1.0, now);
+          }
+        }
+      }
+
+      /* ================= 2. PETA PEJABAT, PINTU & KUNCI (PIGGY-STYLE) ================= */
+      const LOCK_COLORS = {
+        red: { hex: 0xef4444, emissive: 0x7f1d1d, css: '#ef4444' },
+        blue: { hex: 0x3b82f6, emissive: 0x1e3a8a, css: '#3b82f6' },
+        green: { hex: 0x22c55e, emissive: 0x14532d, css: '#22c55e' },
+        gold: { hex: 0xfacc15, emissive: 0x854d0e, css: '#facc15' }
+      };
+
+      function configureTex(tex, rx = 1, ry = 1, isColor = true) {
+        tex.wrapS = THREE.RepeatWrapping;
+        tex.wrapT = THREE.RepeatWrapping;
+        tex.repeat.set(rx, ry);
+        tex.anisotropy = 4;
+        if (isColor && THREE.SRGBColorSpace) tex.colorSpace = THREE.SRGBColorSpace;
+        return tex;
+      }
+
+      function createFloorMaterial(style, roomW = 20, roomD = 20) {
+        const S = 512;
+        const c = document.createElement('canvas');
+        c.width = S; c.height = S;
+        const ctx = c.getContext('2d');
+
+        const b = document.createElement('canvas');
+        b.width = S; b.height = S;
+        const bctx = b.getContext('2d');
+        bctx.fillStyle = '#808080';
+        bctx.fillRect(0, 0, S, S);
+
+        let roughness = 0.55;
+        let metalness = 0.06;
+
+        if (style === 'marble') {
+          roughness = 0.26;
+          metalness = 0.12;
+          const half = S / 2;
+          // Jubin marmar cerah & gelap berselang-seli
+          ctx.fillStyle = '#e5e7eb';
+          ctx.fillRect(0, 0, S, S);
+          ctx.fillStyle = '#1e293b';
+          ctx.fillRect(0, 0, half, half);
+          ctx.fillRect(half, half, half, half);
+
+          // Urat marmar halus
+          for (let i = 0; i < 24; i++) {
+            ctx.strokeStyle = i % 2 === 0 ? 'rgba(255,255,255,0.14)' : 'rgba(15,23,42,0.12)';
+            ctx.lineWidth = 1.5 + (i % 3);
+            ctx.beginPath();
+            let px = (i * 47) % S;
+            let py = (i * 83) % S;
+            ctx.moveTo(px, py);
+            for (let s = 0; s < 5; s++) {
+              px += ((i * 19 + s * 31) % 70) - 35;
+              py += 36;
+              ctx.lineTo(px, py);
+            }
+            ctx.stroke();
+          }
+
+          // Garis grout antara jubin
+          ctx.strokeStyle = '#64748b';
+          ctx.lineWidth = 4;
+          ctx.strokeRect(2, 2, half - 4, half - 4);
+          ctx.strokeRect(half + 2, 2, half - 4, half - 4);
+          ctx.strokeRect(2, half + 2, half - 4, half - 4);
+          ctx.strokeRect(half + 2, half + 2, half - 4, half - 4);
+
+          bctx.strokeStyle = '#303030';
+          bctx.lineWidth = 5;
+          bctx.strokeRect(0, 0, half, half);
+          bctx.strokeRect(half, 0, half, half);
+          bctx.strokeRect(0, half, half, half);
+          bctx.strokeRect(half, half, half, half);
+        } else if (style === 'wood') {
+          roughness = 0.42;
+          metalness = 0.05;
+          const plankH = 64;
+          const tones = ['#78350f', '#854d0e', '#6b2d0c', '#92400e'];
+          for (let row = 0; row < S / plankH; row++) {
+            const y = row * plankH;
+            ctx.fillStyle = tones[row % tones.length];
+            ctx.fillRect(0, y, S, plankH);
+
+            // Ira kayu (wood grain)
+            ctx.strokeStyle = 'rgba(30, 12, 3, 0.24)';
+            ctx.lineWidth = 1.4;
+            for (let g = 6; g < plankH; g += 8) {
+              ctx.beginPath();
+              ctx.moveTo(0, y + g);
+              ctx.bezierCurveTo(170, y + g - 3, 340, y + g + 3, S, y + g);
+              ctx.stroke();
+            }
+
+            // Garis sambungan papan
+            ctx.fillStyle = '#3b1706';
+            ctx.fillRect(0, y + plankH - 3, S, 3);
+            const jointX = ((row * 160) + 96) % S;
+            ctx.fillRect(jointX, y, 3, plankH);
+
+            bctx.fillStyle = '#282828';
+            bctx.fillRect(0, y + plankH - 3, S, 3);
+            bctx.fillRect(jointX, y, 3, plankH);
+          }
+        } else if (style === 'carpet') {
+          roughness = 0.88;
+          metalness = 0.0;
+          ctx.fillStyle = '#4c1324';
+          ctx.fillRect(0, 0, S, S);
+          // Corak tenunan berlian pejabat eksekutif
+          ctx.strokeStyle = 'rgba(251, 191, 36, 0.14)';
+          ctx.lineWidth = 2;
+          for (let y = 0; y < S; y += 64) {
+            for (let x = 0; x < S; x += 64) {
+              ctx.beginPath();
+              ctx.moveTo(x + 32, y + 6);
+              ctx.lineTo(x + 58, y + 32);
+              ctx.lineTo(x + 32, y + 58);
+              ctx.lineTo(x + 6, y + 32);
+              ctx.closePath();
+              ctx.stroke();
+            }
+          }
+          for (let i = 0; i < 1600; i++) {
+            const rx = (i * 73) % S;
+            const ry = (i * 139) % S;
+            ctx.fillStyle = i % 2 === 0 ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.12)';
+            ctx.fillRect(rx, ry, 2, 2);
+            bctx.fillStyle = i % 2 === 0 ? '#969696' : '#686868';
+            bctx.fillRect(rx, ry, 2, 2);
+          }
+        } else if (style === 'tile') {
+          roughness = 0.3;
+          metalness = 0.08;
+          ctx.fillStyle = '#0f766e';
+          ctx.fillRect(0, 0, S, S);
+          const step = 128;
+          for (let y = 0; y < S; y += step) {
+            for (let x = 0; x < S; x += step) {
+              ctx.fillStyle = ((x + y) / step) % 2 === 0 ? '#115e59' : '#134e4a';
+              ctx.fillRect(x + 4, y + 4, step - 8, step - 8);
+              ctx.strokeStyle = '#99f6e4';
+              ctx.lineWidth = 3;
+              ctx.strokeRect(x + 2, y + 2, step - 4, step - 4);
+              bctx.strokeStyle = '#252525';
+              bctx.lineWidth = 5;
+              bctx.strokeRect(x, y, step, step);
+            }
+          }
+        } else {
+          // Lantai keluli industri bilik server + jalur amaran kuning/hitam
+          roughness = 0.42;
+          metalness = 0.45;
+          ctx.fillStyle = '#334155';
+          ctx.fillRect(0, 0, S, S);
+          ctx.strokeStyle = 'rgba(148, 163, 184, 0.22)';
+          ctx.lineWidth = 2;
+          for (let y = 0; y < S; y += 32) {
+            for (let x = 0; x < S; x += 32) {
+              ctx.beginPath();
+              ctx.moveTo(x + 8, y + 16);
+              ctx.lineTo(x + 24, y + 16);
+              ctx.moveTo(x + 16, y + 8);
+              ctx.lineTo(x + 16, y + 24);
+              ctx.stroke();
+              bctx.fillStyle = '#a8a8a8';
+              bctx.fillRect(x + 14, y + 14, 4, 4);
+            }
+          }
+          // Jalur keselamatan kuning-hitam di bahagian bawah jubin
+          ctx.fillStyle = '#eab308';
+          ctx.fillRect(0, S - 42, S, 42);
+          ctx.fillStyle = '#0f172a';
+          for (let x = -48; x < S + 48; x += 48) {
+            ctx.beginPath();
+            ctx.moveTo(x, S);
+            ctx.lineTo(x + 24, S);
+            ctx.lineTo(x + 44, S - 42);
+            ctx.lineTo(x + 20, S - 42);
+            ctx.closePath();
+            ctx.fill();
+          }
+        }
+
+        const repX = Math.max(2, Math.round(roomW / 3.4));
+        const repY = Math.max(2, Math.round(roomD / 3.4));
+        const map = configureTex(new THREE.CanvasTexture(c), repX, repY, true);
+        const bumpMap = configureTex(new THREE.CanvasTexture(b), repX, repY, false);
+
+        return new THREE.MeshStandardMaterial({
+          map,
+          bumpMap,
+          bumpScale: 0.025,
+          roughness,
+          metalness
+        });
+      }
+
+      function createWallMaterial() {
+        const S = 512;
+        const c = document.createElement('canvas');
+        c.width = S; c.height = S;
+        const ctx = c.getContext('2d');
+
+        const b = document.createElement('canvas');
+        b.width = S; b.height = S;
+        const bctx = b.getContext('2d');
+        bctx.fillStyle = '#808080';
+        bctx.fillRect(0, 0, S, S);
+
+        // Bahagian atas: Dinding plaster pejabat bertekstur halus
+        ctx.fillStyle = '#e7e5e4';
+        ctx.fillRect(0, 0, S, 336);
+        for (let i = 0; i < 1800; i++) {
+          const px = (i * 97) % S;
+          const py = (i * 53) % 336;
+          ctx.fillStyle = i % 2 === 0 ? 'rgba(0,0,0,0.035)' : 'rgba(255,255,255,0.22)';
+          ctx.fillRect(px, py, 2, 2);
+        }
+
+        // Kumai siling (crown molding)
+        ctx.fillStyle = '#cbd5e1';
+        ctx.fillRect(0, 0, S, 18);
+        ctx.fillStyle = '#94a3b8';
+        ctx.fillRect(0, 18, S, 5);
+
+        // Rel kerusi kayu (chair rail)
+        ctx.fillStyle = '#78350f';
+        ctx.fillRect(0, 326, S, 14);
+        ctx.fillStyle = '#b45309';
+        ctx.fillRect(0, 328, S, 4);
+        bctx.fillStyle = '#d0d0d0';
+        bctx.fillRect(0, 326, S, 14);
+
+        // Bahagian bawah: Panel kayu mahogani (wainscoting)
+        ctx.fillStyle = '#451a03';
+        ctx.fillRect(0, 340, S, 172);
+        for (let x = 0; x < S; x += 128) {
+          ctx.strokeStyle = '#78350f';
+          ctx.lineWidth = 4;
+          ctx.strokeRect(x + 14, 354, 100, 134);
+          ctx.strokeStyle = '#290f02';
+          ctx.lineWidth = 2;
+          ctx.strokeRect(x + 20, 360, 88, 122);
+
+          bctx.strokeStyle = '#b5b5b5';
+          bctx.lineWidth = 4;
+          bctx.strokeRect(x + 14, 354, 100, 134);
+        }
+
+        // Skirting lantai bawah
+        ctx.fillStyle = '#1c1917';
+        ctx.fillRect(0, 494, S, 18);
+
+        const map = new THREE.CanvasTexture(c);
+        map.wrapS = THREE.RepeatWrapping;
+        map.wrapT = THREE.ClampToEdgeWrapping;
+        map.anisotropy = 4;
+        if (THREE.SRGBColorSpace) map.colorSpace = THREE.SRGBColorSpace;
+
+        const bumpMap = new THREE.CanvasTexture(b);
+        bumpMap.wrapS = THREE.RepeatWrapping;
+        bumpMap.wrapT = THREE.ClampToEdgeWrapping;
+
+        return new THREE.MeshStandardMaterial({
+          map,
+          bumpMap,
+          bumpScale: 0.03,
+          roughness: 0.68
+        });
+      }
+
+      function createCeilingMaterial(roomW = 20, roomD = 20) {
+        const S = 256;
+        const c = document.createElement('canvas');
+        c.width = S; c.height = S;
+        const ctx = c.getContext('2d');
+        ctx.fillStyle = '#1e293b';
+        ctx.fillRect(0, 0, S, S);
+        ctx.strokeStyle = '#334155';
+        ctx.lineWidth = 4;
+        ctx.strokeRect(2, 2, S - 4, S - 4);
+        ctx.strokeStyle = '#0f172a';
+        ctx.lineWidth = 2;
+        ctx.strokeRect(10, 10, S - 20, S - 20);
+
+        const repX = Math.max(3, Math.round(roomW / 2.2));
+        const repY = Math.max(3, Math.round(roomD / 2.2));
+        const map = configureTex(new THREE.CanvasTexture(c), repX, repY, true);
+        return new THREE.MeshStandardMaterial({ map, roughness: 0.85 });
+      }
+
+      function createPlaqueTexture(text) {
+        const c = document.createElement('canvas');
+        c.width = 512; c.height = 128;
+        const ctx = c.getContext('2d');
+        const grad = ctx.createLinearGradient(0, 0, 0, 128);
+        grad.addColorStop(0, '#1e293b');
+        grad.addColorStop(1, '#090d16');
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 0, 512, 128);
+        ctx.strokeStyle = '#facc15'; ctx.lineWidth = 7; ctx.strokeRect(8, 8, 496, 112);
+        ctx.strokeStyle = 'rgba(250, 204, 21, 0.35)'; ctx.lineWidth = 2; ctx.strokeRect(16, 16, 480, 96);
+        ctx.fillStyle = '#f8fafc'; ctx.font = 'bold 32px sans-serif';
+        ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+        ctx.fillText(text, 256, 66);
+        const tex = new THREE.CanvasTexture(c);
+        if (THREE.SRGBColorSpace) tex.colorSpace = THREE.SRGBColorSpace;
+        return tex;
+      }
+
+      function createKeyMesh(colorKey) {
+        const cfg = LOCK_COLORS[colorKey];
+        const group = new THREE.Group();
+        const mat = new THREE.MeshStandardMaterial({
+          color: cfg.hex,
+          emissive: cfg.emissive,
+          emissiveIntensity: 0.95,
+          metalness: 0.72,
+          roughness: 0.2
+        });
+
+        // Kepala kunci berukir (bow ring + inner trim)
+        const ring = new THREE.Mesh(new THREE.TorusGeometry(0.16, 0.042, 12, 24), mat);
+        ring.position.set(-0.2, 0, 0);
+        group.add(ring);
+
+        const collar = new THREE.Mesh(new THREE.CylinderGeometry(0.055, 0.055, 0.06, 12), mat);
+        collar.rotation.z = Math.PI / 2;
+        collar.position.set(-0.03, 0, 0);
+        group.add(collar);
+
+        // Batang kunci silinder berkilat
+        const shaft = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.03, 0.36, 12), mat);
+        shaft.rotation.z = Math.PI / 2;
+        shaft.position.set(0.15, 0, 0);
+        group.add(shaft);
+
+        // Gigi kunci bertingkat
+        const tooth1 = new THREE.Mesh(new THREE.BoxGeometry(0.055, 0.13, 0.045), mat);
+        tooth1.position.set(0.21, -0.075, 0);
+        group.add(tooth1);
+
+        const tooth2 = new THREE.Mesh(new THREE.BoxGeometry(0.045, 0.09, 0.045), mat);
+        tooth2.position.set(0.27, -0.055, 0);
+        group.add(tooth2);
+
+        const tooth3 = new THREE.Mesh(new THREE.BoxGeometry(0.055, 0.12, 0.045), mat);
+        tooth3.position.set(0.32, -0.07, 0);
+        group.add(tooth3);
+
+        return group;
+      }
+
+      class OfficeMap {
+        constructor(scene) {
+          this.scene = scene;
+          this.colliders = [];
+          this.interactables = [];
+          this.lockers = [];
+          this.doors = [];
+          this.keysList = [];
+
+          this.rooms = [
+            { name: 'Lobi Lif Utama', x: 0, z: 25, w: 20, d: 14, style: 'marble' },
+            { name: 'Koridor Utama', x: 0, z: 0, w: 12, d: 36, style: 'marble' },
+            { name: 'Bilik Fail & Arkib', x: -18, z: 9, w: 24, d: 18, style: 'wood' },
+            { name: 'Pantri & Ruang Rehat', x: -18, z: -9, w: 24, d: 18, style: 'tile' },
+            { name: 'Bilik Mesyuarat Eksekutif', x: 18, z: 9, w: 24, d: 18, style: 'carpet' },
+            { name: 'Bilik Server & Janakuasa', x: 18, z: -9, w: 24, d: 18, style: 'hazard' },
+            { name: 'Pejabat Pengarah', x: 0, z: -26, w: 32, d: 16, style: 'wood' }
+          ];
+
+          // Graf navigasi lengkap dengan nod bebas daripada meja supaya bot bergerak lancar tanpa tersangkut
+          this.navNodes = [
+            { id: 0, pos: new THREE.Vector3(0, 0, 25), links: [1] },
+            { id: 1, pos: new THREE.Vector3(0, 0, 20.2), links: [0, 2], doorId: 'door_lobby' },
+            { id: 2, pos: new THREE.Vector3(0, 0, 15.8), links: [1, 3], doorId: 'door_lobby' },
+            { id: 3, pos: new THREE.Vector3(0, 0, 9), links: [2, 4, 7, 15] },
+            { id: 4, pos: new THREE.Vector3(0, 0, 0), links: [3, 5] },
+            { id: 5, pos: new THREE.Vector3(0, 0, -9), links: [4, 6, 14, 18] },
+            { id: 6, pos: new THREE.Vector3(0, 0, -15.8), links: [5, 21], doorId: 'door_director' },
+            { id: 7, pos: new THREE.Vector3(-3.8, 0, 9), links: [3, 8], doorId: 'door_archive' },
+            { id: 8, pos: new THREE.Vector3(-8.2, 0, 9), links: [7, 9], doorId: 'door_archive' },
+            { id: 9, pos: new THREE.Vector3(-11.5, 0, 9), links: [8, 10] },
+            { id: 10, pos: new THREE.Vector3(-18, 0, 2.2), links: [9, 11], doorId: 'door_west_conn' },
+            { id: 11, pos: new THREE.Vector3(-18, 0, -2.2), links: [10, 12], doorId: 'door_west_conn' },
+            { id: 12, pos: new THREE.Vector3(-11.5, 0, -9), links: [11, 13] },
+            { id: 13, pos: new THREE.Vector3(-8.2, 0, -9), links: [12, 14], doorId: 'door_pantry' },
+            { id: 14, pos: new THREE.Vector3(-3.8, 0, -9), links: [5, 13], doorId: 'door_pantry' },
+            { id: 15, pos: new THREE.Vector3(3.8, 0, 9), links: [3, 16], doorId: 'door_meeting' },
+            { id: 16, pos: new THREE.Vector3(8.2, 0, 9), links: [15, 17], doorId: 'door_meeting' },
+            { id: 17, pos: new THREE.Vector3(11.5, 0, 9), links: [16, 23] },
+            { id: 18, pos: new THREE.Vector3(3.8, 0, -9), links: [5, 19], doorId: 'door_server' },
+            { id: 19, pos: new THREE.Vector3(8.2, 0, -9), links: [18, 20], doorId: 'door_server' },
+            { id: 20, pos: new THREE.Vector3(13.5, 0, -9), links: [19, 24] },
+            { id: 21, pos: new THREE.Vector3(0, 0, -20.2), links: [6, 22], doorId: 'door_director' },
+            { id: 22, pos: new THREE.Vector3(0, 0, -24.5), links: [21] },
+            { id: 23, pos: new THREE.Vector3(18, 0, 2.2), links: [17, 24], doorId: 'door_east_conn' },
+            { id: 24, pos: new THREE.Vector3(18, 0, -2.2), links: [23, 20], doorId: 'door_east_conn' }
+          ];
+
+          this.patrolNodeIds = [9, 3, 4, 5, 12, 20, 17, 22];
+          this.wallMat = createWallMaterial();
+
+          this.buildArchitecture();
+          this.buildDoors();
+          this.buildFurnitureAndLockers();
+          this.spawnMissionItems();
+        }
+
+        addBox(x, y, z, w, h, d, mat, collide = true) {
+          const mesh = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), mat);
+          mesh.position.set(x, y, z);
+          this.scene.add(mesh);
+          if (collide) {
+            this.colliders.push({
+              minX: x - w / 2,
+              maxX: x + w / 2,
+              minZ: z - d / 2,
+              maxZ: z + d / 2
+            });
+          }
+          return mesh;
+        }
+
+        addCeilingFixture(x, y, z) {
+          const frameMat = new THREE.MeshStandardMaterial({ color: 0x334155, metalness: 0.6, roughness: 0.35 });
+          const panelMat = new THREE.MeshStandardMaterial({
+            color: 0xfffbeb,
+            emissive: 0xfef3c7,
+            emissiveIntensity: 1.2,
+            roughness: 0.2
+          });
+          const frame = new THREE.Mesh(new THREE.BoxGeometry(2.4, 0.08, 1.1), frameMat);
+          frame.position.set(x, y - 0.04, z);
+          this.scene.add(frame);
+
+          const diffuser = new THREE.Mesh(new THREE.BoxGeometry(2.2, 0.04, 0.9), panelMat);
+          diffuser.position.set(x, y - 0.08, z);
+          this.scene.add(diffuser);
+        }
+
+        buildArchitecture() {
+          const H = 4.6;
+          for (const r of this.rooms) {
+            const floor = new THREE.Mesh(
+              new THREE.PlaneGeometry(r.w, r.d),
+              createFloorMaterial(r.style, r.w, r.d)
+            );
+            floor.rotation.x = -Math.PI / 2;
+            floor.position.set(r.x, 0, r.z);
+            this.scene.add(floor);
+
+            const ceil = new THREE.Mesh(
+              new THREE.PlaneGeometry(r.w, r.d),
+              createCeilingMaterial(r.w, r.d)
+            );
+            ceil.rotation.x = Math.PI / 2;
+            ceil.position.set(r.x, H, r.z);
+            this.scene.add(ceil);
+
+            this.addCeilingFixture(r.x, H, r.z);
+
+            const light = new THREE.PointLight(0xfff3d6, 2.25, 31);
+            light.position.set(r.x, H - 0.35, r.z);
+            this.scene.add(light);
+          }
+
+          // Lampu siling tambahan di koridor panjang
+          this.addCeilingFixture(0, H, 10);
+          this.addCeilingFixture(0, H, -10);
+
+          // Tiang hiasan seni bina di sudut lobi & persimpangan
+          const pillarMat = new THREE.MeshStandardMaterial({ color: 0x334155, roughness: 0.45, metalness: 0.25 });
+          [[-9.7, 31.7], [9.7, 31.7], [-5.5, 17.5], [5.5, 17.5], [-5.5, -17.5], [5.5, -17.5]].forEach(([px, pz]) => {
+            this.addBox(px, H / 2, pz, 0.55, H, 0.55, pillarMat, false);
+          });
+
+          // Lobi Lif Utama
+          this.addBox(0, H / 2, 32.3, 20.6, H, 0.6, this.wallMat);
+          this.addBox(-10.3, H / 2, 25.3, 0.6, H, 14.6, this.wallMat);
+          this.addBox(10.3, H / 2, 25.3, 0.6, H, 14.6, this.wallMat);
+          // Bukaan pintu lobi di x=0, z=18 (lebar 3.2 -> -1.6 hingga +1.6)
+          this.addBox(-5.95, H / 2, 18, 8.7, H, 0.6, this.wallMat);
+          this.addBox(5.95, H / 2, 18, 8.7, H, 0.6, this.wallMat);
+
+          // Dinding luar kiri & kanan
+          this.addBox(-30.3, H / 2, 0, 0.6, H, 36.6, this.wallMat);
+          this.addBox(30.3, H / 2, 0, 0.6, H, 36.6, this.wallMat);
+
+          // Dinding atas sayap kiri & kanan
+          this.addBox(-18.15, H / 2, 18, 24.3, H, 0.6, this.wallMat);
+          this.addBox(18.15, H / 2, 18, 24.3, H, 0.6, this.wallMat);
+
+          // Dinding Pemisah Koridor Kiri (x = -6), bukaan pintu di z=9 & z=-9 (lebar 3.2)
+          this.addBox(-6, H / 2, 14.45, 0.6, H, 7.7, this.wallMat);
+          this.addBox(-6, H / 2, 0, 0.6, H, 14.8, this.wallMat);
+          this.addBox(-6, H / 2, -14.45, 0.6, H, 7.7, this.wallMat);
+
+          // Dinding Pemisah Koridor Kanan (x = +6), bukaan pintu di z=9 & z=-9 (lebar 3.2)
+          this.addBox(6, H / 2, 14.45, 0.6, H, 7.7, this.wallMat);
+          this.addBox(6, H / 2, 0, 0.6, H, 14.8, this.wallMat);
+          this.addBox(6, H / 2, -14.45, 0.6, H, 7.7, this.wallMat);
+
+          // Dinding Pemisah Sayap Kiri (z = 0), bukaan pintu penghubung di x=-18 (lebar 3.2)
+          this.addBox(-24.95, H / 2, 0, 10.7, H, 0.6, this.wallMat);
+          this.addBox(-11.2, H / 2, 0, 10.4, H, 0.6, this.wallMat);
+
+          // Dinding Pemisah Sayap Kanan (z = 0), bukaan pintu pintas di x = 18 (lebar 3.2)
+          this.addBox(11.35, H / 2, 0, 10.1, H, 0.6, this.wallMat);
+          this.addBox(24.8, H / 2, 0, 10.4, H, 0.6, this.wallMat);
+
+          // Pejabat Pengarah (z = -18 hingga -34.3), 1 bukaan pintu utama di x=0, z=-18 (lebar 3.2)
+          this.addBox(0, H / 2, -34.3, 32.6, H, 0.6, this.wallMat);
+          this.addBox(-16.3, H / 2, -26.15, 0.6, H, 16.6, this.wallMat);
+          this.addBox(16.3, H / 2, -26.15, 0.6, H, 16.6, this.wallMat);
+          this.addBox(-15.95, H / 2, -18, 28.7, H, 0.6, this.wallMat);
+          this.addBox(15.95, H / 2, -18, 28.7, H, 0.6, this.wallMat);
+
+          // Papan tanda nama bilik
+          this.addPlaque('BILIK FAIL & ARKIB', -5.65, 3.65, 9, Math.PI / 2);
+          this.addPlaque('BILIK MESYUARAT', 5.65, 3.65, 9, -Math.PI / 2);
+          this.addPlaque('PANTRI & REHAT', -5.65, 3.65, -9, Math.PI / 2);
+          this.addPlaque('BILIK JANAKUASA', 5.65, 3.65, -9, -Math.PI / 2);
+          this.addPlaque('PEJABAT PENGARAH', 0, 3.65, -17.65, 0);
+        }
+
+        addPlaque(label, x, y, z, rotY) {
+          const sign = new THREE.Mesh(
+            new THREE.PlaneGeometry(2.8, 0.62),
+            new THREE.MeshBasicMaterial({ map: createPlaqueTexture(label) })
+          );
+          sign.position.set(x, y, z);
+          sign.rotation.y = rotY;
+          this.scene.add(sign);
+        }
+
+        buildDoors() {
+          // Campuran pintu terbuka + 4 mangga berwarna ala Roblox Piggy ('red', 'blue', 'green', 'gold') + pintu pintas
+          const doorDefs = [
+            { id: 'door_lobby', x: 0, z: 18, axis: 'x', lockColor: null },
+            { id: 'door_archive', x: -6, z: 9, axis: 'z', lockColor: null },
+            { id: 'door_pantry', x: -6, z: -9, axis: 'z', lockColor: null },
+            { id: 'door_west_conn', x: -18, z: 0, axis: 'x', lockColor: 'green' },
+            { id: 'door_meeting', x: 6, z: 9, axis: 'z', lockColor: 'red' },
+            { id: 'door_server', x: 6, z: -9, axis: 'z', lockColor: null },
+            { id: 'door_east_conn', x: 18, z: 0, axis: 'x', lockColor: 'blue' },
+            { id: 'door_director', x: 0, z: -18, axis: 'x', lockColor: 'gold' }
+          ];
+
+          const frameMat = new THREE.MeshStandardMaterial({ color: 0x1e293b, roughness: 0.5, metalness: 0.3 });
+
+          for (const d of doorDefs) {
+            const isX = d.axis === 'x';
+            const leafColor = d.lockColor ? LOCK_COLORS[d.lockColor].hex : 0x7c2d12;
+            const leafMat = new THREE.MeshStandardMaterial({
+              color: leafColor,
+              roughness: 0.45,
+              metalness: d.lockColor ? 0.25 : 0.1
+            });
+
+            // Dinding atas pintu (lintel)
+            this.addBox(d.x, 3.8, d.z, isX ? 3.2 : 0.6, 1.6, isX ? 0.6 : 3.2, this.wallMat, false);
+
+            // Bingkai tepi kiri/kanan
+            if (isX) {
+              this.addBox(d.x - 1.52, 1.5, d.z, 0.16, 3.0, 0.64, frameMat, false);
+              this.addBox(d.x + 1.52, 1.5, d.z, 0.16, 3.0, 0.64, frameMat, false);
+            } else {
+              this.addBox(d.x, 1.5, d.z - 1.52, 0.64, 3.0, 0.16, frameMat, false);
+              this.addBox(d.x, 1.5, d.z + 1.52, 0.64, 3.0, 0.16, frameMat, false);
+            }
+
+            // Pivot engsel pintu
+            const pivot = new THREE.Group();
+            if (isX) {
+              pivot.position.set(d.x - 1.44, 0, d.z);
+            } else {
+              pivot.position.set(d.x, 0, d.z - 1.44);
+            }
+
+            // Daun pintu berpanel (2.88 unit lebar) + bingkai ukiran
+            const leaf = new THREE.Mesh(
+              new THREE.BoxGeometry(isX ? 2.88 : 0.15, 2.95, isX ? 0.15 : 2.88),
+              leafMat
+            );
+            if (isX) {
+              leaf.position.set(1.44, 1.48, 0);
+            } else {
+              leaf.position.set(0, 1.48, 1.44);
+            }
+            pivot.add(leaf);
+
+            const panelTrimMat = new THREE.MeshStandardMaterial({
+              color: d.lockColor ? LOCK_COLORS[d.lockColor].hex : 0x5c1d0c,
+              roughness: 0.55,
+              metalness: 0.15
+            });
+            [2.12, 0.86].forEach((py) => {
+              const inset = new THREE.Mesh(
+                new THREE.BoxGeometry(isX ? 2.15 : 0.19, 0.85, isX ? 0.19 : 2.15),
+                panelTrimMat
+              );
+              if (isX) inset.position.set(1.44, py, 0);
+              else inset.position.set(0, py, 1.44);
+              pivot.add(inset);
+            });
+
+            // Pemegang & plat tombol pintu berkembar (depan & belakang)
+            const knobMat = new THREE.MeshStandardMaterial({ color: 0xf1f5f9, metalness: 0.88, roughness: 0.18 });
+            const plate = new THREE.Mesh(
+              new THREE.BoxGeometry(isX ? 0.12 : 0.21, 0.34, isX ? 0.21 : 0.12),
+              knobMat
+            );
+            const lever = new THREE.Mesh(
+              new THREE.BoxGeometry(isX ? 0.22 : 0.28, 0.05, isX ? 0.28 : 0.22),
+              knobMat
+            );
+            if (isX) {
+              plate.position.set(2.54, 1.35, 0);
+              lever.position.set(2.48, 1.38, 0);
+            } else {
+              plate.position.set(0, 1.35, 2.54);
+              lever.position.set(0, 1.38, 2.48);
+            }
+            pivot.add(plate);
+            pivot.add(lever);
+
+            // Mangga Kunci 3D Terperinci (Padlock ala Roblox Piggy) jika pintu berkunci
+            let lockGroup = null;
+            if (d.lockColor) {
+              const cfg = LOCK_COLORS[d.lockColor];
+              lockGroup = new THREE.Group();
+              const bodyMat = new THREE.MeshStandardMaterial({
+                color: cfg.hex,
+                emissive: cfg.emissive,
+                emissiveIntensity: 0.9,
+                metalness: 0.35,
+                roughness: 0.25
+              });
+              const shackleMat = new THREE.MeshStandardMaterial({ color: 0xf8fafc, metalness: 0.9, roughness: 0.15 });
+              const keyholeMat = new THREE.MeshBasicMaterial({ color: 0x090d16 });
+
+              const body = new THREE.Mesh(new THREE.BoxGeometry(0.44, 0.46, 0.26), bodyMat);
+              const band = new THREE.Mesh(new THREE.BoxGeometry(0.46, 0.08, 0.28), shackleMat);
+              band.position.y = -0.14;
+              const shackle = new THREE.Mesh(new THREE.TorusGeometry(0.145, 0.042, 12, 20, Math.PI), shackleMat);
+              shackle.position.y = 0.23;
+
+              const keyholeFront = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.14, 0.28), keyholeMat);
+              keyholeFront.position.y = 0.02;
+
+              lockGroup.add(body);
+              lockGroup.add(band);
+              lockGroup.add(shackle);
+              lockGroup.add(keyholeFront);
+
+              if (isX) {
+                lockGroup.position.set(1.44, 1.45, 0);
+              } else {
+                lockGroup.position.set(0, 1.45, 1.44);
+                lockGroup.rotation.y = Math.PI / 2;
+              }
+              pivot.add(lockGroup);
+            }
+
+            this.scene.add(pivot);
+
+            const doorObj = {
+              id: d.id,
+              type: 'door',
+              x: d.x,
+              z: d.z,
+              axis: d.axis,
+              position: new THREE.Vector3(d.x, 1.35, d.z),
+              pivot,
+              lockGroup,
+              lockColor: d.lockColor,
+              locked: Boolean(d.lockColor),
+              open: false,
+              currentAngle: 0,
+              box: {
+                minX: d.x - (isX ? 1.55 : 0.26),
+                maxX: d.x + (isX ? 1.55 : 0.26),
+                minZ: d.z - (isX ? 0.26 : 1.55),
+                maxZ: d.z + (isX ? 0.26 : 1.55)
+              }
+            };
+
+            this.doors.push(doorObj);
+            this.interactables.push(doorObj);
+          }
+        }
+
+        addDetailedDesk(x, z, w, d, topMat, legMat, hasComputer = true, chairSide = 1) {
+          // Collider tepat mengikut dimensi meja asal
+          this.colliders.push({
+            minX: x - w / 2,
+            maxX: x + w / 2,
+            minZ: z - d / 2,
+            maxZ: z + d / 2
+          });
+
+          const g = new THREE.Group();
+          g.position.set(x, 0, z);
+
+          // Permukaan meja tebal + bingkai tepi
+          const top = new THREE.Mesh(new THREE.BoxGeometry(w, 0.09, d), topMat);
+          top.position.y = 0.88;
+          g.add(top);
+
+          // Panel hadapan meja
+          const modesty = new THREE.Mesh(new THREE.BoxGeometry(w - 0.24, 0.52, 0.06), topMat);
+          modesty.position.set(0, 0.56, -chairSide * (d / 2 - 0.14));
+          g.add(modesty);
+
+          // 4 kaki meja keluli
+          const lx = w / 2 - 0.12;
+          const lz = d / 2 - 0.12;
+          [[-lx, -lz], [lx, -lz], [-lx, lz], [lx, lz]].forEach(([px, pz]) => {
+            const leg = new THREE.Mesh(new THREE.BoxGeometry(0.09, 0.84, 0.09), legMat);
+            leg.position.set(px, 0.42, pz);
+            g.add(leg);
+          });
+
+          if (hasComputer) {
+            const bezelMat = new THREE.MeshStandardMaterial({ color: 0x0f172a, roughness: 0.35, metalness: 0.4 });
+            const screenMat = new THREE.MeshStandardMaterial({
+              color: 0x1e3a8a,
+              emissive: 0x1d4ed8,
+              emissiveIntensity: 0.35,
+              roughness: 0.15
+            });
+            const monX = -w * 0.24;
+            const monZ = -chairSide * 0.22;
+
+            const base = new THREE.Mesh(new THREE.BoxGeometry(0.28, 0.03, 0.2), bezelMat);
+            base.position.set(monX, 0.94, monZ);
+            g.add(base);
+
+            const neck = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.22, 0.05), bezelMat);
+            neck.position.set(monX, 1.05, monZ);
+            g.add(neck);
+
+            const monitor = new THREE.Mesh(new THREE.BoxGeometry(0.72, 0.44, 0.05), bezelMat);
+            monitor.position.set(monX, 1.24, monZ);
+            g.add(monitor);
+
+            const display = new THREE.Mesh(new THREE.PlaneGeometry(0.66, 0.38), screenMat);
+            display.position.set(monX, 1.24, monZ + chairSide * 0.028);
+            if (chairSide < 0) display.rotation.y = Math.PI;
+            g.add(display);
+
+            const keyboard = new THREE.Mesh(new THREE.BoxGeometry(0.42, 0.025, 0.16), bezelMat);
+            keyboard.position.set(monX, 0.94, monZ + chairSide * 0.34);
+            g.add(keyboard);
+          }
+
+          this.scene.add(g);
+        }
+
+        addOfficeChair(x, z, rotY = 0) {
+          const g = new THREE.Group();
+          g.position.set(x, 0, z);
+          g.rotation.y = rotY;
+
+          const leatherMat = new THREE.MeshStandardMaterial({ color: 0x1e293b, roughness: 0.55 });
+          const chromeMat = new THREE.MeshStandardMaterial({ color: 0x94a3b8, metalness: 0.85, roughness: 0.2 });
+
+          const base = new THREE.Mesh(new THREE.CylinderGeometry(0.28, 0.32, 0.06, 10), chromeMat);
+          base.position.y = 0.04;
+          g.add(base);
+
+          const stem = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.04, 0.42, 8), chromeMat);
+          stem.position.y = 0.25;
+          g.add(stem);
+
+          const seat = new THREE.Mesh(new THREE.BoxGeometry(0.54, 0.09, 0.52), leatherMat);
+          seat.position.y = 0.48;
+          g.add(seat);
+
+          const back = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.62, 0.08), leatherMat);
+          back.position.set(0, 0.82, -0.23);
+          g.add(back);
+
+          this.scene.add(g);
+        }
+
+        addServerRack(x, z) {
+          this.colliders.push({
+            minX: x - 0.7,
+            maxX: x + 0.7,
+            minZ: z - 2.1,
+            maxZ: z + 2.1
+          });
+
+          const g = new THREE.Group();
+          g.position.set(x, 0, z);
+
+          const cabMat = new THREE.MeshStandardMaterial({ color: 0x1e293b, roughness: 0.38, metalness: 0.65 });
+          const trimMat = new THREE.MeshStandardMaterial({ color: 0x475569, roughness: 0.3, metalness: 0.8 });
+          const ledGreen = new THREE.MeshBasicMaterial({ color: 0x22c55e });
+          const ledAmber = new THREE.MeshBasicMaterial({ color: 0xf59e0b });
+
+          const body = new THREE.Mesh(new THREE.BoxGeometry(1.36, 2.8, 4.16), cabMat);
+          body.position.y = 1.4;
+          g.add(body);
+
+          const topCap = new THREE.Mesh(new THREE.BoxGeometry(1.42, 0.1, 4.22), trimMat);
+          topCap.position.y = 2.82;
+          g.add(topCap);
+
+          // Jalur lampu LED status pelayan di hadapan rak
+          for (let row = 0; row < 6; row++) {
+            const y = 0.45 + row * 0.38;
+            const bar = new THREE.Mesh(
+              new THREE.BoxGeometry(0.04, 0.06, 3.6),
+              row % 3 === 0 ? ledAmber : ledGreen
+            );
+            bar.position.set(-0.69, y, 0);
+            g.add(bar);
+          }
+
+          this.scene.add(g);
+        }
+
+        buildFurnitureAndLockers() {
+          const deskMat = new THREE.MeshStandardMaterial({ color: 0x6b3419, roughness: 0.42, metalness: 0.08 });
+          const execDeskMat = new THREE.MeshStandardMaterial({ color: 0x451a03, roughness: 0.35, metalness: 0.12 });
+          const pantryTopMat = new THREE.MeshStandardMaterial({ color: 0x334155, roughness: 0.3, metalness: 0.45 });
+          const metalMat = new THREE.MeshStandardMaterial({ color: 0x64748b, roughness: 0.35, metalness: 0.7 });
+
+          // Meja-meja bilik pejabat terperinci + komputer + kerusi
+          this.addDetailedDesk(-16, 9, 4.0, 1.8, deskMat, metalMat, true, 1);
+          this.addOfficeChair(-16, 10.35, Math.PI);
+
+          this.addDetailedDesk(16, 9, 6.2, 2.2, execDeskMat, metalMat, false, 1);
+          this.addOfficeChair(14.3, 10.55, Math.PI);
+          this.addOfficeChair(17.7, 10.55, Math.PI);
+          this.addOfficeChair(14.3, 7.45, 0);
+          this.addOfficeChair(17.7, 7.45, 0);
+
+          this.addDetailedDesk(-16, -9, 4.2, 1.6, pantryTopMat, metalMat, false, -1);
+
+          this.addDetailedDesk(0, -28.5, 4.8, 1.8, execDeskMat, metalMat, true, -1);
+          this.addOfficeChair(0, -29.95, 0);
+
+          // Rak server bilik janakuasa dengan lampu LED
+          this.addServerRack(23.5, -12);
+          this.addServerRack(23.5, -6);
+
+          // Lif Utama Berperincian (Pintu berkembar keluli + penunjuk tingkat bercahaya)
+          const liftFrameMat = new THREE.MeshStandardMaterial({ color: 0x1e293b, metalness: 0.7, roughness: 0.3 });
+          const liftDoorMat = new THREE.MeshStandardMaterial({ color: 0x94a3b8, metalness: 0.85, roughness: 0.22 });
+          const liftSeamMat = new THREE.MeshStandardMaterial({ color: 0x0f172a, roughness: 0.5 });
+
+          this.addBox(0, 1.55, 31.86, 3.5, 3.1, 0.24, liftFrameMat, false);
+          const liftMesh = this.addBox(0, 1.5, 31.78, 3.15, 2.95, 0.22, liftDoorMat, false);
+          this.addBox(0, 1.5, 31.66, 0.06, 2.95, 0.04, liftSeamMat, false);
+
+          const indicatorSign = new THREE.Mesh(
+            new THREE.PlaneGeometry(1.3, 0.34),
+            new THREE.MeshBasicMaterial({ map: createPlaqueTexture('LIF UTAMA • T14') })
+          );
+          indicatorSign.position.set(0, 3.35, 31.65);
+          indicatorSign.rotation.y = Math.PI;
+          this.scene.add(indicatorSign);
+
+          this.interactables.push({
+            id: 'elevator',
+            type: 'elevator',
+            index: 0,
+            position: new THREE.Vector3(0, 1.2, 31.0),
+            mesh: liftMesh,
+            done: false
+          });
+
+          // Loker Persembunyian Terperinci (dengan lubang pengudaraan & pemegang keluli)
+          const lockerCoords = [
+            { x: -8.8, z: 26, rot: Math.PI / 2 },
+            { x: -28.8, z: 14, rot: Math.PI / 2 },
+            { x: 28.8, z: 14, rot: -Math.PI / 2 },
+            { x: -28.8, z: -14, rot: Math.PI / 2 },
+            { x: 28.8, z: -14, rot: -Math.PI / 2 },
+            { x: -14.8, z: -31, rot: Math.PI / 2 },
+            { x: 14.8, z: -31, rot: -Math.PI / 2 },
+            { x: -4.8, z: 0, rot: Math.PI / 2 }
+          ];
+
+          const lockerMat = new THREE.MeshStandardMaterial({ color: 0x1d4ed8, roughness: 0.38, metalness: 0.45 });
+          const lockerDoorMat = new THREE.MeshStandardMaterial({ color: 0x2563eb, roughness: 0.35, metalness: 0.5 });
+          const ventMat = new THREE.MeshStandardMaterial({ color: 0x0f172a, roughness: 0.6 });
+          const handleMat = new THREE.MeshStandardMaterial({ color: 0xe2e8f0, metalness: 0.9, roughness: 0.15 });
+
+          lockerCoords.forEach((lc, idx) => {
+            this.colliders.push({
+              minX: lc.x - 0.6,
+              maxX: lc.x + 0.6,
+              minZ: lc.z - 0.6,
+              maxZ: lc.z + 0.6
+            });
+
+            const lockerGroup = new THREE.Group();
+            lockerGroup.position.set(lc.x, 0, lc.z);
+            lockerGroup.rotation.y = lc.rot;
+
+            const body = new THREE.Mesh(new THREE.BoxGeometry(1.18, 2.6, 1.16), lockerMat);
+            body.position.y = 1.3;
+            lockerGroup.add(body);
+
+            const frontDoor = new THREE.Mesh(new THREE.BoxGeometry(1.04, 2.44, 0.06), lockerDoorMat);
+            frontDoor.position.set(0, 1.3, 0.58);
+            lockerGroup.add(frontDoor);
+
+            [2.18, 2.06, 1.94, 0.56, 0.44].forEach((vy) => {
+              const slot = new THREE.Mesh(new THREE.BoxGeometry(0.66, 0.035, 0.03), ventMat);
+              slot.position.set(0, vy, 0.615);
+              lockerGroup.add(slot);
+            });
+
+            const handle = new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.24, 0.06), handleMat);
+            handle.position.set(0.38, 1.32, 0.625);
+            lockerGroup.add(handle);
+
+            this.scene.add(lockerGroup);
+
+            const exitOffset = new THREE.Vector3(Math.sin(lc.rot) * 1.5, 0, Math.cos(lc.rot) * 1.5);
+            const lockerObj = {
+              id: `locker_${idx}`,
+              type: 'locker',
+              index: idx + 1,
+              position: new THREE.Vector3(lc.x, 1.2, lc.z),
+              insidePos: new THREE.Vector3(lc.x, 1.65, lc.z),
+              exitPos: new THREE.Vector3(lc.x, 1.65, lc.z).add(exitOffset),
+              yaw: lc.rot,
+              mesh: lockerGroup
+            };
+            this.lockers.push(lockerObj);
+            this.interactables.push(lockerObj);
+          });
+        }
+
+        spawnMissionItems() {
+          // 1. 4 Fail Audit Sulit (Fail berlapis dengan jalur merah SULIT)
+          const fileSpots = [
+            { x: -16, y: 0.96, z: 9 },
+            { x: 16, y: 0.96, z: 9 },
+            { x: -16, y: 0.96, z: -9 },
+            { x: 0, y: 0.96, z: -28.5 }
+          ];
+          const folderMat = new THREE.MeshStandardMaterial({ color: 0xfacc15, emissive: 0x854d0e, emissiveIntensity: 0.65, roughness: 0.4 });
+          const paperMat = new THREE.MeshStandardMaterial({ color: 0xf8fafc, roughness: 0.6 });
+          const ribbonMat = new THREE.MeshStandardMaterial({ color: 0xdc2626, emissive: 0x7f1d1d, emissiveIntensity: 0.5 });
+
+          fileSpots.forEach((f, i) => {
+            const fileGroup = new THREE.Group();
+            fileGroup.position.set(f.x, f.y, f.z);
+            fileGroup.rotation.y = (i % 2 === 0 ? 0.18 : -0.22);
+
+            const bottomCover = new THREE.Mesh(new THREE.BoxGeometry(0.68, 0.03, 0.48), folderMat);
+            const pages = new THREE.Mesh(new THREE.BoxGeometry(0.64, 0.05, 0.44), paperMat);
+            pages.position.y = 0.035;
+            const topCover = new THREE.Mesh(new THREE.BoxGeometry(0.68, 0.03, 0.48), folderMat);
+            topCover.position.y = 0.07;
+            const redBand = new THREE.Mesh(new THREE.BoxGeometry(0.16, 0.095, 0.5), ribbonMat);
+            redBand.position.set(0.14, 0.035, 0);
+
+            fileGroup.add(bottomCover);
+            fileGroup.add(pages);
+            fileGroup.add(topCover);
+            fileGroup.add(redBand);
+
+            this.scene.add(fileGroup);
+            this.interactables.push({
+              id: `file_${i}`,
+              type: 'file',
+              index: i + 1,
+              position: new THREE.Vector3(f.x, f.y + 0.06, f.z),
+              mesh: fileGroup,
+              done: false
+            });
+          });
+
+          // 2. 4 Kunci Berwarna dengan 3 variasi lokasi rawak setiap pusingan
+          this.keyPresets = [
+            [
+              { color: 'red', x: -26.5, z: 14.5 },
+              { color: 'green', x: -25.5, z: -13.5 },
+              { color: 'blue', x: 24.5, z: 13.5 },
+              { color: 'gold', x: 26.5, z: -12.0 }
+            ],
+            [
+              { color: 'red', x: -26.0, z: -5.0 },
+              { color: 'blue', x: -25.0, z: 4.5 },
+              { color: 'green', x: 25.0, z: 4.5 },
+              { color: 'gold', x: 26.5, z: -4.5 }
+            ],
+            [
+              { color: 'red', x: -12.5, z: -14.5 },
+              { color: 'blue', x: 13.5, z: -14.5 },
+              { color: 'green', x: -12.5, z: 14.5 },
+              { color: 'gold', x: 13.5, z: 14.5 }
+            ]
+          ];
+
+          this.keyPresets[0].forEach((k) => {
+            const mesh = createKeyMesh(k.color);
+            mesh.position.set(k.x, 1.15, k.z);
+            this.scene.add(mesh);
+            const keyObj = {
+              id: `key_${k.color}`,
+              type: 'key',
+              color: k.color,
+              position: new THREE.Vector3(k.x, 1.15, k.z),
+              mesh,
+              done: false
+            };
+            this.keysList.push(keyObj);
+            this.interactables.push(keyObj);
+          });
+
+          // 3. 2 Suis Janakuasa Kecemasan
+          const switchSpots = [
+            { x: 22.6, y: 1.5, z: -12 },
+            { x: 22.6, y: 1.5, z: -6 }
+          ];
+          switchSpots.forEach((s, i) => {
+            const mat = new THREE.MeshStandardMaterial({ color: 0xef4444, emissive: 0x991b1b, emissiveIntensity: 0.85 });
+            const mesh = new THREE.Mesh(new THREE.BoxGeometry(0.3, 0.55, 0.4), mat);
+            mesh.position.set(s.x, s.y, s.z);
+            this.scene.add(mesh);
+            this.interactables.push({
+              id: `switch_${i}`,
+              type: 'switch',
+              index: i + 1,
+              position: new THREE.Vector3(s.x, s.y, s.z),
+              mesh,
+              done: false
+            });
+          });
+        }
+
+        randomizeKeyPositions() {
+          const preset = this.keyPresets[Math.floor(Math.random() * this.keyPresets.length)];
+          for (const spot of preset) {
+            const keyObj = this.keysList.find((k) => k.color === spot.color);
+            if (keyObj) {
+              keyObj.position.set(spot.x, 1.15, spot.z);
+              keyObj.mesh.position.copy(keyObj.position);
+            }
+          }
+        }
+
+        updateDoors(dt) {
+          for (const d of this.doors) {
+            const targetAngle = d.open ? Math.PI / 2 : 0;
+            d.currentAngle += (targetAngle - d.currentAngle) * Math.min(1, dt * 10);
+            d.pivot.rotation.y = d.currentAngle;
+          }
+        }
+
+        getActiveColliders() {
+          const closedDoorBoxes = [];
+          for (const d of this.doors) {
+            if (!d.open) closedDoorBoxes.push(d.box);
+          }
+          return this.colliders.concat(closedDoorBoxes);
+        }
+
+        getRoomAt(x, z) {
+          for (const r of this.rooms) {
+            if (Math.abs(x - r.x) <= r.w / 2 && Math.abs(z - r.z) <= r.d / 2) {
+              return r.name;
+            }
+          }
+          return 'Koridor Tingkat 14';
+        }
+      }
+
+      /* ================= 3. ENTITI ANWAR (ANTI-STUCK & VISION-ONLY CHASE) ================= */
+      function createPlaceholderTexture() {
+        const c = document.createElement('canvas');
+        c.width = 512; c.height = 512;
+        const ctx = c.getContext('2d');
+        const grad = ctx.createRadialGradient(256, 230, 40, 256, 256, 240);
+        grad.addColorStop(0, '#fca5a5');
+        grad.addColorStop(0.65, '#991b1b');
+        grad.addColorStop(1, 'rgba(0,0,0,0)');
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 0, 512, 512);
+
+        ctx.fillStyle = '#0f172a';
+        ctx.beginPath();
+        ctx.ellipse(256, 240, 125, 160, 0, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.fillStyle = '#fef08a';
+        ctx.beginPath();
+        ctx.arc(210, 205, 16, 0, Math.PI * 2);
+        ctx.arc(302, 205, 16, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.fillStyle = '#ffffff';
+        ctx.font = 'bold 26px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText('LETAK anwar.png', 256, 430);
+        ctx.font = '20px sans-serif';
+        ctx.fillText('DI REPO GITHUB', 256, 462);
+        return new THREE.CanvasTexture(c);
+      }
+
+      function lineIntersectsBox(x1, z1, x2, z2, box, pad = 0.35) {
+        const minX = box.minX - pad;
+        const maxX = box.maxX + pad;
+        const minZ = box.minZ - pad;
+        const maxZ = box.maxZ + pad;
+
+        let t0 = 0, t1 = 1;
+        const dx = x2 - x1;
+        const dz = z2 - z1;
+        const checks = [
+          [-dx, x1 - minX],
+          [dx, maxX - x1],
+          [-dz, z1 - minZ],
+          [dz, maxZ - z1]
+        ];
+
+        for (const [p, q] of checks) {
+          if (Math.abs(p) < 1e-6) {
+            if (q < 0) return false;
+          } else {
+            const r = q / p;
+            if (p < 0) {
+              if (r > t1) return false;
+              if (r > t0) t0 = r;
+            } else {
+              if (r < t0) return false;
+              if (r < t1) t1 = r;
+            }
+          }
+        }
+        return t0 <= t1;
+      }
+
+      class AnwarEntity {
+        constructor(scene, officeMap) {
+          this.scene = scene;
+          this.map = officeMap;
+          this.patrolIndex = 0;
+          this.position = new THREE.Vector3(-11.5, 0, 9);
+          this.facingAngle = 0;
+          this.state = 'RONDA';
+          this.baseSpeed = 3.8;
+          this.chaseSpeed = 5.2;
+          this.detectRange = 17;
+          this.loseTimer = 0;
+          this.doorOpenTimer = 0;
+          this.stuckCheckTimer = 0;
+          this.lastCheckPos = this.position.clone();
+
+          const placeholderTex = createPlaceholderTexture();
+          this.imageSrc = placeholderTex.image.toDataURL();
+
+          this.group = new THREE.Group();
+          this.group.position.copy(this.position);
+
+          const mat = new THREE.SpriteMaterial({ map: placeholderTex, transparent: true });
+          this.sprite = new THREE.Sprite(mat);
+          this.sprite.scale.set(2.3, 2.7, 1);
+          this.sprite.position.y = 1.45;
+          this.group.add(this.sprite);
+
+          this.auraLight = new THREE.PointLight(0xdc2626, 1.5, 11);
+          this.auraLight.position.set(0, 1.6, 0);
+          this.group.add(this.auraLight);
+
+          this.scene.add(this.group);
+          this.tryLoadDefaultFace();
+        }
+
+        tryLoadDefaultFace() {
+          const loader = new THREE.TextureLoader();
+          loader.load('./anwar.png', (tex) => {
+            if (THREE.SRGBColorSpace) tex.colorSpace = THREE.SRGBColorSpace;
+            this.sprite.material.map = tex;
+            this.sprite.material.needsUpdate = true;
+            this.imageSrc = './anwar.png';
+          }, undefined, () => {
+            loader.load('./assets/anwar.png', (tex) => {
+              if (THREE.SRGBColorSpace) tex.colorSpace = THREE.SRGBColorSpace;
+              this.sprite.material.map = tex;
+              this.sprite.material.needsUpdate = true;
+              this.imageSrc = './assets/anwar.png';
+            });
+          });
+        }
+
+        setCustomFace(dataUrl) {
+          const loader = new THREE.TextureLoader();
+          loader.load(dataUrl, (tex) => {
+            if (THREE.SRGBColorSpace) tex.colorSpace = THREE.SRGBColorSpace;
+            this.sprite.material.map = tex;
+            this.sprite.material.needsUpdate = true;
+            this.imageSrc = dataUrl;
+          });
+        }
+
+        setDifficulty(diff) {
+          // Direbalancekan supaya sepadan dengan kelajuan jalan pemain (5.8)
+          if (diff === 'mudah') {
+            this.baseSpeed = 3.2; this.chaseSpeed = 4.45; this.detectRange = 14;
+          } else if (diff === 'sukar') {
+            this.baseSpeed = 4.4; this.chaseSpeed = 5.6; this.detectRange = 20;
+          } else {
+            this.baseSpeed = 3.8; this.chaseSpeed = 5.15; this.detectRange = 17;
+          }
+        }
+
+        reset() {
+          this.position.set(-11.5, 0, 9);
+          this.group.position.copy(this.position);
+          this.facingAngle = 0;
+          this.state = 'RONDA';
+          this.patrolIndex = 1;
+          this.loseTimer = 0;
+          this.doorOpenTimer = 0;
+          this.stuckCheckTimer = 0;
+          this.lastCheckPos.copy(this.position);
+        }
+
+        hasLineOfSight(fromPos, toPos, pad = 0.3) {
+          // Semak dinding DAN pintu tertutup supaya bot tidak nampak menembusi dinding/pintu!
+          const obstacles = this.map.getActiveColliders();
+          for (const box of obstacles) {
+            if (lineIntersectsBox(fromPos.x, fromPos.z, toPos.x, toPos.z, box, pad)) return false;
+          }
+          return true;
+        }
+
+        canOccupy(nx, nz, radius = 0.35) {
+          const obstacles = this.map.getActiveColliders();
+          for (const b of obstacles) {
+            if (nx + radius > b.minX && nx - radius < b.maxX && nz + radius > b.minZ && nz - radius < b.maxZ) {
+              return false;
+            }
+          }
+          return true;
+        }
+
+        moveSmooth(dirX, dirZ, stepDist) {
+          const r = 0.35;
+          // Cuba gerak penuh dahulu
+          if (this.canOccupy(this.position.x + dirX * stepDist, this.position.z + dirZ * stepDist, r)) {
+            this.position.x += dirX * stepDist;
+            this.position.z += dirZ * stepDist;
+            return true;
+          }
+          // Gelongsor di sepanjang paksi X atau Z
+          let moved = false;
+          if (Math.abs(dirX) > 0.05 && this.canOccupy(this.position.x + Math.sign(dirX) * stepDist, this.position.z, r)) {
+            this.position.x += Math.sign(dirX) * stepDist;
+            moved = true;
+          }
+          if (Math.abs(dirZ) > 0.05 && this.canOccupy(this.position.x, this.position.z + Math.sign(dirZ) * stepDist, r)) {
+            this.position.z += Math.sign(dirZ) * stepDist;
+            moved = true;
+          }
+          if (moved) return true;
+
+          // Cuba sudut elakan (+55 deg dan -55 deg) supaya langsung tidak tersangkut di bucu
+          const baseAngle = Math.atan2(dirZ, dirX);
+          for (const offset of [0.95, -0.95, 1.57, -1.57]) {
+            const ax = Math.cos(baseAngle + offset);
+            const az = Math.sin(baseAngle + offset);
+            if (this.canOccupy(this.position.x + ax * stepDist, this.position.z + az * stepDist, r)) {
+              this.position.x += ax * stepDist;
+              this.position.z += az * stepDist;
+              return true;
+            }
+          }
+          return false;
+        }
+
+        findNearestNode(pos) {
+          const nodes = this.map.navNodes;
+          let bestVisible = null, bestVisDist = Infinity;
+          let bestAny = nodes[0], bestAnyDist = Infinity;
+
+          for (const n of nodes) {
+            const d = pos.distanceTo(n.pos);
+            if (d < bestAnyDist) { bestAnyDist = d; bestAny = n; }
+            if (d < bestVisDist && this.hasLineOfSight(pos, n.pos, 0.22)) {
+              bestVisDist = d; bestVisible = n;
+            }
+          }
+          return bestVisible || bestAny;
+        }
+
+        isEdgeBlockedByLockedDoor(uNode, vNode) {
+          if (!uNode.doorId || uNode.doorId !== vNode.doorId) return false;
+          const door = this.map.doors.find((d) => d.id === uNode.doorId);
+          return door ? door.locked : false;
+        }
+
+        getNextWaypointToward(targetPos) {
+          const nodes = this.map.navNodes;
+          const startNode = this.findNearestNode(this.position);
+          const goalNode = this.findNearestNode(targetPos);
+          if (startNode.id === goalNode.id) return goalNode.pos;
+
+          const dist = new Map();
+          const prev = new Map();
+          const unvisited = new Set();
+
+          for (const n of nodes) { dist.set(n.id, Infinity); unvisited.add(n.id); }
+          dist.set(startNode.id, 0);
+
+          while (unvisited.size > 0) {
+            let uId = null, minD = Infinity;
+            for (const id of unvisited) {
+              const d = dist.get(id);
+              if (d < minD) { minD = d; uId = id; }
+            }
+            if (uId === null || uId === goalNode.id) break;
+            unvisited.delete(uId);
+
+            const uNode = nodes[uId];
+            for (const vId of uNode.links) {
+              if (!unvisited.has(vId)) continue;
+              const vNode = nodes[vId];
+              if (this.isEdgeBlockedByLockedDoor(uNode, vNode)) continue;
+              const alt = minD + uNode.pos.distanceTo(vNode.pos);
+              if (alt < dist.get(vId)) {
+                dist.set(vId, alt);
+                prev.set(vId, uId);
+              }
+            }
+          }
+
+          if (!prev.has(goalNode.id)) {
+            return startNode.pos;
+          }
+
+          let step = goalNode.id;
+          while (prev.has(step) && prev.get(step) !== startNode.id) {
+            step = prev.get(step);
+          }
+          return nodes[step].pos;
+        }
+
+        canVisuallySeePlayer(flatPlayer, dist) {
+          if (dist > this.detectRange) return false;
+          if (!this.hasLineOfSight(this.position, flatPlayer, 0.25)) return false;
+
+          // Jika sudah mengejar atau sangat dekat (< 5.5m), sentiasa nampak jika tiada halangan
+          if (this.state === 'KEJAR' || dist < 5.5) return true;
+
+          // Semasa rondaan biasa, semak sudut pandangan hadapan (~160 darjah)
+          const toPlayerAngle = Math.atan2(flatPlayer.x - this.position.x, flatPlayer.z - this.position.z);
+          let diff = toPlayerAngle - this.facingAngle;
+          while (diff > Math.PI) diff -= Math.PI * 2;
+          while (diff < -Math.PI) diff += Math.PI * 2;
+          return Math.abs(diff) <= 1.4;
+        }
+
+        update(dt, playerPos, playerYaw, isPlayerHiding, audio, onCatch) {
+          const flatPlayer = new THREE.Vector3(playerPos.x, 0, playerPos.z);
+          const dist = this.position.distanceTo(flatPlayer);
+
+          const toEntity = new THREE.Vector3().subVectors(this.position, flatPlayer);
+          const worldAngle = Math.atan2(-toEntity.x, -toEntity.z);
+          let relAngle = worldAngle - playerYaw;
+          while (relAngle > Math.PI) relAngle -= Math.PI * 2;
+          while (relAngle < -Math.PI) relAngle += Math.PI * 2;
+          const stereoPan = -Math.sin(relAngle);
+
+          audio.updateProximityAudio(dist, stereoPan, true, 28);
+
+          // HANYA kejar apabila benar-benar NAMPAK pemain (tiada radar bunyi menembusi dinding)
+          const seesPlayer = !isPlayerHiding && this.canVisuallySeePlayer(flatPlayer, dist);
+
+          if (seesPlayer) {
+            this.state = 'KEJAR';
+            this.loseTimer = 3.0;
+          } else if (this.state === 'KEJAR') {
+            this.loseTimer -= dt;
+            if (isPlayerHiding || this.loseTimer <= 0) {
+              this.state = 'RONDA';
+            }
+          }
+
+          // Jika ada pintu TIDAK berkunci yang tertutup di hadapan bot, bot buka selepas 0.55s
+          let waitingAtDoor = false;
+          for (const door of this.map.doors) {
+            if (!door.open && !door.locked && this.position.distanceTo(new THREE.Vector3(door.x, 0, door.z)) < 1.95) {
+              this.doorOpenTimer += dt;
+              waitingAtDoor = true;
+              if (this.doorOpenTimer >= 0.55) {
+                door.open = true;
+                this.doorOpenTimer = 0;
+                audio.playDoorSwing();
+              }
+              break;
+            }
+          }
+          if (!waitingAtDoor) {
+            this.doorOpenTimer = 0;
+          }
+
+          let steerTarget, speed;
+          if (this.state === 'KEJAR' && !isPlayerHiding) {
+            speed = this.chaseSpeed;
+            steerTarget = this.hasLineOfSight(this.position, flatPlayer, 0.35)
+              ? flatPlayer
+              : this.getNextWaypointToward(flatPlayer);
+          } else {
+            speed = this.baseSpeed;
+            let patrolNodeId = this.map.patrolNodeIds[this.patrolIndex];
+            let patrolGoal = this.map.navNodes[patrolNodeId].pos;
+
+            if (this.position.distanceTo(patrolGoal) < 1.35) {
+              this.patrolIndex = (this.patrolIndex + 1) % this.map.patrolNodeIds.length;
+              patrolNodeId = this.map.patrolNodeIds[this.patrolIndex];
+              patrolGoal = this.map.navNodes[patrolNodeId].pos;
+            }
+
+            let nextStep = this.getNextWaypointToward(patrolGoal);
+            let guard = 0;
+            while (
+              guard < this.map.patrolNodeIds.length &&
+              nextStep.distanceTo(this.position) < 0.75 &&
+              this.position.distanceTo(patrolGoal) > 1.8
+            ) {
+              this.patrolIndex = (this.patrolIndex + 1) % this.map.patrolNodeIds.length;
+              patrolNodeId = this.map.patrolNodeIds[this.patrolIndex];
+              patrolGoal = this.map.navNodes[patrolNodeId].pos;
+              nextStep = this.getNextWaypointToward(patrolGoal);
+              guard++;
+            }
+            steerTarget = nextStep;
+          }
+
+          if (!waitingAtDoor) {
+            const dir = new THREE.Vector3().subVectors(steerTarget, this.position);
+            dir.y = 0;
+            if (dir.lengthSq() > 0.001) {
+              dir.normalize();
+              this.facingAngle = Math.atan2(dir.x, dir.z);
+              this.moveSmooth(dir.x, dir.z, speed * dt);
+            }
+          }
+
+          // Pemantau Anti-Stuck: jika tidak bergerak selama 0.6s (bukan menunggu pintu), selaraskan ke nod terdekat
+          this.stuckCheckTimer += dt;
+          if (this.stuckCheckTimer >= 0.6) {
+            if (!waitingAtDoor && this.position.distanceTo(this.lastCheckPos) < 0.25) {
+              const nearest = this.findNearestNode(this.position);
+              const pull = new THREE.Vector3().subVectors(nearest.pos, this.position);
+              pull.y = 0;
+              if (pull.lengthSq() > 0.01) {
+                pull.normalize();
+                this.moveSmooth(pull.x, pull.z, 0.45);
+              }
+              if (this.state === 'RONDA') {
+                this.patrolIndex = (this.patrolIndex + 1) % this.map.patrolNodeIds.length;
+              }
+            }
+            this.lastCheckPos.copy(this.position);
+            this.stuckCheckTimer = 0;
+          }
+
+          const bob = Math.sin(performance.now() * (this.state === 'KEJAR' ? 0.016 : 0.008)) * 0.11;
+          this.group.position.set(this.position.x, 0, this.position.z);
+          this.sprite.position.y = 1.45 + bob;
+
+          if (!isPlayerHiding && dist < 1.3 && this.hasLineOfSight(this.position, flatPlayer, 0.25)) {
+            onCatch();
+          }
+          return dist;
+        }
+      }
+
+      /* ================= 4. ENJIN UTAMA & KAWALAN ================= */
+      const canvas = document.getElementById('game-canvas');
+      const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      if (THREE.ACESFilmicToneMapping) {
+        renderer.toneMapping = THREE.ACESFilmicToneMapping;
+        renderer.toneMappingExposure = 1.06;
+      }
+
+      const scene = new THREE.Scene();
+      scene.background = new THREE.Color(0x0b101d);
+      scene.fog = new THREE.FogExp2(0x0b101d, 0.018);
+
+      const camera = new THREE.PerspectiveCamera(72, window.innerWidth / window.innerHeight, 0.1, 80);
+      camera.rotation.order = 'YXZ';
+      scene.add(camera);
+
+      // Pencahayaan ambien jelas kerana ciri lampu suluh telah dibuang
+      const hemiLight = new THREE.HemisphereLight(0xe2e8f0, 0x334155, 1.35);
+      scene.add(hemiLight);
+
+      const audio = new HorrorAudio();
+      const officeMap = new OfficeMap(scene);
+      const anwar = new AnwarEntity(scene, officeMap);
+
+      const state = {
+        mode: 'LOBBY',
+        lang: 'bm',
+        difficulty: 'sederhana',
+        sensitivity: 1.0,
+        yaw: Math.PI,
+        pitch: 0,
+        pos: new THREE.Vector3(0, 1.65, 26),
+        isHiding: false,
+        currentLocker: null,
+        filesCollected: 0,
+        switchesOn: 0,
+        keysOwned: { red: false, blue: false, green: false, gold: false },
+        elapsedTime: 0,
+        introTimer: 0,
+        touchEnabled: ('ontouchstart' in window) || navigator.maxTouchPoints > 0
+      };
+
+      const keys = {};
+      let joyVec = { x: 0, y: 0 };
+      let isMouseDragging = false;
+      let lastMouseX = 0;
+      let lastMouseY = 0;
+
+      const screens = {
+        LOBBY: document.getElementById('lobby-screen'),
+        INTRO: document.getElementById('intro-screen'),
+        PLAYING: document.getElementById('hud-screen'),
+        PAUSED: document.getElementById('pause-screen'),
+        JUMPSCARE: document.getElementById('jumpscare-screen'),
+        DEATH: document.getElementById('death-screen'),
+        WIN: document.getElementById('win-screen')
+      };
+
+      function showScreen(name) {
+        Object.entries(screens).forEach(([k, el]) => el.classList.toggle('active', k === name));
+      }
+
+      /* --- NAVIGASI SUB-VIEW MAIN MENU --- */
+      const lobbyViews = {
+        home: document.getElementById('lobby-view-home'),
+        chapters: document.getElementById('lobby-view-chapters'),
+        shop: document.getElementById('lobby-view-shop'),
+        updates: document.getElementById('lobby-view-updates'),
+        settings: document.getElementById('lobby-view-settings')
+      };
+
+      function showLobbyView(viewKey) {
+        Object.entries(lobbyViews).forEach(([k, el]) => el.classList.toggle('active', k === viewKey));
+      }
+
+      document.getElementById('btn-nav-play').addEventListener('click', () => {
+        audio.playClick();
+        showLobbyView('chapters');
+      });
+
+      document.getElementById('btn-nav-shop').addEventListener('click', () => {
+        audio.playClick();
+        showLobbyView('shop');
+      });
+
+      document.getElementById('btn-nav-updates').addEventListener('click', () => {
+        audio.playClick();
+        showLobbyView('updates');
+      });
+
+      document.getElementById('btn-top-updates').addEventListener('click', () => {
+        audio.playClick();
+        showLobbyView('updates');
+      });
+
+      document.getElementById('btn-nav-settings').addEventListener('click', () => {
+        audio.playClick();
+        showLobbyView('settings');
+      });
+
+      function renderUpdateLogs() {
+        const container = document.getElementById('update-log-container');
+        if (!container) return;
+        const dict = I18N[state.lang];
+        container.innerHTML = '';
+
+        for (const entry of dict.updateLogs) {
+          const card = document.createElement('div');
+          card.className = 'update-card' + (entry.latest ? ' latest' : '');
+
+          const head = document.createElement('div');
+          head.className = 'update-card-head';
+
+          const ver = document.createElement('span');
+          ver.className = 'update-ver';
+          ver.textContent = entry.version;
+          head.appendChild(ver);
+
+          const rightWrap = document.createElement('div');
+          rightWrap.style.display = 'flex';
+          rightWrap.style.alignItems = 'center';
+          rightWrap.style.gap = '8px';
+
+          const dateSpan = document.createElement('span');
+          dateSpan.className = 'update-date';
+          dateSpan.textContent = entry.date;
+          rightWrap.appendChild(dateSpan);
+
+          if (entry.latest) {
+            const tag = document.createElement('span');
+            tag.className = 'pill-tag red';
+            tag.textContent = dict.updateLatestBadge;
+            rightWrap.appendChild(tag);
+          }
+
+          head.appendChild(rightWrap);
+          card.appendChild(head);
+
+          const title = document.createElement('div');
+          title.className = 'update-title';
+          title.textContent = entry.title;
+          card.appendChild(title);
+
+          const ul = document.createElement('ul');
+          ul.className = 'update-bullets';
+          for (const bullet of entry.items) {
+            const li = document.createElement('li');
+            li.textContent = bullet;
+            ul.appendChild(li);
+          }
+          card.appendChild(ul);
+          container.appendChild(card);
+        }
+      }
+
+      document.querySelectorAll('[data-back-home]').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          audio.playClick();
+          showLobbyView('home');
+        });
+      });
+
+      /* --- PENUKAR BAHASA BM & BI --- */
+      function getItemLabel(item) {
+        const dict = I18N[state.lang].itemLabels;
+        if (item.type === 'elevator') return dict.elevator;
+        if (item.type === 'locker') return dict.locker;
+        if (item.type === 'file') return dict.file(item.index);
+        if (item.type === 'switch') return dict.switch(item.index);
+        if (item.type === 'key') return dict.key(I18N[state.lang].keyNames[item.color]);
+        if (item.type === 'door') {
+          if (item.locked) {
+            const kName = I18N[state.lang].keyNames[item.lockColor];
+            return state.keysOwned[item.lockColor] ? dict.doorUnlock(kName) : dict.doorLocked(kName);
+          }
+          return item.open ? dict.doorClose : dict.doorOpen;
+        }
+        return '';
+      }
+
+      function getRoomDisplayName(rawName) {
+        return I18N[state.lang].rooms[rawName] || rawName;
+      }
+
+      function getDifficultyDisplayName(diff) {
+        if (diff === 'mudah') return 'Easy Mode';
+        if (diff === 'sukar') return 'Hard Mode';
+        return 'Normal Mode';
+      }
+
+      function updateKeysHUD() {
+        document.getElementById('key-badge-red').classList.toggle('owned', state.keysOwned.red);
+        document.getElementById('key-badge-blue').classList.toggle('owned', state.keysOwned.blue);
+        document.getElementById('key-badge-green').classList.toggle('owned', state.keysOwned.green);
+        document.getElementById('key-badge-gold').classList.toggle('owned', state.keysOwned.gold);
+      }
+
+      function applyLanguage() {
+        const dict = I18N[state.lang];
+        document.documentElement.lang = state.lang === 'bm' ? 'ms' : 'en';
+
+        document.querySelectorAll('[data-lang-switch]').forEach((btn) => {
+          btn.classList.toggle('active', btn.dataset.langSwitch === state.lang);
+        });
+
+        document.querySelectorAll('[data-i18n]').forEach((el) => {
+          const key = el.dataset.i18n;
+          if (typeof dict[key] === 'string') {
+            el.textContent = dict[key];
+          }
+        });
+
+        document.querySelectorAll('[data-i18n-html]').forEach((el) => {
+          const key = el.dataset.i18nHtml;
+          if (typeof dict[key] === 'string') {
+            el.innerHTML = dict[key];
+          }
+        });
+
+        renderUpdateLogs();
+        updateMissionHUD();
+        updateKeysHUD();
+        const rawRoom = officeMap.getRoomAt(state.pos.x, state.pos.z);
+        document.getElementById('room-name').textContent = `${dict.locationPrefix}: ${getRoomDisplayName(rawRoom)}`;
+      }
+
+      document.querySelectorAll('[data-lang-switch]').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          state.lang = btn.dataset.langSwitch;
+          applyLanguage();
+        });
+      });
+
+      document.querySelectorAll('.diff-btn').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.diff-btn').forEach((b) => b.classList.remove('active'));
+          btn.classList.add('active');
+          state.difficulty = btn.dataset.diff;
+          anwar.setDifficulty(state.difficulty);
+        });
+      });
+
+      const sensSlider = document.getElementById('sens-slider');
+      const sensVal = document.getElementById('sens-val');
+      sensSlider.addEventListener('input', () => {
+        state.sensitivity = parseFloat(sensSlider.value);
+        sensVal.textContent = state.sensitivity.toFixed(1);
+      });
+
+      document.getElementById('face-upload').addEventListener('change', (e) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = () => {
+          anwar.setCustomFace(reader.result);
+          document.getElementById('asset-status').textContent = `${state.lang === 'bm' ? 'Muka dimuat naik' : 'Face uploaded'}: ${file.name}`;
+        };
+        reader.readAsDataURL(file);
+      });
+
+      document.getElementById('audio-upload').addEventListener('change', async (e) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+        await audio.setCustomAudioFile(file);
+        document.getElementById('asset-status').textContent = `${state.lang === 'bm' ? 'Suara dimuat naik' : 'Audio uploaded'}: ${file.name}`;
+      });
+
+      document.getElementById('btn-start').addEventListener('click', () => {
+        audio.init();
+        audio.playClick();
+        resetGame();
+        startIntro();
+      });
+
+      document.getElementById('btn-start-skip').addEventListener('click', () => {
+        audio.init();
+        audio.playClick();
+        resetGame();
+        beginGameplay();
+      });
+
+      document.getElementById('btn-skip-intro').addEventListener('click', () => {
+        audio.playClick();
+        beginGameplay();
+      });
+
+      const introCameraShots = [
+        { camPos: new THREE.Vector3(0, 2.3, 27), lookAt: new THREE.Vector3(0, 1.4, 18) },
+        { camPos: new THREE.Vector3(2.5, 2.1, 12), lookAt: new THREE.Vector3(6, 1.4, 9) },
+        { camPos: new THREE.Vector3(-15, 2.1, -5), lookAt: new THREE.Vector3(-15, 1.15, -9) },
+        { camPos: new THREE.Vector3(-12, 2.0, 9), lookAt: new THREE.Vector3(-18, 1.45, 9) }
+      ];
+
+      function startIntro() {
+        state.mode = 'INTRO';
+        state.introTimer = 0;
+        audio.updateProximityAudio(999, 0, false);
+        showScreen('INTRO');
+      }
+
+      function beginGameplay() {
+        state.mode = 'PLAYING';
+        showScreen('PLAYING');
+        document.getElementById('mobile-controls').classList.toggle('visible', state.touchEnabled);
+        if (!state.touchEnabled && canvas.requestPointerLock) {
+          try { canvas.requestPointerLock(); } catch (_) {}
+        }
+      }
+
+      function resetGame() {
+        state.pos.set(0, 1.65, 26);
+        state.yaw = Math.PI;
+        state.pitch = 0;
+        camera.rotation.order = 'YXZ';
+        camera.rotation.set(0, state.yaw, 0);
+        state.isHiding = false;
+        state.currentLocker = null;
+        state.filesCollected = 0;
+        state.switchesOn = 0;
+        state.keysOwned = { red: false, blue: false, green: false, gold: false };
+        state.elapsedTime = 0;
+
+        officeMap.doors.forEach((d) => {
+          d.open = false;
+          d.currentAngle = 0;
+          d.pivot.rotation.y = 0;
+          d.locked = Boolean(d.lockColor);
+          if (d.lockGroup) d.lockGroup.visible = d.locked;
+        });
+
+        officeMap.interactables.forEach((item) => {
+          item.done = false;
+          if (item.mesh && item.type !== 'elevator' && item.type !== 'locker') item.mesh.visible = true;
+          if (item.type === 'switch' && item.mesh) {
+            item.mesh.material.color.setHex(0xef4444);
+            item.mesh.material.emissive.setHex(0x991b1b);
+          }
+        });
+
+        officeMap.randomizeKeyPositions();
+
+        anwar.setDifficulty(state.difficulty);
+        anwar.reset();
+        audio.updateProximityAudio(999, 0, false);
+        updateMissionHUD();
+        updateKeysHUD();
+      }
+
+      window.addEventListener('keydown', (e) => {
+        keys[e.code] = true;
+        if (state.mode !== 'PLAYING') return;
+        if (e.code === 'KeyE') triggerInteract();
+        if (e.code === 'Escape' || e.code === 'KeyP') pauseGame();
+      });
+
+      window.addEventListener('keyup', (e) => { keys[e.code] = false; });
+
+      function applyLookDelta(dx, dy, factor) {
+        if (!Number.isFinite(dx) || !Number.isFinite(dy)) return;
+        const clampedX = Math.max(-90, Math.min(90, dx));
+        const clampedY = Math.max(-90, Math.min(90, dy));
+        state.yaw -= clampedX * factor * state.sensitivity;
+        state.pitch -= clampedY * factor * state.sensitivity;
+        state.pitch = Math.max(-1.15, Math.min(1.15, state.pitch));
+      }
+
+      window.addEventListener('mousemove', (e) => {
+        if (state.mode !== 'PLAYING') return;
+        if (document.pointerLockElement === canvas) {
+          applyLookDelta(e.movementX, e.movementY, 0.0022);
+        } else if (isMouseDragging) {
+          const dx = e.clientX - lastMouseX;
+          const dy = e.clientY - lastMouseY;
+          lastMouseX = e.clientX;
+          lastMouseY = e.clientY;
+          applyLookDelta(dx, dy, 0.004);
+        }
+      });
+
+      canvas.addEventListener('mousedown', (e) => {
+        if (state.mode !== 'PLAYING') return;
+        isMouseDragging = true;
+        lastMouseX = e.clientX;
+        lastMouseY = e.clientY;
+
+        if (!state.touchEnabled && document.pointerLockElement !== canvas && canvas.requestPointerLock) {
+          try { canvas.requestPointerLock(); } catch (_) {}
+        }
+        if (e.button === 0) triggerInteract();
+      });
+
+      window.addEventListener('mouseup', () => { isMouseDragging = false; });
+      window.addEventListener('contextmenu', (e) => e.preventDefault());
+
+      // Kawalan Telefon
+      const joyZone = document.getElementById('joystick-zone');
+      const joyStick = document.getElementById('joystick-stick');
+      let joyTouchId = null;
+
+      joyZone.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        const t = e.changedTouches[0];
+        joyTouchId = t.identifier;
+        updateJoystick(t);
+      });
+
+      joyZone.addEventListener('touchmove', (e) => {
+        e.preventDefault();
+        for (const t of e.changedTouches) {
+          if (t.identifier === joyTouchId) updateJoystick(t);
+        }
+      });
+
+      const resetJoy = (e) => {
+        for (const t of e.changedTouches) {
+          if (t.identifier === joyTouchId) {
+            joyTouchId = null;
+            joyVec = { x: 0, y: 0 };
+            joyStick.style.transform = 'translate(-50%, -50%)';
+          }
+        }
+      };
+      joyZone.addEventListener('touchend', resetJoy);
+      joyZone.addEventListener('touchcancel', resetJoy);
+
+      function updateJoystick(touch) {
+        const rect = joyZone.getBoundingClientRect();
+        const cx = rect.left + rect.width / 2;
+        const cy = rect.top + rect.height / 2;
+        const maxR = 40;
+        let dx = touch.clientX - cx;
+        let dy = touch.clientY - cy;
+        const dist = Math.hypot(dx, dy);
+        if (dist > maxR) { dx = (dx / dist) * maxR; dy = (dy / dist) * maxR; }
+        joyStick.style.transform = `translate(calc(-50% + ${dx}px), calc(-50% + ${dy}px))`;
+        joyVec.x = dx / maxR;
+        joyVec.y = dy / maxR;
+      }
+
+      const lookZone = document.getElementById('look-zone');
+      let lookTouchId = null, lastLookX = 0, lastLookY = 0;
+
+      lookZone.addEventListener('touchstart', (e) => {
+        const t = e.changedTouches[0];
+        lookTouchId = t.identifier;
+        lastLookX = t.clientX;
+        lastLookY = t.clientY;
+      });
+
+      lookZone.addEventListener('touchmove', (e) => {
+        e.preventDefault();
+        for (const t of e.changedTouches) {
+          if (t.identifier === lookTouchId) {
+            const dx = t.clientX - lastLookX;
+            const dy = t.clientY - lastLookY;
+            lastLookX = t.clientX;
+            lastLookY = t.clientY;
+            applyLookDelta(dx, dy, 0.0055);
+          }
+        }
+      });
+
+      lookZone.addEventListener('touchend', (e) => {
+        for (const t of e.changedTouches) {
+          if (t.identifier === lookTouchId) lookTouchId = null;
+        }
+      });
+
+      document.getElementById('mob-interact').addEventListener('touchstart', (e) => { e.preventDefault(); triggerInteract(); });
+
+      document.getElementById('btn-pause').addEventListener('click', pauseGame);
+      document.getElementById('btn-resume').addEventListener('click', () => { audio.playClick(); beginGameplay(); });
+      document.getElementById('btn-toggle-touch').addEventListener('click', () => {
+        state.touchEnabled = !state.touchEnabled;
+        document.getElementById('mobile-controls').classList.toggle('visible', state.touchEnabled);
+        showToast(state.touchEnabled ? I18N[state.lang].toastTouchOn : I18N[state.lang].toastTouchOff);
+      });
+      document.getElementById('btn-quit').addEventListener('click', returnToLobby);
+      document.getElementById('btn-retry').addEventListener('click', () => { resetGame(); beginGameplay(); });
+      document.getElementById('btn-death-lobby').addEventListener('click', returnToLobby);
+      document.getElementById('btn-win-again').addEventListener('click', () => { resetGame(); beginGameplay(); });
+      document.getElementById('btn-win-lobby').addEventListener('click', returnToLobby);
+
+      function pauseGame() {
+        if (state.mode !== 'PLAYING') return;
+        state.mode = 'PAUSED';
+        audio.updateProximityAudio(999, 0, false);
+        if (document.pointerLockElement) document.exitPointerLock();
+        showScreen('PAUSED');
+      }
+
+      function returnToLobby() {
+        state.mode = 'LOBBY';
+        audio.updateProximityAudio(999, 0, false);
+        if (document.pointerLockElement) document.exitPointerLock();
+        showLobbyView('home');
+        showScreen('LOBBY');
+      }
+
+      function showToast(msg) {
+        const el = document.getElementById('toast-msg');
+        el.textContent = msg;
+        el.classList.remove('hidden');
+        clearTimeout(el._timer);
+        el._timer = setTimeout(() => el.classList.add('hidden'), 2400);
+      }
+
+      let nearestInteractable = null;
+
+      function triggerInteract() {
+        const dict = I18N[state.lang];
+        if (state.isHiding && state.currentLocker) {
+          state.isHiding = false;
+          state.pos.copy(state.currentLocker.exitPos);
+          state.currentLocker = null;
+          document.getElementById('hiding-banner').classList.add('hidden');
+          audio.playLocker();
+          return;
+        }
+
+        if (!nearestInteractable) return;
+        const item = nearestInteractable;
+
+        if (item.type === 'door') {
+          if (item.locked) {
+            if (state.keysOwned[item.lockColor]) {
+              item.locked = false;
+              if (item.lockGroup) item.lockGroup.visible = false;
+              item.open = true;
+              audio.playUnlock();
+              showToast(dict.toastDoorUnlocked(dict.lockNames[item.lockColor]));
+            } else {
+              audio.playLockedRattle();
+              showToast(dict.toastDoorLocked(dict.keyNames[item.lockColor]));
+            }
+          } else {
+            // Elakkan pintu tertutup tepat atas badan pemain
+            if (item.open) {
+              const distCenter = Math.hypot(state.pos.x - item.x, state.pos.z - item.z);
+              if (distCenter < 0.75) return;
+            }
+            item.open = !item.open;
+            audio.playDoorSwing();
+          }
+        } else if (item.type === 'key') {
+          item.done = true;
+          item.mesh.visible = false;
+          state.keysOwned[item.color] = true;
+          audio.playPickup();
+          updateKeysHUD();
+          showToast(dict.toastKeyGot(dict.keyNames[item.color]));
+        } else if (item.type === 'locker') {
+          state.isHiding = true;
+          state.currentLocker = item;
+          state.pos.copy(item.insidePos);
+          state.yaw = item.yaw;
+          state.pitch = 0;
+          document.getElementById('hiding-banner').classList.remove('hidden');
+          audio.playLocker();
+        } else if (item.type === 'file') {
+          item.done = true;
+          item.mesh.visible = false;
+          state.filesCollected++;
+          audio.playPickup();
+          showToast(dict.toastFileGot(state.filesCollected));
+          updateMissionHUD();
+        } else if (item.type === 'switch') {
+          if (state.filesCollected < 4) { showToast(dict.toastNeedFiles); return; }
+          item.done = true;
+          item.mesh.material.color.setHex(0x22c55e);
+          item.mesh.material.emissive.setHex(0x15803d);
+          state.switchesOn++;
+          audio.playSwitch();
+          showToast(dict.toastSwitchOn(state.switchesOn));
+          updateMissionHUD();
+        } else if (item.type === 'elevator') {
+          if (state.filesCollected < 4 || state.switchesOn < 2) {
+            showToast(dict.toastElevatorLocked);
+            return;
+          }
+          triggerWin();
+        }
+      }
+
+      function updateMissionHUD() {
+        const dict = I18N[state.lang];
+        const el = document.getElementById('mission-text');
+        if (state.filesCollected < 4) {
+          el.textContent = dict.phase1(state.filesCollected);
+        } else if (state.switchesOn < 2) {
+          el.textContent = dict.phase2(state.switchesOn);
+        } else {
+          el.textContent = dict.phase3;
+        }
+      }
+
+      function formatTime(sec) {
+        const m = Math.floor(sec / 60).toString().padStart(2, '0');
+        const s = Math.floor(sec % 60).toString().padStart(2, '0');
+        return `${m}:${s}`;
+      }
+
+      function triggerCatch() {
+        if (state.mode !== 'PLAYING') return;
+        state.mode = 'JUMPSCARE';
+        if (document.pointerLockElement) document.exitPointerLock();
+
+        document.getElementById('jumpscare-img').src = anwar.imageSrc;
+        showScreen('JUMPSCARE');
+        audio.playJumpscare();
+
+        setTimeout(() => {
+          state.mode = 'END';
+          audio.updateProximityAudio(999, 0, false);
+          const rawRoom = officeMap.getRoomAt(state.pos.x, state.pos.z);
+          document.getElementById('stat-death-room').textContent = getRoomDisplayName(rawRoom);
+          document.getElementById('stat-death-time').textContent = formatTime(state.elapsedTime);
+          document.getElementById('stat-death-files').textContent = `${state.filesCollected} / 4`;
+          document.getElementById('stat-death-switches').textContent = `${state.switchesOn} / 2`;
+          showScreen('DEATH');
+        }, 1550);
+      }
+
+      function triggerWin() {
+        state.mode = 'END';
+        audio.updateProximityAudio(999, 0, false);
+        if (document.pointerLockElement) document.exitPointerLock();
+        audio.playPickup();
+        document.getElementById('stat-win-diff').textContent = getDifficultyDisplayName(state.difficulty);
+        document.getElementById('stat-win-time').textContent = formatTime(state.elapsedTime);
+        showScreen('WIN');
+      }
+
+      function canMoveTo(nx, nz) {
+        const r = 0.4;
+        const obstacles = officeMap.getActiveColliders();
+        for (const b of obstacles) {
+          if (nx + r > b.minX && nx - r < b.maxX && nz + r > b.minZ && nz - r < b.maxZ) return false;
+        }
+        return true;
+      }
+
+      function updatePlayer(dt) {
+        if (state.isHiding) {
+          camera.position.copy(state.pos);
+          camera.rotation.order = 'YXZ';
+          camera.rotation.y = state.yaw;
+          camera.rotation.x = state.pitch;
+          camera.rotation.z = 0;
+          return;
+        }
+
+        let forward = 0, right = 0;
+        if (keys['KeyW'] || keys['ArrowUp']) forward += 1;
+        if (keys['KeyS'] || keys['ArrowDown']) forward -= 1;
+        if (keys['KeyD'] || keys['ArrowRight']) right += 1;
+        if (keys['KeyA'] || keys['ArrowLeft']) right -= 1;
+
+        if (Math.abs(joyVec.x) > 0.1 || Math.abs(joyVec.y) > 0.1) {
+          forward -= joyVec.y;
+          right += joyVec.x;
+        }
+
+        const isMoving = Math.hypot(forward, right) > 0.1;
+        // Kelajuan jalan sekata (tiada lari/sprint) yang pantas & adil untuk semua tahap
+        const speed = 5.8;
+        const sin = Math.sin(state.yaw);
+        const cos = Math.cos(state.yaw);
+
+        let vx = (-sin * forward + cos * right);
+        let vz = (-cos * forward - sin * right);
+        const len = Math.hypot(vx, vz);
+        if (len > 0.001) {
+          vx = (vx / len) * speed * dt;
+          vz = (vz / len) * speed * dt;
+        }
+
+        if (canMoveTo(state.pos.x + vx, state.pos.z)) state.pos.x += vx;
+        if (canMoveTo(state.pos.x, state.pos.z + vz)) state.pos.z += vz;
+
+        const bob = isMoving ? Math.sin(performance.now() * 0.011) * 0.055 : 0;
+        camera.position.set(state.pos.x, state.pos.y + bob, state.pos.z);
+        camera.rotation.order = 'YXZ';
+        camera.rotation.y = state.yaw;
+        camera.rotation.x = state.pitch;
+        camera.rotation.z = 0;
+
+        nearestInteractable = null;
+        let bestDist = 2.9;
+        for (const item of officeMap.interactables) {
+          if (item.done) continue;
+          const d = state.pos.distanceTo(item.position);
+          if (d < bestDist) { bestDist = d; nearestInteractable = item; }
+        }
+
+        const dict = I18N[state.lang];
+        const promptEl = document.getElementById('interact-prompt');
+        if (nearestInteractable) {
+          promptEl.innerHTML = dict.pressInteract(getItemLabel(nearestInteractable));
+          promptEl.classList.remove('hidden');
+        } else {
+          promptEl.classList.add('hidden');
+        }
+
+        const rawRoom = officeMap.getRoomAt(state.pos.x, state.pos.z);
+        document.getElementById('room-name').textContent = `${dict.locationPrefix}: ${getRoomDisplayName(rawRoom)}`;
+      }
+
+      const miniCanvas = document.getElementById('minimap-canvas');
+      const mCtx = miniCanvas.getContext('2d');
+
+      function drawMinimap(entityDist) {
+        mCtx.clearRect(0, 0, 160, 160);
+        const scale = 2.15, cx = 80, cy = 82;
+
+        mCtx.fillStyle = '#1e293b';
+        for (const r of officeMap.rooms) {
+          mCtx.fillRect(cx + (r.x - r.w / 2) * scale, cy + (r.z - r.d / 2) * scale, r.w * scale, r.d * scale);
+        }
+
+        // Lukis pintu di minimap (berwarna mengikut mangga jika berkunci)
+        for (const d of officeMap.doors) {
+          mCtx.fillStyle = d.locked ? LOCK_COLORS[d.lockColor].css : (d.open ? '#475569' : '#cbd5e1');
+          const w = d.axis === 'x' ? 7 : 3;
+          const h = d.axis === 'x' ? 3 : 7;
+          mCtx.fillRect(cx + d.x * scale - w / 2, cy + d.z * scale - h / 2, w, h);
+        }
+
+        for (const item of officeMap.interactables) {
+          if (item.done || item.type === 'door') continue;
+          if (item.type === 'file') mCtx.fillStyle = '#facc15';
+          else if (item.type === 'switch') mCtx.fillStyle = '#ef4444';
+          else if (item.type === 'locker') mCtx.fillStyle = '#38bdf8';
+          else if (item.type === 'elevator') mCtx.fillStyle = '#22c55e';
+          else if (item.type === 'key') mCtx.fillStyle = LOCK_COLORS[item.color].css;
+          else continue;
+          mCtx.fillRect(cx + item.position.x * scale - 2.3, cy + item.position.z * scale - 2.3, 4.6, 4.6);
+        }
+
+        if (entityDist < 24) {
+          mCtx.fillStyle = '#ef4444';
+          mCtx.beginPath();
+          mCtx.arc(cx + anwar.position.x * scale, cy + anwar.position.z * scale, 4.2, 0, Math.PI * 2);
+          mCtx.fill();
+        }
+
+        mCtx.fillStyle = '#ffffff';
+        mCtx.beginPath();
+        mCtx.arc(cx + state.pos.x * scale, cy + state.pos.z * scale, 3.8, 0, Math.PI * 2);
+        mCtx.fill();
+      }
+
+      let lastTime = performance.now();
+      function animate(now) {
+        requestAnimationFrame(animate);
+        const dt = Math.min(0.05, (now - lastTime) / 1000);
+        lastTime = now;
+
+        // Putarkan kunci yang belum diambil supaya mudah dilihat
+        for (const k of officeMap.keysList) {
+          if (!k.done && k.mesh) {
+            k.mesh.rotation.y += dt * 2.2;
+            k.mesh.position.y = 1.15 + Math.sin(now * 0.004) * 0.06;
+          }
+        }
+
+        if (state.mode === 'LOBBY') {
+          const t = now * 0.00025;
+          camera.position.set(Math.sin(t) * 12, 2.6, Math.cos(t) * 12);
+          camera.lookAt(0, 1.3, 0);
+        } else if (state.mode === 'INTRO') {
+          state.introTimer += dt;
+          const totalIntro = 16;
+          const shotIdx = Math.min(introCameraShots.length - 1, Math.floor(state.introTimer / 4));
+          const camShot = introCameraShots[shotIdx];
+          const textShot = I18N[state.lang].introShots[shotIdx];
+
+          document.getElementById('intro-speaker').textContent = textShot.speaker;
+          document.getElementById('intro-text').textContent = textShot.text;
+          document.getElementById('intro-bar').style.width = `${Math.min(100, (state.introTimer / totalIntro) * 100)}%`;
+
+          camera.position.lerp(camShot.camPos, 0.05);
+          camera.lookAt(camShot.lookAt);
+
+          if (state.introTimer >= totalIntro) beginGameplay();
+        } else if (state.mode === 'PLAYING') {
+          state.elapsedTime += dt;
+          officeMap.updateDoors(dt);
+          updatePlayer(dt);
+          const dist = anwar.update(dt, state.pos, state.yaw, state.isHiding, audio, triggerCatch);
+
+          const dangerRatio = anwar.state === 'KEJAR' ? Math.max(0.25, Math.min(1, 1 - dist / 16)) : Math.max(0, Math.min(0.45, 1 - dist / 12));
+          document.getElementById('danger-pulse').style.opacity = dangerRatio.toFixed(2);
+          document.getElementById('danger-banner').classList.toggle('hidden', anwar.state !== 'KEJAR');
+          drawMinimap(dist);
+        }
+
+        renderer.render(scene, camera);
+      }
+
+      window.addEventListener('resize', () => {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+      });
+
+      applyLanguage();
+      requestAnimationFrame(animate);
+    })();
+  </script>
+</body>
+</html>
