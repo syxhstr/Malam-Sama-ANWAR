@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+html_content = """<!DOCTYPE html>
 <html lang="ms">
 <head>
   <meta charset="UTF-8" />
@@ -337,7 +337,7 @@
       box-shadow: 0 0 22px rgba(239, 68, 68, 0.4), inset 0 0 16px rgba(239, 68, 68, 0.24);
     }
 
-    /* Sudut Kiri Bawah: Pil Versi Sahaja (CH 1-3 Dibuang) */
+    /* Sudut Kiri Bawah: Pil Versi Sahaja */
     .piggy-bottom-left {
       display: flex;
       flex-direction: column;
@@ -965,7 +965,7 @@
 
     <!-- VIEW A: HOME MAIN MENU (GAYA PIGGY) -->
     <div id="lobby-view-home" class="lobby-view active">
-      <!-- Bar Atas: Muzik & Bahasa di Kanan (Gear Penjuru Dibuang) -->
+      <!-- Bar Atas: Muzik & Bahasa di Kanan -->
       <div class="piggy-top-bar">
         <div class="top-right-controls">
           <button type="button" id="btn-bgm-toggle" class="audio-toggle-btn">
@@ -1237,9 +1237,8 @@
           sensLabel: 'Sensitiviti Kamera',
           updates: [
             {
-             {
               id: 'v202',
-              bannerTitle: 'Lobi Klasik & Lagu Krismas',
+              bannerTitle: 'Lobi Klasik & Lagu Perayaan',
               version: 'v2.0.2',
               theme: 'theme-purple-gold',
               mainSectionTitle: 'Perubahan Lobi Utama',
@@ -1384,9 +1383,8 @@
           sensLabel: 'Camera Sensitivity',
           updates: [
             {
-             {
               id: 'v202',
-              bannerTitle: 'Classic Lobby & Xmas OST',
+              bannerTitle: 'Classic Lobby & Festive OST',
               version: 'v2.0.2',
               theme: 'theme-purple-gold',
               mainSectionTitle: 'Main Menu Overhaul',
@@ -2033,3 +2031,9 @@
   </script>
 </body>
 </html>
+"""
+
+with open("index.html", "w", encoding="utf-8") as f:
+    f.write(html_content)
+
+print("Generated clean index.html successfully! Size:", len(html_content))
