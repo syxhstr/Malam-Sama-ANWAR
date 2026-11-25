@@ -4,6 +4,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
   <title>Malam Sama Madani — Permainan Seram 3D</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@700&family=Fredoka:wght@600;700&family=Special+Elite&display=swap" rel="stylesheet" />
   <style>
     * {
       box-sizing: border-box;
@@ -17,9 +20,9 @@
       width: 100%;
       height: 100%;
       overflow: hidden;
-      background: #07090d;
-      color: #f1f5f9;
-      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: #060709;
+      color: #f8fafc;
+      font-family: 'Fredoka', 'Segoe UI', system-ui, -apple-system, sans-serif;
     }
 
     #game-canvas {
@@ -36,10 +39,56 @@
       position: fixed;
       inset: 0;
       pointer-events: none;
-      z-index: 2;
-      background: radial-gradient(circle at center, transparent 55%, rgba(0, 0, 0, 0.78) 100%);
+      z-index: 3;
+      background: radial-gradient(circle at 48% 50%, transparent 42%, rgba(0, 0, 0, 0.85) 100%);
     }
 
+    /* ================= KARAKTER ANWAR & ZAHID (GAYA PIGGY) ================= */
+    .lobby-characters {
+      position: fixed;
+      inset: 0;
+      z-index: 2;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .char-zahid {
+      position: absolute;
+      left: 36%;
+      bottom: 13%;
+      height: 46vh;
+      max-height: 430px;
+      width: auto;
+      object-fit: contain;
+      filter: brightness(0.62) contrast(1.18) drop-shadow(0 12px 24px rgba(0, 0, 0, 0.96));
+      transform-origin: bottom center;
+      animation: zahidPeek 5.5s ease-in-out infinite;
+    }
+
+    .char-anwar {
+      position: absolute;
+      left: 5%;
+      bottom: -2%;
+      height: 82vh;
+      max-height: 760px;
+      width: auto;
+      object-fit: contain;
+      filter: brightness(0.86) contrast(1.12) drop-shadow(0 18px 34px rgba(0, 0, 0, 0.96));
+      transform-origin: bottom center;
+      animation: anwarBreathe 4.2s ease-in-out infinite;
+    }
+
+    @keyframes anwarBreathe {
+      0%, 100% { transform: translateY(0px) rotate(0deg) scale(1); }
+      50% { transform: translateY(6px) rotate(-0.8deg) scale(1.012); }
+    }
+
+    @keyframes zahidPeek {
+      0%, 100% { transform: translateX(0px) rotate(0deg); }
+      50% { transform: translateX(-8px) rotate(1.4deg); }
+    }
+
+    /* ================= SKRIN UTAMA ================= */
     .screen {
       position: fixed;
       inset: 0;
@@ -51,226 +100,653 @@
       display: flex;
     }
 
-    /* ================= LOBI / MAIN MENU HUB ================= */
     #lobby-screen {
-      background: linear-gradient(135deg, rgba(6, 9, 16, 0.84), rgba(15, 23, 42, 0.74));
-      backdrop-filter: blur(6px);
-      overflow-y: auto;
-      padding: 20px;
-      align-items: center;
-      justify-content: center;
+      padding: 18px 24px;
+      flex-direction: column;
+      justify-content: space-between;
     }
 
-    .lobby-container {
+    .lobby-view {
+      display: none;
       width: 100%;
-      max-width: 1120px;
-      margin: auto;
-      position: relative;
-      z-index: 12;
+      height: 100%;
+      animation: fadeIn 0.18s ease;
     }
 
-    .top-quick-bar {
+    .lobby-view.active {
+      display: flex;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.985); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    /* ================= VIEW A: HOME MAIN MENU (GAYA PIGGY) ================= */
+    #lobby-view-home {
+      position: relative;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    /* Bar Atas: Gear Settings Kiri + Audio & Bahasa Kanan */
+    .piggy-top-bar {
       display: flex;
       justify-content: space-between;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 14px;
+      align-items: flex-start;
+      width: 100%;
+      z-index: 15;
     }
 
-    .version-chip-btn {
-      background: rgba(15, 23, 42, 0.92);
-      border: 1px solid rgba(250, 204, 21, 0.45);
-      color: #fde047;
-      font-weight: 800;
-      font-size: 0.76rem;
-      padding: 6px 13px;
-      border-radius: 999px;
+    .piggy-gear-btn {
+      width: 64px;
+      height: 64px;
+      background: rgba(10, 12, 16, 0.72);
+      border: 3px solid rgba(255, 255, 255, 0.85);
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.75);
+      transition: transform 0.14s ease, background 0.14s ease, border-color 0.14s ease;
+    }
+
+    .piggy-gear-btn:hover {
+      transform: rotate(28deg) scale(1.06);
+      background: rgba(30, 41, 59, 0.9);
+      border-color: #fde047;
+    }
+
+    .piggy-gear-btn svg {
+      width: 40px;
+      height: 40px;
+      fill: #ffffff;
+    }
+
+    .top-right-controls {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .audio-toggle-btn {
+      background: rgba(10, 12, 16, 0.78);
+      border: 2px solid rgba(255, 255, 255, 0.45);
+      color: #f8fafc;
+      font-family: 'Courier Prime', monospace;
+      font-weight: 700;
+      font-size: 0.82rem;
+      padding: 8px 13px;
+      border-radius: 10px;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      transition: all 0.15s ease;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.65);
+      transition: all 0.14s ease;
     }
 
-    .version-chip-btn:hover {
-      background: rgba(30, 41, 59, 0.95);
-      border-color: #facc15;
-      transform: translateY(-1px);
+    .audio-toggle-btn:hover {
+      border-color: #4ade80;
+      color: #86efac;
+    }
+
+    .audio-toggle-btn.muted {
+      border-color: #f87171;
+      color: #fca5a5;
     }
 
     .lang-pill-group {
       display: inline-flex;
-      background: rgba(15, 23, 42, 0.9);
-      border: 1px solid rgba(148, 163, 184, 0.3);
-      border-radius: 999px;
+      background: rgba(10, 12, 16, 0.82);
+      border: 2px solid rgba(255, 255, 255, 0.35);
+      border-radius: 10px;
       padding: 3px;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.65);
     }
 
     .lang-pill {
       background: transparent;
       border: none;
       color: #94a3b8;
-      font-weight: 800;
-      font-size: 0.76rem;
-      padding: 5px 12px;
-      border-radius: 999px;
+      font-family: 'Courier Prime', monospace;
+      font-weight: 700;
+      font-size: 0.82rem;
+      padding: 6px 12px;
+      border-radius: 7px;
       cursor: pointer;
-      transition: all 0.15s ease;
+      transition: all 0.14s ease;
     }
 
     .lang-pill.active {
-      background: #ef4444;
+      background: #dc2626;
       color: #ffffff;
     }
 
-    .lobby-view {
-      display: none;
-      animation: fadeIn 0.2s ease;
+    /* Kawasan Tengah & Kanan: Tajuk Besar PIGGY-Style + 4 Butang Neon */
+    .piggy-main-stage {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      flex: 1;
+      width: 100%;
+      padding-right: 1.5%;
+      z-index: 14;
     }
 
-    .lobby-view.active {
-      display: block;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(6px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    /* --- HOME MENU --- */
-    .home-hero {
-      text-align: center;
-      max-width: 560px;
-      margin: 0 auto;
-      padding: 28px 24px;
-      background: rgba(15, 23, 42, 0.88);
-      border: 1px solid rgba(148, 163, 184, 0.24);
-      border-radius: 18px;
-      box-shadow: 0 22px 50px rgba(0, 0, 0, 0.65);
-    }
-
-    .badge {
-      display: inline-block;
-      padding: 5px 14px;
-      border-radius: 999px;
-      font-size: 0.74rem;
-      font-weight: 700;
-      letter-spacing: 1.5px;
-      background: rgba(220, 38, 38, 0.2);
-      border: 1px solid rgba(248, 113, 113, 0.45);
-      color: #fca5a5;
-      margin-bottom: 12px;
-    }
-
-    .game-title {
-      font-size: clamp(2.1rem, 5.5vw, 3.5rem);
-      font-weight: 900;
-      letter-spacing: 2px;
-      line-height: 1.1;
-      text-shadow: 0 4px 24px rgba(0, 0, 0, 0.85);
-    }
-
-    .game-title span {
-      color: #ef4444;
-      display: block;
-    }
-
-    .game-subtitle {
-      color: #cbd5e1;
-      margin: 12px auto 24px;
-      font-size: 0.95rem;
-      line-height: 1.5;
-    }
-
-    .main-menu-stack {
+    .piggy-right-column {
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      align-items: flex-end;
+      gap: 18px;
+      width: min(440px, 92vw);
     }
 
-    .menu-btn {
+    .piggy-title-block {
+      text-align: right;
+      margin-bottom: 4px;
+    }
+
+    .piggy-title-sub {
+      font-family: 'Special Elite', 'Courier Prime', monospace;
+      font-size: clamp(1.35rem, 3vw, 2.25rem);
+      color: #e2e8f0;
+      letter-spacing: 3px;
+      text-shadow: 0 4px 0 #000000, 0 0 18px rgba(0, 0, 0, 0.95);
+      line-height: 1.05;
+    }
+
+    .piggy-title-main {
+      font-family: 'Special Elite', 'Courier Prime', monospace;
+      font-size: clamp(3.3rem, 7.6vw, 5.8rem);
+      font-weight: 900;
+      color: #ffffff;
+      letter-spacing: 5px;
+      line-height: 0.95;
+      text-shadow:
+        0 5px 0 #000000,
+        -2px -2px 0 #000000,
+        2px -2px 0 #000000,
+        -2px 2px 0 #000000,
+        2px 2px 0 #000000,
+        0 10px 28px rgba(0, 0, 0, 0.95);
+    }
+
+    /* 4 Butang Menu Sisi Kanan Gaya Piggy (Green, Blue, Purple, Red) */
+    .piggy-btn-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
       width: 100%;
-      padding: 15px 20px;
+      max-width: 390px;
+    }
+
+    .piggy-menu-btn {
+      display: flex;
+      align-items: stretch;
+      justify-content: space-between;
+      width: 100%;
+      height: 68px;
       border-radius: 12px;
-      font-weight: 800;
-      font-size: 1.05rem;
-      letter-spacing: 1px;
       cursor: pointer;
-      border: 1px solid rgba(148, 163, 184, 0.28);
-      background: rgba(30, 41, 59, 0.9);
+      padding: 0;
+      overflow: hidden;
+      transition: transform 0.12s ease, filter 0.14s ease, box-shadow 0.14s ease;
+    }
+
+    .piggy-menu-btn:hover {
+      transform: translateX(-5px) scale(1.02);
+      filter: brightness(1.16);
+    }
+
+    .piggy-menu-btn:active {
+      transform: scale(0.98);
+    }
+
+    .piggy-btn-label {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Courier Prime', monospace;
+      font-size: clamp(1.35rem, 2.5vw, 1.85rem);
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-shadow: 0 2px 6px rgba(0, 0, 0, 0.95);
+      padding: 0 12px;
+    }
+
+    .piggy-btn-icon-box {
+      width: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-left: 3px solid currentColor;
+      background: rgba(0, 0, 0, 0.25);
+    }
+
+    .piggy-btn-icon-box svg {
+      width: 34px;
+      height: 34px;
+    }
+
+    /* Hijau - MAIN / PLAY */
+    .piggy-btn-green {
+      background: linear-gradient(180deg, rgba(6, 78, 24, 0.84), rgba(3, 44, 14, 0.92));
+      border: 3.5px solid #22c55e;
+      color: #4ade80;
+      box-shadow: 0 0 18px rgba(34, 197, 94, 0.38), inset 0 0 14px rgba(34, 197, 94, 0.22);
+    }
+
+    /* Biru - KEDAI / SHOP */
+    .piggy-btn-blue {
+      background: linear-gradient(180deg, rgba(23, 37, 110, 0.84), rgba(12, 20, 68, 0.92));
+      border: 3.5px solid #3b82f6;
+      color: #60a5fa;
+      box-shadow: 0 0 18px rgba(59, 130, 246, 0.36), inset 0 0 14px rgba(59, 130, 246, 0.22);
+    }
+
+    /* Ungu - LOG KEMAS KINI / UPDATES */
+    .piggy-btn-purple {
+      background: linear-gradient(180deg, rgba(76, 20, 120, 0.84), rgba(42, 10, 70, 0.92));
+      border: 3.5px solid #a855f7;
+      color: #c084fc;
+      box-shadow: 0 0 18px rgba(168, 85, 247, 0.36), inset 0 0 14px rgba(168, 85, 247, 0.22);
+    }
+
+    /* Merah - TETAPAN / BAB */
+    .piggy-btn-red {
+      background: linear-gradient(180deg, rgba(110, 16, 16, 0.84), rgba(62, 8, 8, 0.92));
+      border: 3.5px solid #ef4444;
+      color: #f87171;
+      box-shadow: 0 0 18px rgba(239, 68, 68, 0.38), inset 0 0 14px rgba(239, 68, 68, 0.22);
+    }
+
+    /* Sudut Kiri Bawah Gaya Piggy (Kad Bab + Bar Status Versi) */
+    .piggy-bottom-left {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 10px;
+      z-index: 15;
+    }
+
+    .piggy-book-card {
+      width: 142px;
+      background: linear-gradient(180deg, rgba(18, 22, 32, 0.92), rgba(8, 10, 16, 0.96));
+      border: 3px solid #a855f7;
+      border-radius: 14px;
+      padding: 8px;
+      cursor: pointer;
+      box-shadow: 0 8px 22px rgba(0, 0, 0, 0.85), 0 0 14px rgba(168, 85, 247, 0.35);
+      transition: transform 0.14s ease, border-color 0.14s ease;
+      text-align: center;
+    }
+
+    .piggy-book-card:hover {
+      transform: translateY(-3px) scale(1.03);
+      border-color: #e879f9;
+    }
+
+    .piggy-book-art {
+      height: 76px;
+      border-radius: 8px;
+      background: radial-gradient(circle at 50% 35%, #334155 0%, #090d16 90%);
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      gap: 4px;
+      overflow: hidden;
+      padding-top: 6px;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+    }
+
+    .piggy-book-art img {
+      height: 68px;
+      width: auto;
+      object-fit: contain;
+      filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.9));
+    }
+
+    .piggy-book-label {
+      margin-top: 6px;
+      font-family: 'Courier Prime', monospace;
+      font-size: 0.84rem;
+      font-weight: 700;
       color: #f8fafc;
+      letter-spacing: 1px;
+    }
+
+    .piggy-token-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: linear-gradient(180deg, rgba(88, 16, 98, 0.9), rgba(48, 8, 56, 0.95));
+      border: 3px solid #d946ef;
+      border-radius: 12px;
+      padding: 7px 14px;
+      color: #f5d0fe;
+      font-family: 'Courier Prime', monospace;
+      font-weight: 700;
+      font-size: 1.05rem;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.8), 0 0 14px rgba(217, 70, 239, 0.35);
+      cursor: pointer;
+      transition: transform 0.12s ease;
+    }
+
+    .piggy-token-pill:hover {
+      transform: scale(1.04);
+    }
+
+    /* ================= VIEW D: UPDATE LOG GAYA TDS (GAMBAR 2) ================= */
+    #lobby-view-updates {
+      align-items: center;
+      justify-content: center;
+      background: rgba(0, 0, 0, 0.58);
+      backdrop-filter: blur(4px);
+    }
+
+    .tds-modal-wrapper {
+      position: relative;
+      width: min(980px, 95vw);
+      height: min(610px, 86vh);
+      background: rgba(14, 16, 22, 0.96);
+      border: 2px solid rgba(255, 255, 255, 0.16);
+      border-radius: 16px;
+      box-shadow: 0 28px 70px rgba(0, 0, 0, 0.92);
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      overflow: visible;
+    }
+
+    .tds-close-btn {
+      position: absolute;
+      top: -14px;
+      right: -14px;
+      width: 52px;
+      height: 52px;
+      background: linear-gradient(180deg, #ff5f5f, #dc2626);
+      border: 3px solid #7f1d1d;
+      border-radius: 12px;
+      color: #ffffff;
+      font-size: 1.8rem;
+      font-weight: 900;
+      line-height: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 30;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.75);
+      transition: transform 0.12s ease, filter 0.12s ease;
+    }
+
+    .tds-close-btn:hover {
+      transform: scale(1.08);
+      filter: brightness(1.1);
+    }
+
+    /* Bar Sisi Kiri: All Updates */
+    .tds-sidebar {
+      background: rgba(9, 11, 16, 0.92);
+      border-right: 2px solid rgba(255, 255, 255, 0.1);
+      border-radius: 16px 0 0 16px;
+      padding: 18px 14px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .tds-sidebar-title {
+      text-align: center;
+      font-size: 1.45rem;
+      font-weight: 700;
+      color: #ffffff;
+      margin-bottom: 14px;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.9);
+    }
+
+    .tds-version-list {
+      flex: 1;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      padding-right: 4px;
+    }
+
+    .tds-version-list::-webkit-scrollbar,
+    .tds-content-scroll::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .tds-version-list::-webkit-scrollbar-thumb,
+    .tds-content-scroll::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.25);
+      border-radius: 999px;
+    }
+
+    .tds-ver-banner {
+      position: relative;
+      min-height: 76px;
+      border-radius: 10px;
+      padding: 10px 12px;
+      border: 2.5px solid rgba(255, 255, 255, 0.25);
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      text-align: right;
+      overflow: hidden;
+      transition: transform 0.12s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .tds-ver-banner:hover {
+      transform: translateY(-2px);
+      border-color: rgba(255, 255, 255, 0.75);
+    }
+
+    .tds-ver-banner.active {
+      border-color: #facc15;
+      box-shadow: 0 0 16px rgba(250, 204, 21, 0.5);
+    }
+
+    .tds-banner-name {
+      font-size: 1.02rem;
+      font-weight: 700;
+      color: #ffffff;
+      line-height: 1.15;
+      text-shadow:
+        -1.5px -1.5px 0 #000,
+        1.5px -1.5px 0 #000,
+        -1.5px 1.5px 0 #000,
+        1.5px 1.5px 0 #000,
+        0 3px 6px rgba(0, 0, 0, 0.9);
+      z-index: 2;
+    }
+
+    .tds-banner-ver {
+      font-size: 0.92rem;
+      font-weight: 700;
+      color: #f8fafc;
+      text-shadow:
+        -1.5px -1.5px 0 #000,
+        1.5px -1.5px 0 #000,
+        -1.5px 1.5px 0 #000,
+        1.5px 1.5px 0 #000;
+      z-index: 2;
+    }
+
+    /* Tema Warna Kad Versi TDS */
+    .theme-purple-gold { background: linear-gradient(135deg, #4c1d95 0%, #9333ea 52%, #f59e0b 100%); }
+    .theme-cyan-blue   { background: linear-gradient(135deg, #0369a1 0%, #0284c7 55%, #38bdf8 100%); }
+    .theme-crimson     { background: linear-gradient(135deg, #7f1d1d 0%, #dc2626 55%, #fb7185 100%); }
+    .theme-emerald     { background: linear-gradient(135deg, #064e3b 0%, #059669 55%, #34d399 100%); }
+    .theme-amber       { background: linear-gradient(135deg, #78350f 0%, #d97706 55%, #facc15 100%); }
+    .theme-violet      { background: linear-gradient(135deg, #3b0764 0%, #6d28d9 60%, #a855f7 100%); }
+
+    /* Kandungan Kanan TDS */
+    .tds-content-scroll {
+      padding: 24px 28px 28px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .tds-section-header {
+      font-size: 1.45rem;
+      font-weight: 700;
+      color: #ffffff;
+      padding-bottom: 8px;
+      border-bottom: 2px solid rgba(255, 255, 255, 0.72);
+      margin-bottom: 10px;
+    }
+
+    .tds-bullet-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      padding-left: 8px;
+      font-size: 0.96rem;
+      color: #e2e8f0;
+      line-height: 1.45;
+    }
+
+    .tds-bullet-list li::before {
+      content: "•  ";
+      color: #ffffff;
+      font-weight: 900;
+    }
+
+    /* Bar Kuning Keemasan Boleh Buka-Tutup (Macam Level 4 Changes v dalam gambar) */
+    .tds-feature-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 18px;
+      margin-top: 6px;
+    }
+
+    .tds-feature-avatar {
+      width: 88px;
+      flex-shrink: 0;
+      text-align: center;
+    }
+
+    .tds-feature-avatar img {
+      width: 74px;
+      height: 74px;
+      object-fit: contain;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.06);
+      padding: 4px;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+    }
+
+    .tds-feature-avatar span {
+      display: block;
+      margin-top: 5px;
+      font-size: 0.84rem;
+      color: #cbd5e1;
+      font-weight: 600;
+    }
+
+    .tds-accordion-stack {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .tds-accordion-item {
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .tds-gold-bar {
+      width: 100%;
+      background: linear-gradient(180deg, #f59e0b, #d97706);
+      border: 2px solid #fbbf24;
+      border-radius: 8px;
+      padding: 9px 14px;
+      color: #ffffff;
+      font-family: 'Fredoka', sans-serif;
+      font-size: 1.02rem;
+      font-weight: 700;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      transition: transform 0.12s ease, background 0.15s ease, border-color 0.15s ease;
+      cursor: pointer;
+      text-shadow:
+        -1px -1px 0 #000,
+        1px -1px 0 #000,
+        -1px 1px 0 #000,
+        1px 1px 0 #000;
+      transition: filter 0.12s ease;
     }
 
-    .menu-btn:hover {
-      background: rgba(51, 65, 85, 0.95);
-      border-color: rgba(248, 250, 252, 0.45);
-      transform: translateY(-1px);
+    .tds-gold-bar:hover {
+      filter: brightness(1.08);
     }
 
-    .menu-btn.play-btn {
-      background: linear-gradient(135deg, #dc2626, #991b1b);
-      border-color: #f87171;
-      box-shadow: 0 10px 24px rgba(220, 38, 38, 0.38);
-      font-size: 1.15rem;
+    .tds-accordion-body {
+      display: none;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(251, 191, 36, 0.35);
+      border-top: none;
+      border-radius: 0 0 8px 8px;
+      padding: 10px 14px;
+      font-size: 0.9rem;
+      color: #f1f5f9;
+      line-height: 1.45;
     }
 
-    .menu-btn.play-btn:hover {
-      background: linear-gradient(135deg, #ef4444, #b91c1c);
+    .tds-accordion-item.open .tds-gold-bar {
+      border-radius: 8px 8px 0 0;
     }
 
-    .pill-tag {
-      font-size: 0.7rem;
-      font-weight: 800;
-      padding: 4px 10px;
-      border-radius: 999px;
-      letter-spacing: 0.8px;
-      background: rgba(250, 204, 21, 0.18);
-      border: 1px solid rgba(250, 204, 21, 0.45);
-      color: #fde047;
+    .tds-accordion-item.open .tds-accordion-body {
+      display: block;
     }
 
-    .pill-tag.red {
-      background: rgba(0, 0, 0, 0.35);
-      border-color: rgba(255, 255, 255, 0.35);
-      color: #ffffff;
+    /* ================= SUB-VIEW LAIN (PILIH BAB, KEDAI, TETAPAN) ================= */
+    .subview-container {
+      width: 100%;
+      max-width: 1120px;
+      margin: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
     }
 
-    .pill-tag.blue {
-      background: rgba(37, 99, 235, 0.35);
-      border-color: #60a5fa;
-      color: #dbeafe;
-    }
-
-    /* --- SUB-VIEW HEADER --- */
     .subview-header {
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 12px;
-      margin-bottom: 18px;
-      background: rgba(15, 23, 42, 0.88);
-      border: 1px solid rgba(148, 163, 184, 0.22);
+      background: rgba(12, 16, 26, 0.92);
+      border: 2px solid rgba(255, 255, 255, 0.2);
       padding: 14px 18px;
       border-radius: 14px;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.7);
     }
 
     .subview-header h2 {
-      font-size: 1.2rem;
+      font-size: 1.25rem;
       letter-spacing: 1px;
     }
 
     .btn-back {
       background: #1e293b;
-      border: 1px solid #334155;
+      border: 2px solid #475569;
       color: #f8fafc;
       padding: 8px 14px;
-      border-radius: 8px;
+      border-radius: 9px;
+      font-family: 'Fredoka', sans-serif;
       font-weight: 700;
-      font-size: 0.85rem;
+      font-size: 0.9rem;
       cursor: pointer;
     }
 
@@ -278,7 +754,6 @@
       background: #334155;
     }
 
-    /* --- CHAPTERS VIEW (3 BAB SEBARIS) --- */
     .chapters-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -286,18 +761,12 @@
       align-items: stretch;
     }
 
-    @media (max-width: 960px) {
-      .chapters-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-
     .panel {
-      background: rgba(15, 23, 42, 0.92);
-      border: 1px solid rgba(148, 163, 184, 0.24);
+      background: rgba(12, 16, 26, 0.92);
+      border: 2px solid rgba(148, 163, 184, 0.28);
       border-radius: 16px;
       padding: 22px;
-      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.55);
+      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.7);
     }
 
     .chapter-card {
@@ -305,25 +774,18 @@
       flex-direction: column;
       justify-content: space-between;
       min-height: 280px;
-      transition: transform 0.16s ease, box-shadow 0.16s ease;
+      transition: transform 0.16s ease;
     }
 
     .chapter-card:not(.locked):hover {
-      transform: translateY(-3px);
+      transform: translateY(-4px);
     }
 
-    .chapter-card.ch1-card {
-      border-color: rgba(239, 68, 68, 0.65);
-    }
-
-    .chapter-card.ch2-card {
-      border-color: rgba(59, 130, 246, 0.65);
-    }
-
+    .chapter-card.ch1-card { border-color: #ef4444; }
+    .chapter-card.ch2-card { border-color: #3b82f6; }
     .chapter-card.locked {
-      opacity: 0.82;
-      background: rgba(15, 23, 42, 0.72);
-      border: 1px dashed rgba(250, 204, 21, 0.35);
+      opacity: 0.84;
+      border: 2px dashed rgba(250, 204, 21, 0.45);
     }
 
     .chapter-top {
@@ -335,33 +797,50 @@
     }
 
     .chapter-num {
-      font-size: 0.74rem;
-      font-weight: 800;
-      letter-spacing: 1.2px;
+      font-size: 0.76rem;
+      font-weight: 700;
+      letter-spacing: 1px;
       color: #fca5a5;
     }
 
-    .chapter-num.blue {
-      color: #93c5fd;
-    }
+    .chapter-num.blue { color: #93c5fd; }
+    .chapter-num.gold { color: #fde047; }
 
-    .chapter-num.gold {
+    .pill-tag {
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(250, 204, 21, 0.2);
+      border: 1px solid rgba(250, 204, 21, 0.5);
       color: #fde047;
     }
 
+    .pill-tag.red {
+      background: rgba(220, 38, 38, 0.35);
+      border-color: #f87171;
+      color: #ffffff;
+    }
+
+    .pill-tag.blue {
+      background: rgba(37, 99, 235, 0.35);
+      border-color: #60a5fa;
+      color: #dbeafe;
+    }
+
     .chapter-title {
-      font-size: 1.38rem;
-      font-weight: 900;
+      font-size: 1.4rem;
+      font-weight: 700;
       margin-bottom: 10px;
       color: #ffffff;
-      line-height: 1.2;
     }
 
     .chapter-desc {
-      font-size: 0.88rem;
+      font-size: 0.9rem;
       color: #cbd5e1;
-      line-height: 1.55;
+      line-height: 1.5;
       margin-bottom: 22px;
+      font-family: 'Segoe UI', sans-serif;
     }
 
     .btn-primary, .btn-blue, .btn-locked {
@@ -369,161 +848,65 @@
       width: 100%;
       padding: 14px 16px;
       border-radius: 10px;
-      font-weight: 800;
-      font-size: 0.96rem;
+      font-weight: 700;
+      font-size: 1rem;
       letter-spacing: 0.8px;
       text-align: center;
       text-decoration: none;
       cursor: pointer;
       border: none;
-      transition: transform 0.12s ease, background 0.15s ease;
     }
 
     .btn-primary {
       background: linear-gradient(135deg, #dc2626, #991b1b);
       color: #ffffff;
-      box-shadow: 0 8px 20px rgba(220, 38, 38, 0.38);
-    }
-
-    .btn-primary:hover {
-      background: linear-gradient(135deg, #ef4444, #b91c1c);
+      box-shadow: 0 8px 20px rgba(220, 38, 38, 0.42);
     }
 
     .btn-blue {
       background: linear-gradient(135deg, #2563eb, #1d4ed8);
       color: #ffffff;
-      box-shadow: 0 8px 20px rgba(37, 99, 235, 0.4);
-    }
-
-    .btn-blue:hover {
-      background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+      box-shadow: 0 8px 20px rgba(37, 99, 235, 0.42);
     }
 
     .btn-locked {
-      background: rgba(30, 41, 59, 0.72);
+      background: rgba(30, 41, 59, 0.75);
       color: #94a3b8;
-      border: 1px solid rgba(148, 163, 184, 0.25);
+      border: 1px solid rgba(148, 163, 184, 0.3);
       cursor: not-allowed;
     }
 
-    /* --- UPDATE LOG VIEW --- */
-    .update-log-list {
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-      max-height: 68vh;
-      overflow-y: auto;
-      padding-right: 4px;
-    }
-
-    .update-card {
-      background: rgba(15, 23, 42, 0.9);
-      border: 1px solid rgba(148, 163, 184, 0.24);
-      border-radius: 14px;
-      padding: 16px 18px;
-      text-align: left;
-    }
-
-    .update-card.latest {
-      border-color: rgba(239, 68, 68, 0.55);
-      box-shadow: 0 10px 26px rgba(220, 38, 38, 0.16);
-    }
-
-    .update-card-head {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-bottom: 8px;
-    }
-
-    .update-ver {
-      font-size: 1.05rem;
-      font-weight: 900;
-      color: #f8fafc;
-    }
-
-    .update-date {
-      font-size: 0.75rem;
-      color: #94a3b8;
-      font-weight: 600;
-    }
-
-    .update-title {
-      font-size: 0.92rem;
-      font-weight: 800;
-      color: #fca5a5;
-      margin-bottom: 8px;
-    }
-
-    .update-bullets {
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      font-size: 0.84rem;
-      color: #cbd5e1;
-      line-height: 1.45;
-    }
-
-    .update-bullets li::before {
-      content: "• ";
-      color: #ef4444;
-      font-weight: 900;
-    }
-
-    /* --- SHOP VIEW --- */
     .shop-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 14px;
     }
 
-    @media (max-width: 760px) {
-      .shop-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-
     .shop-card {
-      background: rgba(15, 23, 42, 0.86);
-      border: 1px solid rgba(148, 163, 184, 0.22);
+      background: rgba(12, 16, 26, 0.92);
+      border: 2px solid rgba(59, 130, 246, 0.4);
       border-radius: 14px;
-      padding: 18px;
+      padding: 20px;
       text-align: center;
     }
 
-    .shop-icon {
-      font-size: 2rem;
-      margin-bottom: 8px;
-    }
+    .shop-icon { font-size: 2.2rem; margin-bottom: 8px; }
+    .shop-card h3 { font-size: 1.08rem; margin-bottom: 6px; }
+    .shop-card p { font-size: 0.85rem; color: #94a3b8; margin-bottom: 12px; font-family: 'Segoe UI', sans-serif; }
 
-    .shop-card h3 {
-      font-size: 1rem;
-      margin-bottom: 6px;
-    }
-
-    .shop-card p {
-      font-size: 0.8rem;
-      color: #94a3b8;
-      margin-bottom: 12px;
-      line-height: 1.4;
-    }
-
-    /* --- SETTINGS VIEW --- */
     .settings-stack {
       display: flex;
       flex-direction: column;
       gap: 16px;
-      max-width: 640px;
+      max-width: 620px;
+      width: 100%;
       margin: 0 auto;
     }
 
     .field-label {
       display: block;
-      font-size: 0.86rem;
-      color: #cbd5e1;
+      font-size: 0.95rem;
+      color: #e2e8f0;
       margin-bottom: 10px;
       font-weight: 700;
     }
@@ -538,16 +921,15 @@
       padding: 12px;
       border-radius: 10px;
       background: #1e293b;
-      border: 1px solid #334155;
+      border: 2px solid #334155;
       color: #e2e8f0;
-      font-weight: 800;
+      font-family: 'Fredoka', sans-serif;
+      font-weight: 700;
       cursor: pointer;
-      text-align: center;
-      transition: all 0.15s ease;
     }
 
     .lang-choice-btn.active {
-      background: rgba(220, 38, 38, 0.26);
+      background: rgba(220, 38, 38, 0.3);
       border-color: #ef4444;
       color: #ffffff;
     }
@@ -557,84 +939,223 @@
       accent-color: #ef4444;
     }
 
+    /* ================= RESPONSIF MOBILE ================= */
+    @media (max-width: 900px) {
+      .chapters-grid, .shop-grid {
+        grid-template-columns: 1fr;
+        max-height: 74vh;
+        overflow-y: auto;
+      }
+
+      .tds-modal-wrapper {
+        grid-template-columns: 1fr;
+        grid-template-rows: 175px 1fr;
+        height: 86vh;
+      }
+
+      .tds-sidebar {
+        border-right: none;
+        border-bottom: 2px solid rgba(255, 255, 255, 0.12);
+        border-radius: 16px 16px 0 0;
+        padding: 12px;
+      }
+
+      .tds-version-list {
+        flex-direction: row;
+        overflow-x: auto;
+        overflow-y: hidden;
+      }
+
+      .tds-ver-banner {
+        min-width: 185px;
+        min-height: 68px;
+      }
+    }
+
     @media (max-width: 680px) {
       #lobby-screen {
-        padding: calc(12px + env(safe-area-inset-top, 0px)) 12px calc(16px + env(safe-area-inset-bottom, 0px));
-        align-items: flex-start;
+        padding: 12px;
       }
 
-      .home-hero {
-        padding: 20px 16px;
+      .char-anwar {
+        left: -10%;
+        height: 64vh;
+        opacity: 0.78;
       }
 
-      .menu-btn {
-        padding: 13px 15px;
-        font-size: 0.96rem;
+      .char-zahid {
+        left: 22%;
+        bottom: 22%;
+        height: 36vh;
+        opacity: 0.62;
       }
 
-      .chapter-card {
-        min-height: auto;
+      .piggy-gear-btn {
+        width: 52px;
+        height: 52px;
+      }
+
+      .piggy-gear-btn svg {
+        width: 30px;
+        height: 30px;
+      }
+
+      .piggy-main-stage {
+        padding-right: 0;
+        justify-content: center;
+      }
+
+      .piggy-right-column {
+        align-items: center;
+      }
+
+      .piggy-title-block {
+        text-align: center;
+      }
+
+      .piggy-menu-btn {
+        height: 58px;
+      }
+
+      .piggy-bottom-left {
+        flex-direction: row;
+        align-items: flex-end;
+      }
+
+      .piggy-book-card {
+        width: 112px;
+        padding: 6px;
+      }
+
+      .piggy-book-art {
+        height: 54px;
       }
     }
   </style>
   <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
 </head>
 <body>
+  <!-- LAGU LATAR LOBI LOOPING -->
+  <audio id="lobby-bgm" src="lobbyxmas.mp3" loop preload="auto"></audio>
+
   <canvas id="game-canvas"></canvas>
+
+  <!-- KARAKTER ANWAR & ZAHID DI KORIDOR -->
+  <div class="lobby-characters" aria-hidden="true">
+    <img src="zahid.png" alt="Zahid" class="char-zahid" onerror="this.style.display='none'" />
+    <img src="anwar.png" alt="Anwar" class="char-anwar" onerror="this.style.display='none'" />
+  </div>
+
   <div id="vignette-overlay"></div>
 
   <!-- ================= MAIN MENU / LOBI UTAMA HUB ================= -->
   <section id="lobby-screen" class="screen active">
-    <div class="lobby-container">
-      <div class="top-quick-bar">
-        <button type="button" id="btn-top-updates" class="version-chip-btn">
-          <span>📋</span>
-          <span data-i18n="topUpdateChip">V 2.0.1 • LOG KEMAS KINI</span>
+
+    <!-- VIEW A: HOME MAIN MENU (GAYA PIGGY) -->
+    <div id="lobby-view-home" class="lobby-view active">
+      <!-- Bar Atas: Gear Settings (Kiri) + Muzik & Bahasa (Kanan) -->
+      <div class="piggy-top-bar">
+        <button type="button" id="btn-top-gear" class="piggy-gear-btn" title="Tetapan / Settings" aria-label="Settings">
+          <svg viewBox="0 0 24 24">
+            <path d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.07-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61 l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c-0.04-0.24-0.24-0.41-0.48-0.41 h-3.84c-0.24,0-0.43,0.17-0.47,0.41L9.25,5.35C8.66,5.59,8.12,5.92,7.63,6.29L5.24,5.33c-0.22-0.08-0.47,0-0.59,0.22L2.74,8.87 C2.62,9.08,2.66,9.34,2.86,9.48l2.03,1.58C4.84,11.36,4.8,11.69,4.8,12s0.02,0.64,0.07,0.94l-2.03,1.58 c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94l0.36,2.54 c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.44-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96 c0.22,0.08,0.47,0,0.59-0.22l1.92-3.32c0.12-0.22,0.07-0.47-0.12-0.61L19.14,12.94z M12,15.6c-1.98,0-3.6-1.62-3.6-3.6 s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z"/>
+          </svg>
         </button>
 
-        <div class="lang-pill-group" role="group" aria-label="Language Switcher">
-          <button type="button" class="lang-pill active" data-lang-switch="bm">BM</button>
-          <button type="button" class="lang-pill" data-lang-switch="en">BI</button>
+        <div class="top-right-controls">
+          <button type="button" id="btn-bgm-toggle" class="audio-toggle-btn">
+            <span id="bgm-icon">🔊</span>
+            <span data-i18n="bgmLabel">BGM</span>
+          </button>
+
+          <div class="lang-pill-group" role="group" aria-label="Language Switcher">
+            <button type="button" class="lang-pill active" data-lang-switch="bm">BM</button>
+            <button type="button" class="lang-pill" data-lang-switch="en">BI</button>
+          </div>
         </div>
       </div>
 
-      <!-- VIEW A: HOME MAIN MENU -->
-      <div id="lobby-view-home" class="lobby-view active">
-        <div class="home-hero">
-          <div class="badge" data-i18n="heroBadge">EDISI SERAM 3D • MENARA PERDANA</div>
-          <h1 class="game-title">MALAM SAMA <span>MADANI</span></h1>
-          <p class="game-subtitle" data-i18n="heroSubtitle">Terperangkap di dalam menara selepas waktu pejabat. Selesaikan setiap bab dan selamatkan diri sebelum ditangkap.</p>
+      <!-- Tajuk Besar & 4 Butang Neon Sisi Kanan -->
+      <div class="piggy-main-stage">
+        <div class="piggy-right-column">
+          <div class="piggy-title-block">
+            <div class="piggy-title-sub">MALAM SAMA</div>
+            <h1 class="piggy-title-main">MADANI</h1>
+          </div>
 
-          <div class="main-menu-stack">
-            <button type="button" id="btn-nav-play" class="menu-btn play-btn">
-              <span data-i18n="menuPlay">MAIN</span>
-              <span class="pill-tag red" data-i18n="menuPlayTag">PILIH BAB &raquo;</span>
+          <div class="piggy-btn-stack">
+            <!-- 1. HIJAU: MAIN / PLAY -->
+            <button type="button" id="btn-nav-play" class="piggy-menu-btn piggy-btn-green">
+              <span class="piggy-btn-label" data-i18n="menuPlay">MAIN</span>
+              <span class="piggy-btn-icon-box">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                  <polygon points="6,4 20,12 6,20" />
+                </svg>
+              </span>
             </button>
 
-            <button type="button" id="btn-nav-shop" class="menu-btn">
-              <span data-i18n="menuShop">KEDAI</span>
-              <span class="pill-tag" data-i18n="comingSoon">COMING SOON</span>
+            <!-- 2. BIRU: KEDAI / SHOP -->
+            <button type="button" id="btn-nav-shop" class="piggy-menu-btn piggy-btn-blue">
+              <span class="piggy-btn-label" data-i18n="menuShop">KEDAI</span>
+              <span class="piggy-btn-icon-box">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+                  <line x1="3" y1="6" x2="21" y2="6"/>
+                  <path d="M16 10a4 4 0 0 1-8 0"/>
+                </svg>
+              </span>
             </button>
 
-            <button type="button" id="btn-nav-updates" class="menu-btn">
-              <span data-i18n="menuUpdates">LOG KEMAS KINI</span>
-              <span class="pill-tag red" data-i18n="menuUpdatesTag">V 2.0.1 BARU</span>
+            <!-- 3. UNGU: LOG KEMAS KINI / UPDATES -->
+            <button type="button" id="btn-nav-updates" class="piggy-menu-btn piggy-btn-purple">
+              <span class="piggy-btn-label" data-i18n="menuUpdates">KEMAS KINI</span>
+              <span class="piggy-btn-icon-box">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                  <polyline points="14 2 14 8 20 8"/>
+                  <line x1="8" y1="13" x2="16" y2="13"/>
+                  <line x1="8" y1="17" x2="14" y2="17"/>
+                </svg>
+              </span>
             </button>
 
-            <button type="button" id="btn-nav-settings" class="menu-btn">
-              <span data-i18n="menuSettings">TETAPAN</span>
-              <span style="font-size:0.8rem;color:#94a3b8;" data-i18n="menuSettingsHint">BM / BI • Kamera</span>
+            <!-- 4. MERAH: TETAPAN / SETTINGS -->
+            <button type="button" id="btn-nav-settings" class="piggy-menu-btn piggy-btn-red">
+              <span class="piggy-btn-label" data-i18n="menuSettings">TETAPAN</span>
+              <span class="piggy-btn-icon-box">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 2C8.13 2 5 5.13 5 9c0 2.38 1.19 4.47 3 5.74V17c0 .55.45 1 1 1h6c.55 0 1-.45 1-1v-2.26c1.81-1.27 3-3.36 3-5.74 0-3.87-3.13-7-7-7zm-2 17h4v1.5c0 .83-.67 1.5-1.5 1.5h-1c-.83 0-1.5-.67-1.5-1.5V19z"/>
+                </svg>
+              </span>
             </button>
           </div>
         </div>
       </div>
 
-      <!-- VIEW B: CHAPTER SELECTION (3 BAB) -->
-      <div id="lobby-view-chapters" class="lobby-view">
+      <!-- Sudut Kiri Bawah: Kad Buku Bab & Pil Versi Gaya Piggy -->
+      <div class="piggy-bottom-left">
+        <div id="btn-book-quick" class="piggy-book-card" title="Pilih Bab">
+          <div class="piggy-book-art">
+            <img src="anwar.png" alt="Bab 1" onerror="this.style.display='none'" />
+            <img src="zahid.png" alt="Bab 2" onerror="this.style.display='none'" />
+          </div>
+          <div class="piggy-book-label" data-i18n="bookBadge">BAB 1 - 3</div>
+        </div>
+
+        <div id="btn-version-pill" class="piggy-token-pill" title="Log Kemas Kini">
+          <span>🎄</span>
+          <span>v2.1.0</span>
+          <span style="color:#f0abfc;font-size:1.25rem;">+</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- VIEW B: CHAPTER SELECTION (3 BAB) -->
+    <div id="lobby-view-chapters" class="lobby-view">
+      <div class="subview-container">
         <div class="subview-header">
           <button type="button" class="btn-back" data-back-home>&larr; <span data-i18n="btnBack">KEMBALI</span></button>
           <h2 data-i18n="chapterSelectTitle">PILIH BAB PERMAINAN</h2>
-          <div style="width:74px;"></div>
+          <div style="width:84px;"></div>
         </div>
 
         <div class="chapters-grid">
@@ -681,13 +1202,15 @@
           </div>
         </div>
       </div>
+    </div>
 
-      <!-- VIEW C: SHOP (COMING SOON) -->
-      <div id="lobby-view-shop" class="lobby-view">
+    <!-- VIEW C: SHOP (COMING SOON) -->
+    <div id="lobby-view-shop" class="lobby-view">
+      <div class="subview-container">
         <div class="subview-header">
           <button type="button" class="btn-back" data-back-home>&larr; <span data-i18n="btnBack">KEMBALI</span></button>
           <h2><span data-i18n="menuShop">KEDAI</span> • <span style="color:#fde047;">COMING SOON</span></h2>
-          <div style="width:74px;"></div>
+          <div style="width:84px;"></div>
         </div>
 
         <div class="shop-grid">
@@ -711,24 +1234,31 @@
           </div>
         </div>
       </div>
+    </div>
 
-      <!-- VIEW D: UPDATE LOG -->
-      <div id="lobby-view-updates" class="lobby-view">
-        <div class="subview-header">
-          <button type="button" class="btn-back" data-back-home>&larr; <span data-i18n="btnBack">KEMBALI</span></button>
-          <h2 data-i18n="updateLogTitle">LOG KEMAS KINI (V 2.0.1)</h2>
-          <div style="width:74px;"></div>
-        </div>
+    <!-- VIEW D: UPDATE LOG MODAL GAYA TDS (GAMBAR 2) -->
+    <div id="lobby-view-updates" class="lobby-view">
+      <div class="tds-modal-wrapper">
+        <button type="button" class="tds-close-btn" data-back-home aria-label="Tutup">&times;</button>
 
-        <div id="update-log-container" class="update-log-list"></div>
+        <!-- Panel Kiri: All Updates / Semua Kemas Kini -->
+        <aside class="tds-sidebar">
+          <h2 class="tds-sidebar-title" data-i18n="allUpdatesTitle">Semua Kemas Kini</h2>
+          <div id="tds-version-list" class="tds-version-list"></div>
+        </aside>
+
+        <!-- Panel Kanan: Butiran Versi Dipilih -->
+        <div id="tds-content-scroll" class="tds-content-scroll"></div>
       </div>
+    </div>
 
-      <!-- VIEW E: SETTINGS -->
-      <div id="lobby-view-settings" class="lobby-view">
+    <!-- VIEW E: SETTINGS -->
+    <div id="lobby-view-settings" class="lobby-view">
+      <div class="subview-container">
         <div class="subview-header">
           <button type="button" class="btn-back" data-back-home>&larr; <span data-i18n="btnBack">KEMBALI</span></button>
           <h2 data-i18n="settingsTitle">TETAPAN PERMAINAN</h2>
-          <div style="width:74px;"></div>
+          <div style="width:84px;"></div>
         </div>
 
         <div class="settings-stack">
@@ -738,6 +1268,13 @@
               <button type="button" class="lang-choice-btn active" data-lang-switch="bm">Bahasa Melayu (BM)</button>
               <button type="button" class="lang-choice-btn" data-lang-switch="en">English (BI)</button>
             </div>
+          </div>
+
+          <div class="panel">
+            <label class="field-label" for="bgm-vol-slider">
+              <span data-i18n="bgmVolLabel">Kelantangan Muzik Lobi (lobbyxmas.mp3)</span>: <span id="bgm-vol-val">60</span>%
+            </label>
+            <input type="range" id="bgm-vol-slider" min="0" max="100" step="5" value="60" />
           </div>
 
           <div class="panel">
@@ -768,99 +1305,18 @@
         } catch (e) {}
       }
 
-      /* ================= KAMUS DWI-BAHASA (BM & BI) ================= */
+      /* ================= KAMUS DWI-BAHASA & DATA UPDATE LOG GAYA TDS ================= */
       const I18N = {
         bm: {
-          heroBadge: 'EDISI SERAM 3D • MENARA PERDANA',
-          heroSubtitle: 'Terperangkap di dalam menara selepas waktu pejabat. Selesaikan setiap bab dan selamatkan diri sebelum ditangkap.',
           menuPlay: 'MAIN',
-          menuPlayTag: 'PILIH BAB »',
           menuShop: 'KEDAI',
-          comingSoon: 'COMING SOON',
-          topUpdateChip: 'V 2.0.1 • LOG KEMAS KINI',
-          menuUpdates: 'LOG KEMAS KINI',
-          menuUpdatesTag: 'V 2.0.1 BARU',
-          updateLogTitle: 'LOG KEMAS KINI (V 2.0.1)',
-          updateLatestBadge: 'TERKINI',
-          updateLogs: [
-            {
-              version: 'V 2.0.1',
-              date: 'Kemas Kini Terkini',
-              latest: true,
-              title: 'Pengasingan Bab 1, UI Seragam & Pratonton Bab 3: Misteri Tadika Fadhlina',
-              items: [
-                'Mengasingkan permainan penuh Bab 1 (Malam Sama Anwar) ke repositori khusus supaya hub utama Malam Sama MADANI lebih ringan dan pantas dimuatkan.',
-                'Menyeragamkan antaramuka kad Bab 1 dengan butang terus MAIN BAB 1 » sepadan dengan gaya Bab 2.',
-                'Menambah paparan pratonton Bab 3: Misteri Tadika Fadhlina (Lokasi: Tadika Seri Fadhlina • Coming Soon) pada skrin Pilih Bab Permainan.'
-              ]
-            },
-            {
-              version: 'V 2.0.0',
-              date: 'Kemas Kini Utama (Bab 2)',
-              latest: false,
-              title: 'Bab 2 Dibuka: Malam Sama Zahid & Pautan Rentas Bab',
-              items: [
-                'Membuka akses penuh ke Bab 2: Malam Sama Zahid (Terowong Kargo & Stesen B2) terus dari menu Pilih Bab.',
-                'Menyambungkan pautan terus ke Bab 2 serta butang teruskan misi selepas menamatkan Bab 1.',
-                'Kemas kini versi utama V 2.0.0 dengan paparan kad Bab 2 bercahaya.'
-              ]
-            },
-            {
-              version: 'v1.4',
-              date: 'Kemas Kini Terdahulu',
-              latest: false,
-              title: 'Kawalan Mesra Mobile & Perincian Perabot Penuh Tingkat 14',
-              items: [
-                'Kawalan Mobile Dinaik Taraf: Kayu ria (joystick) terapung fleksibel di sebelah kiri, butang Pusing Pantas ↻ 180°, butang AKSI bercahaya bila dekat objek, serta sokongan sentuh terus pada teks interaksi.',
-                'Susun atur HUD & minimap responsif supaya tidak bertindih di skrin telefon mod potret mahupun landskap.',
-                'Perincian 3D Bilik Pejabat: Kaunter resepsi lobi, set sofa & meja kaca, mesin gedegang, peti sejuk & dapur pantri, kabinet fail besi, rak buku penuh, mesin fotostat, papan putih mesyuarat, unit janakuasa industri, lukisan dinding & papan tanda KELUAR bercahaya.'
-              ]
-            },
-            {
-              version: 'v1.3',
-              date: 'Kemas Kini Visual',
-              latest: false,
-              title: 'Log Kemas Kini, Fix Skrin Telefon & Naik Taraf Model 3D',
-              items: [
-                'Tambah paparan Log Kemas Kini (Update Log) terus di menu utama dengan sokongan penuh BM & BI.',
-                'Betulkan saiz gambar & teks jumpscare supaya muat kemas di skrin telefon (mod potret & landskap).',
-                'Naik taraf tekstur PBR beresolusi tinggi serta perabot 3D lebih terperinci.'
-              ]
-            },
-            {
-              version: 'v1.2',
-              date: 'Kemas Kini Gameplay',
-              latest: false,
-              title: 'Bot Anti-Sangkut, 4 Kunci & Lokasi Rawak',
-              items: [
-                'Baiki laluan navigasi bot supaya tidak lagi tersangkut pada meja pejabat dan melangkau pintu berkunci secara dinamik.',
-                'Tambah Kunci Hijau bersama 2 pintu pintas di sayap kiri dan sayap kanan.',
-                'Lokasi keempat-empat kunci kini bertukar secara rawak setiap kali permainan dimulakan semula.'
-              ]
-            },
-            {
-              version: 'v1.1',
-              date: 'Kemas Kini Antaramuka',
-              latest: false,
-              title: 'Menu Utama Baharu, Dwi-Bahasa & Mangga Kunci',
-              items: [
-                'Susunan Menu Utama baharu (Main / Pilih Bab, Kedai, Tetapan) dengan penukar bahasa BM / BI.',
-                'Tambah pintu berengsel yang boleh dibuka/ditutup serta sistem mangga kunci berwarna.'
-              ]
-            },
-            {
-              version: 'v1.0',
-              date: 'Pelancaran Awal',
-              latest: false,
-              title: 'Bab 1: Malam Sama Anwar',
-              items: [
-                'Pelancaran asal Tingkat 14 Menara Perdana dengan misi 4 Fail Audit Sulit, 2 suis janakuasa dan loker persembunyian.'
-              ]
-            }
-          ],
+          menuUpdates: 'KEMAS KINI',
           menuSettings: 'TETAPAN',
-          menuSettingsHint: 'BM / BI • Kamera',
+          bookBadge: 'BAB 1 - 3',
+          bgmLabel: 'MUZIK',
+          comingSoon: 'COMING SOON',
           btnBack: 'KEMBALI',
+          allUpdatesTitle: 'Semua Kemas Kini',
           chapterSelectTitle: 'PILIH BAB PERMAINAN',
           ch1Label: 'BAB 1 • TINGKAT 14',
           ch1Playable: 'BOLEH MAIN',
@@ -880,99 +1336,134 @@
           shopItem3Desc: 'Meningkatkan kelajuan langkah kaki di semua koridor.',
           settingsTitle: 'TETAPAN PERMAINAN',
           langSettingLabel: 'Bahasa / Language (BM & BI)',
-          sensLabel: 'Sensitiviti Kamera'
+          bgmVolLabel: 'Kelantangan Muzik Lobi (lobbyxmas.mp3)',
+          sensLabel: 'Sensitiviti Kamera',
+          updates: [
+            {
+              id: 'v210',
+              bannerTitle: 'Lobi Klasik & Lagu Krismas',
+              version: 'v2.1.0',
+              theme: 'theme-purple-gold',
+              mainSectionTitle: 'Perubahan Lobi Utama',
+              bullets: [
+                'Reka bentuk semula Menu Utama dengan susun atur klasik Piggy bersama paparan karakter Anwar (anwar.png) & Zahid (zahid.png) di koridor.',
+                'Menambah lagu latar lobi "lobbyxmas.mp3" dengan mainan berulang (looping) automatik serta kawalan kelantangan.',
+                'Antaramuka Log Kemas Kini berpanel dua baharu lengkap dengan senarai versi di sebelah kiri.'
+              ],
+              subSectionTitle: 'Perincian Karakter & Bab',
+              characterCards: [
+                {
+                  name: 'Anwar',
+                  img: 'anwar.png',
+                  accordions: [
+                    { label: 'Paparan Lobi Utama', text: 'Diletakkan di bahagian hadapan kiri koridor dengan animasi pernafasan dan bayang-bayang seram.' },
+                    { label: 'Bab 1: Malam Sama Anwar', text: 'Boleh dimainkan terus melalui butang MAIN -> Bab 1.' }
+                  ]
+                },
+                {
+                  name: 'Zahid',
+                  img: 'zahid.png',
+                  accordions: [
+                    { label: 'Paparan Lobi Utama', text: 'Mengintai dari bahagian dalam koridor gelap di belakang Anwar.' },
+                    { label: 'Bab 2: Malam Sama Zahid', text: 'Boleh dimainkan terus melalui butang MAIN -> Bab 2.' }
+                  ]
+                }
+              ]
+            },
+            {
+              id: 'v201',
+              bannerTitle: 'Misteri Tadika Fadhlina',
+              version: 'v2.0.1',
+              theme: 'theme-cyan-blue',
+              mainSectionTitle: 'Perubahan Struktur Bab',
+              bullets: [
+                'Mengasingkan permainan penuh Bab 1 (Malam Sama Anwar) ke repositori khusus supaya hab utama lebih ringan.',
+                'Menyeragamkan kad Bab 1 dan Bab 2 pada skrin Pilih Bab Permainan.',
+                'Menambah pratonton Bab 3: Misteri Tadika Fadhlina di lokasi Tadika Seri Fadhlina (Coming Soon).'
+              ],
+              subSectionTitle: 'Status Bab',
+              characterCards: [
+                {
+                  name: 'Tadika Seri Fadhlina',
+                  img: 'anwar.png',
+                  accordions: [
+                    { label: 'Bab 3 (Coming Soon)', text: 'Lokasi baharu di Tadika Seri Fadhlina sedang dalam pembangunan.' }
+                  ]
+                }
+              ]
+            },
+            {
+              id: 'v200',
+              bannerTitle: 'Malam Sama Zahid',
+              version: 'v2.0.0',
+              theme: 'theme-crimson',
+              mainSectionTitle: 'Pelancaran Bab 2',
+              bullets: [
+                'Membuka akses penuh ke Bab 2: Malam Sama Zahid di Terowong Kargo & Stesen B2.',
+                'Menambah mekanik lampu suluh dinamo dan misi mengumpul 3 Sel Tenaga.',
+                'Menyambungkan pautan terus dari Bab 1 ke Bab 2 selepas tamat misi.'
+              ],
+              subSectionTitle: 'Perubahan Gameplay',
+              characterCards: [
+                {
+                  name: 'Zahid (Bos B2)',
+                  img: 'zahid.png',
+                  accordions: [
+                    { label: 'AI Rondaan Terowong', text: 'Rondaan dinamik di kawasan rel bawah tanah dengan sistem pengesanan bunyi.' }
+                  ]
+                }
+              ]
+            },
+            {
+              id: 'v140',
+              bannerTitle: 'Kawalan Mobile & Perabot',
+              version: 'v1.4.0',
+              theme: 'theme-emerald',
+              mainSectionTitle: 'Naik Taraf Mobile & 3D',
+              bullets: [
+                'Kayu ria (joystick) terapung fleksibel, butang Pusing Pantas 180°, dan butang AKSI bercahaya.',
+                'Perincian penuh perabot 3D di setiap bilik pejabat Tingkat 14 Menara Perdana.'
+              ],
+              subSectionTitle: 'Optimum Skrin',
+              characterCards: []
+            },
+            {
+              id: 'v120',
+              bannerTitle: 'Bot Anti-Sangkut & 4 Kunci',
+              version: 'v1.2.0',
+              theme: 'theme-amber',
+              mainSectionTitle: 'Pembaikan Laluan AI',
+              bullets: [
+                'Membaiki laluan navigasi bot supaya tidak tersangkut pada meja pejabat.',
+                'Menambah Kunci Hijau serta lokasi kunci rawak setiap pusingan.'
+              ],
+              subSectionTitle: 'Sistem Kunci',
+              characterCards: []
+            },
+            {
+              id: 'v100',
+              bannerTitle: 'Malam Sama Anwar',
+              version: 'v1.0.0',
+              theme: 'theme-violet',
+              mainSectionTitle: 'Pelancaran Awal',
+              bullets: [
+                'Pelancaran pertama Malam Sama Anwar di Tingkat 14 Menara Perdana dengan misi 4 Fail Audit Sulit dan 2 suis janakuasa.'
+              ],
+              subSectionTitle: 'Asas Permainan',
+              characterCards: []
+            }
+          ]
         },
         en: {
-          heroBadge: '3D HORROR EDITION • PERDANA TOWER',
-          heroSubtitle: 'Trapped inside the tower after office hours. Complete each chapter and escape before getting caught.',
           menuPlay: 'PLAY',
-          menuPlayTag: 'CHAPTERS »',
           menuShop: 'SHOP',
-          comingSoon: 'COMING SOON',
-          topUpdateChip: 'V 2.0.1 • UPDATE LOG',
-          menuUpdates: 'UPDATE LOG',
-          menuUpdatesTag: 'V 2.0.1 NEW',
-          updateLogTitle: 'GAME UPDATE LOG (V 2.0.1)',
-          updateLatestBadge: 'LATEST',
-          updateLogs: [
-            {
-              version: 'V 2.0.1',
-              date: 'Latest Update',
-              latest: true,
-              title: 'Chapter 1 Separation, Unified Card UI & Chapter 3: Misteri Tadika Fadhlina Preview',
-              items: [
-                'Separated the standalone Chapter 1 (Malam Sama Anwar) game into its own dedicated repository for a cleaner, faster Malam Sama MADANI hub.',
-                'Streamlined the Chapter 1 card UI with a clean PLAY CHAPTER 1 » button matching Chapter 2.',
-                'Added the upcoming Chapter 3: Misteri Tadika Fadhlina (Location: Tadika Seri Fadhlina • Coming Soon) card to the Chapter Select screen.'
-              ]
-            },
-            {
-              version: 'V 2.0.0',
-              date: 'Major Update (Chapter 2)',
-              latest: false,
-              title: 'Chapter 2 Unlocked: Malam Sama Zahid & Cross-Chapter Link',
-              items: [
-                'Unlocked full access to Chapter 2: Malam Sama Zahid (Cargo Tunnel & Station B2) directly from the Chapter Select menu.',
-                'Connected direct navigation link to Chapter 2 plus a Continue to Chapter 2 button upon beating Chapter 1.',
-                'Major version V 2.0.0 release with playable Chapter 2 card.'
-              ]
-            },
-            {
-              version: 'v1.4',
-              date: 'Previous Patch',
-              latest: false,
-              title: 'Mobile-Friendly Controls & Full Floor 14 Furniture Expansion',
-              items: [
-                'Upgraded Mobile Controls: Floating left-thumb joystick, quick ↻ 180° turn button, glowing context-aware ACTION button, and direct tap-to-interact on prompts.',
-                'Responsive mobile HUD & compact minimap scaling for both portrait and landscape phone screens.',
-                'Rich 3D Interior Props across Floor 14 rooms and corridors.'
-              ]
-            },
-            {
-              version: 'v1.3',
-              date: 'Visual Patch',
-              latest: false,
-              title: 'Update Log, Mobile Jumpscare Fit & 3D Model Upgrade',
-              items: [
-                'Added an interactive Update Log directly in the Main Menu with full BM & English support.',
-                'Fixed jumpscare image & caption scaling for mobile portrait and landscape screens.',
-                'Upgraded 3D visuals with procedural PBR textures and detailed office furniture.'
-              ]
-            },
-            {
-              version: 'v1.2',
-              date: 'Gameplay Patch',
-              latest: false,
-              title: 'Anti-Stuck Bot AI, 4 Keys & Randomized Spawns',
-              items: [
-                'Fixed bot spawn and navigation waypoints so he patrols smoothly without getting stuck on office desks.',
-                'Added the Green Key and 2 shortcut doors connecting the west and east wings.',
-                'All 4 key locations now randomize automatically every round.'
-              ]
-            },
-            {
-              version: 'v1.1',
-              date: 'UI & Mechanics Patch',
-              latest: false,
-              title: 'Redesigned Main Menu, Bilingual Support & Padlocks',
-              items: [
-                'Added structured Main Menu (Play / Chapters, Shop, Settings) with instant BM / EN language switching.',
-                'Added interactive hinged office doors and color-coded security padlocks.'
-              ]
-            },
-            {
-              version: 'v1.0',
-              date: 'Initial Release',
-              latest: false,
-              title: 'Chapter 1: Malam Sama Anwar',
-              items: [
-                'Original launch of Floor 14 Perdana Tower featuring 4 Confidential Audit Files, 2 emergency generators, hiding lockers, and 3D proximity audio.'
-              ]
-            }
-          ],
+          menuUpdates: 'UPDATES',
           menuSettings: 'SETTINGS',
-          menuSettingsHint: 'BM / BI • Camera',
+          bookBadge: 'CH 1 - 3',
+          bgmLabel: 'MUSIC',
+          comingSoon: 'COMING SOON',
           btnBack: 'BACK',
+          allUpdatesTitle: 'All Updates',
           chapterSelectTitle: 'SELECT CHAPTER',
           ch1Label: 'CHAPTER 1 • FLOOR 14',
           ch1Playable: 'PLAYABLE',
@@ -992,23 +1483,190 @@
           shopItem3Desc: 'Increases base walking speed across all corridors.',
           settingsTitle: 'GAME SETTINGS',
           langSettingLabel: 'Language / Bahasa (BM & BI)',
-          sensLabel: 'Camera Sensitivity'
+          bgmVolLabel: 'Lobby Music Volume (lobbyxmas.mp3)',
+          sensLabel: 'Camera Sensitivity',
+          updates: [
+            {
+              id: 'v210',
+              bannerTitle: 'Classic Lobby & Xmas OST',
+              version: 'v2.1.0',
+              theme: 'theme-purple-gold',
+              mainSectionTitle: 'Main Menu Overhaul',
+              bullets: [
+                'Redesigned the Main Menu in a classic Piggy-inspired layout featuring Anwar (anwar.png) & Zahid (zahid.png) in the hallway.',
+                'Added looping lobby soundtrack "lobbyxmas.mp3" with seamless auto-start and volume controls.',
+                'Upgraded Update Log into a two-pane modal with colorful version banners on the left.'
+              ],
+              subSectionTitle: 'Character & Chapter Details',
+              characterCards: [
+                {
+                  name: 'Anwar',
+                  img: 'anwar.png',
+                  accordions: [
+                    { label: 'Main Lobby Pose', text: 'Positioned in the front-left hallway with subtle idle breathing animation.' },
+                    { label: 'Chapter 1: Malam Sama Anwar', text: 'Playable directly via PLAY -> Chapter 1.' }
+                  ]
+                },
+                {
+                  name: 'Zahid',
+                  img: 'zahid.png',
+                  accordions: [
+                    { label: 'Main Lobby Pose', text: 'Lurking further down the shadowy corridor behind Anwar.' },
+                    { label: 'Chapter 2: Malam Sama Zahid', text: 'Playable directly via PLAY -> Chapter 2.' }
+                  ]
+                }
+              ]
+            },
+            {
+              id: 'v201',
+              bannerTitle: 'Misteri Tadika Fadhlina',
+              version: 'v2.0.1',
+              theme: 'theme-cyan-blue',
+              mainSectionTitle: 'Chapter Structure Changes',
+              bullets: [
+                'Separated standalone Chapter 1 (Malam Sama Anwar) into its own repository for faster hub loading.',
+                'Unified Chapter 1 and Chapter 2 cards on the Chapter Select screen.',
+                'Added Chapter 3 preview: Misteri Tadika Fadhlina at Tadika Seri Fadhlina (Coming Soon).'
+              ],
+              subSectionTitle: 'Chapter Status',
+              characterCards: [
+                {
+                  name: 'Tadika Seri Fadhlina',
+                  img: 'anwar.png',
+                  accordions: [
+                    { label: 'Chapter 3 (Coming Soon)', text: 'Upcoming kindergarten setting currently in development.' }
+                  ]
+                }
+              ]
+            },
+            {
+              id: 'v200',
+              bannerTitle: 'Malam Sama Zahid',
+              version: 'v2.0.0',
+              theme: 'theme-crimson',
+              mainSectionTitle: 'Chapter 2 Release',
+              bullets: [
+                'Unlocked full access to Chapter 2: Malam Sama Zahid in Cargo Tunnel & Station B2.',
+                'Added dynamo flashlight mechanic and 3 Energy Cells objective.',
+                'Linked Chapter 1 victory screen directly into Chapter 2.'
+              ],
+              subSectionTitle: 'Gameplay Changes',
+              characterCards: [
+                {
+                  name: 'Zahid (B2 Boss)',
+                  img: 'zahid.png',
+                  accordions: [
+                    { label: 'Tunnel Patrol AI', text: 'Dynamic underground rail patrol with sound detection.' }
+                  ]
+                }
+              ]
+            },
+            {
+              id: 'v140',
+              bannerTitle: 'Mobile Controls & Props',
+              version: 'v1.4.0',
+              theme: 'theme-emerald',
+              mainSectionTitle: 'Mobile & 3D Upgrade',
+              bullets: [
+                'Floating left-thumb joystick, quick 180° turn button, and glowing ACTION prompt button.',
+                'Full 3D office furniture expansion across Floor 14 of Perdana Tower.'
+              ],
+              subSectionTitle: 'Screen Optimization',
+              characterCards: []
+            },
+            {
+              id: 'v120',
+              bannerTitle: 'Anti-Stuck AI & 4 Keys',
+              version: 'v1.2.0',
+              theme: 'theme-amber',
+              mainSectionTitle: 'AI Pathing Fixes',
+              bullets: [
+                'Fixed bot navigation waypoints around office desks.',
+                'Added Green Key and randomized key spawns every round.'
+              ],
+              subSectionTitle: 'Key System',
+              characterCards: []
+            },
+            {
+              id: 'v100',
+              bannerTitle: 'Malam Sama Anwar',
+              version: 'v1.0.0',
+              theme: 'theme-violet',
+              mainSectionTitle: 'Initial Launch',
+              bullets: [
+                'Original launch of Floor 14 Perdana Tower featuring 4 Confidential Audit Files and 2 generator switches.'
+              ],
+              subSectionTitle: 'Core Gameplay',
+              characterCards: []
+            }
+          ]
         }
       };
 
-      /* ================= KEADAAN & TETAPAN PENGGUNA ================= */
+      /* ================= KEADAAN PENGGUNA & MUZIK LOBI LOOPING ================= */
       let currentLang = safeGetStorage('msm_lang') || 'bm';
       if (currentLang !== 'bm' && currentLang !== 'en') currentLang = 'bm';
+
+      let selectedUpdateId = 'v210';
 
       let cameraSensitivity = parseFloat(safeGetStorage('msm_sens'));
       if (isNaN(cameraSensitivity) || cameraSensitivity < 0.4 || cameraSensitivity > 2.2) {
         cameraSensitivity = 1.0;
       }
 
-      /* ================= ENJIN BUNYI UI (WEB AUDIO API) ================= */
+      let bgmVolume = parseFloat(safeGetStorage('msm_bgm_vol'));
+      if (isNaN(bgmVolume) || bgmVolume < 0 || bgmVolume > 1) {
+        bgmVolume = 0.6;
+      }
+
+      let bgmMuted = safeGetStorage('msm_bgm_muted') === '1';
+
+      const lobbyBgm = document.getElementById('lobby-bgm');
+      const bgmToggleBtn = document.getElementById('btn-bgm-toggle');
+      const bgmIcon = document.getElementById('bgm-icon');
+
+      function updateBgmUi() {
+        if (!bgmToggleBtn || !bgmIcon) return;
+        const isSilenced = bgmMuted || bgmVolume <= 0.001;
+        bgmToggleBtn.classList.toggle('muted', isSilenced);
+        bgmIcon.textContent = isSilenced ? '🔇' : '🔊';
+      }
+
+      function tryStartLobbyBgm() {
+        if (!lobbyBgm) return;
+        lobbyBgm.loop = true;
+        lobbyBgm.volume = bgmMuted ? 0 : bgmVolume;
+        if (bgmMuted || bgmVolume <= 0.001) return;
+
+        const playPromise = lobbyBgm.play();
+        if (playPromise && typeof playPromise.catch === 'function') {
+          playPromise.catch(() => {
+            // Menunggu sentuhan/klik pertama pengguna untuk mula audio
+          });
+        }
+      }
+
+      if (lobbyBgm) {
+        lobbyBgm.loop = true;
+        lobbyBgm.addEventListener('ended', () => {
+          lobbyBgm.currentTime = 0;
+          tryStartLobbyBgm();
+        });
+      }
+
+      // Pastikan lagu mula bermain serta-merta apabila pemain menyentuh/klik mana-mana bahagian skrin
+      ['pointerdown', 'keydown', 'touchstart'].forEach((evtName) => {
+        window.addEventListener(evtName, function unlockAudio() {
+          if (lobbyBgm && lobbyBgm.paused && !bgmMuted && bgmVolume > 0) {
+            tryStartLobbyBgm();
+          }
+        }, { passive: true });
+      });
+
+      /* ================= ENJIN BUNYI KLIK UI ================= */
       let audioCtx = null;
 
-      function playUiClick(freq = 520, duration = 0.055) {
+      function playUiClick(freq = 540, duration = 0.055) {
         try {
           if (!audioCtx) {
             const AudioContextClass = window.AudioContext || window.webkitAudioContext;
@@ -1021,7 +1679,7 @@
           const gain = audioCtx.createGain();
           osc.type = 'triangle';
           osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
-          osc.frequency.exponentialRampToValueAtTime(140, audioCtx.currentTime + duration);
+          osc.frequency.exponentialRampToValueAtTime(150, audioCtx.currentTime + duration);
 
           gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
           gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
@@ -1052,8 +1710,13 @@
         const target = e.target;
         if (!target || !target.closest) return;
 
-        if (target.closest('#btn-nav-play')) {
-          playUiClick(580);
+        // Hidupkan muzik lobi jika belum berjalan
+        if (lobbyBgm && lobbyBgm.paused && !bgmMuted && bgmVolume > 0) {
+          tryStartLobbyBgm();
+        }
+
+        if (target.closest('#btn-nav-play') || target.closest('#btn-book-quick')) {
+          playUiClick(600);
           showLobbyView('chapters');
           return;
         }
@@ -1062,13 +1725,14 @@
           showLobbyView('shop');
           return;
         }
-        if (target.closest('#btn-nav-updates') || target.closest('#btn-top-updates')) {
-          playUiClick(520);
+        if (target.closest('#btn-nav-updates') || target.closest('#btn-version-pill')) {
+          playUiClick(540);
+          renderTdsUpdates();
           showLobbyView('updates');
           return;
         }
-        if (target.closest('#btn-nav-settings')) {
-          playUiClick(520);
+        if (target.closest('#btn-nav-settings') || target.closest('#btn-top-gear')) {
+          playUiClick(500);
           showLobbyView('settings');
           return;
         }
@@ -1078,6 +1742,40 @@
           return;
         }
 
+        // Butang Mute / Unmute Muzik Lobi
+        if (target.closest('#btn-bgm-toggle')) {
+          bgmMuted = !bgmMuted;
+          safeSetStorage('msm_bgm_muted', bgmMuted ? '1' : '0');
+          if (lobbyBgm) {
+            lobbyBgm.volume = bgmMuted ? 0 : bgmVolume;
+            if (!bgmMuted && lobbyBgm.paused) tryStartLobbyBgm();
+          }
+          playUiClick(bgmMuted ? 340 : 620);
+          updateBgmUi();
+          return;
+        }
+
+        // Pilih kad versi di bar sisi kiri Update Log (Gaya TDS)
+        const verBanner = target.closest('[data-update-id]');
+        if (verBanner) {
+          selectedUpdateId = verBanner.getAttribute('data-update-id');
+          playUiClick(580);
+          renderTdsUpdates();
+          return;
+        }
+
+        // Buka/tutup bar kuning keemasan di Update Log
+        const goldBar = target.closest('.tds-gold-bar');
+        if (goldBar) {
+          const item = goldBar.closest('.tds-accordion-item');
+          if (item) {
+            item.classList.toggle('open');
+            playUiClick(520, 0.04);
+          }
+          return;
+        }
+
+        // Penukar Bahasa BM / BI
         const langBtn = target.closest('[data-lang-switch]');
         if (langBtn) {
           currentLang = langBtn.getAttribute('data-lang-switch') || 'bm';
@@ -1087,6 +1785,7 @@
           return;
         }
 
+        // Pautan Bab 1 / Bab 2
         const chapterLink = target.closest('.js-go-ch1, .js-go-ch2');
         if (chapterLink) {
           const targetUrl = chapterLink.getAttribute('href');
@@ -1100,59 +1799,109 @@
         }
       });
 
-      /* ================= PAPARAN LOG KEMAS KINI ================= */
-      function renderUpdateLogs() {
-        const container = document.getElementById('update-log-container');
-        if (!container) return;
+      /* ================= PAPARAN LOG KEMAS KINI GAYA TDS (GAMBAR 2) ================= */
+      function renderTdsUpdates() {
+        const listEl = document.getElementById('tds-version-list');
+        const contentEl = document.getElementById('tds-content-scroll');
+        if (!listEl || !contentEl) return;
+
         const dict = I18N[currentLang];
-        container.innerHTML = '';
+        const updates = dict.updates || [];
+        let activeEntry = updates.find((u) => u.id === selectedUpdateId) || updates[0];
+        if (!activeEntry) return;
+        selectedUpdateId = activeEntry.id;
 
-        for (const entry of dict.updateLogs) {
+        // 1. Bina senarai kad banner di bar sisi kiri
+        listEl.innerHTML = '';
+        for (const u of updates) {
           const card = document.createElement('div');
-          card.className = 'update-card' + (entry.latest ? ' latest' : '');
+          card.className = 'tds-ver-banner ' + u.theme + (u.id === selectedUpdateId ? ' active' : '');
+          card.setAttribute('data-update-id', u.id);
 
-          const head = document.createElement('div');
-          head.className = 'update-card-head';
+          const nameDiv = document.createElement('div');
+          nameDiv.className = 'tds-banner-name';
+          nameDiv.textContent = u.bannerTitle;
 
-          const ver = document.createElement('span');
-          ver.className = 'update-ver';
-          ver.textContent = entry.version;
-          head.appendChild(ver);
+          const verDiv = document.createElement('div');
+          verDiv.className = 'tds-banner-ver';
+          verDiv.textContent = u.version;
 
-          const rightWrap = document.createElement('div');
-          rightWrap.style.display = 'flex';
-          rightWrap.style.alignItems = 'center';
-          rightWrap.style.gap = '8px';
+          card.appendChild(nameDiv);
+          card.appendChild(verDiv);
+          listEl.appendChild(card);
+        }
 
-          const dateSpan = document.createElement('span');
-          dateSpan.className = 'update-date';
-          dateSpan.textContent = entry.date;
-          rightWrap.appendChild(dateSpan);
+        // 2. Bina kandungan kanan bagi versi yang dipilih
+        contentEl.innerHTML = '';
 
-          if (entry.latest) {
-            const tag = document.createElement('span');
-            tag.className = 'pill-tag red';
-            tag.textContent = dict.updateLatestBadge;
-            rightWrap.appendChild(tag);
+        const sec1 = document.createElement('div');
+        const h1 = document.createElement('h3');
+        h1.className = 'tds-section-header';
+        h1.textContent = activeEntry.mainSectionTitle + ' (' + activeEntry.version + ')';
+        sec1.appendChild(h1);
+
+        const ul = document.createElement('ul');
+        ul.className = 'tds-bullet-list';
+        for (const b of activeEntry.bullets) {
+          const li = document.createElement('li');
+          li.textContent = b;
+          ul.appendChild(li);
+        }
+        sec1.appendChild(ul);
+        contentEl.appendChild(sec1);
+
+        if (activeEntry.characterCards && activeEntry.characterCards.length > 0) {
+          const sec2 = document.createElement('div');
+          const h2 = document.createElement('h3');
+          h2.className = 'tds-section-header';
+          h2.textContent = activeEntry.subSectionTitle;
+          sec2.appendChild(h2);
+
+          for (const ch of activeEntry.characterCards) {
+            const row = document.createElement('div');
+            row.className = 'tds-feature-row';
+
+            const avatarBox = document.createElement('div');
+            avatarBox.className = 'tds-feature-avatar';
+
+            const img = document.createElement('img');
+            img.src = ch.img;
+            img.alt = ch.name;
+            img.onerror = function () { this.style.display = 'none'; };
+
+            const cap = document.createElement('span');
+            cap.textContent = ch.name;
+
+            avatarBox.appendChild(img);
+            avatarBox.appendChild(cap);
+            row.appendChild(avatarBox);
+
+            const accStack = document.createElement('div');
+            accStack.className = 'tds-accordion-stack';
+
+            ch.accordions.forEach((acc, idx) => {
+              const accItem = document.createElement('div');
+              accItem.className = 'tds-accordion-item' + (idx === 0 ? ' open' : '');
+
+              const bar = document.createElement('button');
+              bar.type = 'button';
+              bar.className = 'tds-gold-bar';
+              bar.innerHTML = '<span>' + acc.label + '</span><span>&#9662;</span>';
+
+              const body = document.createElement('div');
+              body.className = 'tds-accordion-body';
+              body.textContent = acc.text;
+
+              accItem.appendChild(bar);
+              accItem.appendChild(body);
+              accStack.appendChild(accItem);
+            });
+
+            row.appendChild(accStack);
+            sec2.appendChild(row);
           }
 
-          head.appendChild(rightWrap);
-          card.appendChild(head);
-
-          const title = document.createElement('div');
-          title.className = 'update-title';
-          title.textContent = entry.title;
-          card.appendChild(title);
-
-          const ul = document.createElement('ul');
-          ul.className = 'update-bullets';
-          for (const bullet of entry.items) {
-            const li = document.createElement('li');
-            li.textContent = bullet;
-            ul.appendChild(li);
-          }
-          card.appendChild(ul);
-          container.appendChild(card);
+          contentEl.appendChild(sec2);
         }
       }
 
@@ -1172,10 +1921,33 @@
           }
         });
 
-        renderUpdateLogs();
+        renderTdsUpdates();
       }
 
-      /* ================= TETAPAN SENSITIVITI KAMERA ================= */
+      /* ================= TETAPAN SLIDER (MUZIK & SENSITIVITI) ================= */
+      const bgmVolSlider = document.getElementById('bgm-vol-slider');
+      const bgmVolVal = document.getElementById('bgm-vol-val');
+      if (bgmVolSlider && bgmVolVal) {
+        bgmVolSlider.value = Math.round(bgmVolume * 100);
+        bgmVolVal.textContent = Math.round(bgmVolume * 100);
+
+        bgmVolSlider.addEventListener('input', () => {
+          const pct = parseInt(bgmVolSlider.value, 10);
+          bgmVolume = pct / 100;
+          bgmVolVal.textContent = pct;
+          safeSetStorage('msm_bgm_vol', bgmVolume.toFixed(2));
+          if (pct > 0 && bgmMuted) {
+            bgmMuted = false;
+            safeSetStorage('msm_bgm_muted', '0');
+          }
+          if (lobbyBgm) {
+            lobbyBgm.volume = bgmMuted ? 0 : bgmVolume;
+            if (!bgmMuted && bgmVolume > 0 && lobbyBgm.paused) tryStartLobbyBgm();
+          }
+          updateBgmUi();
+        });
+      }
+
       const sensSlider = document.getElementById('sens-slider');
       const sensVal = document.getElementById('sens-val');
       if (sensSlider && sensVal) {
@@ -1189,15 +1961,15 @@
         });
       }
 
-      /* ================= LATAR BELAKANG 3D THREE.JS (MENARA PERDANA) ================= */
+      /* ================= LATAR BELAKANG 3D THREE.JS (KORIDOR SERAM) ================= */
       function initMenuBackdrop3D() {
         try {
           const canvas = document.getElementById('game-canvas');
           if (!canvas || typeof THREE === 'undefined') return;
 
           const scene = new THREE.Scene();
-          scene.background = new THREE.Color(0x05070b);
-          scene.fog = new THREE.FogExp2(0x05070b, 0.052);
+          scene.background = new THREE.Color(0x070605);
+          scene.fog = new THREE.FogExp2(0x070605, 0.056);
 
           const camera = new THREE.PerspectiveCamera(
             62,
@@ -1215,98 +1987,119 @@
           renderer.setSize(window.innerWidth, window.innerHeight);
           renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
 
-          const tileCanvas = document.createElement('canvas');
-          tileCanvas.width = 256;
-          tileCanvas.height = 256;
-          const tCtx = tileCanvas.getContext('2d');
-          tCtx.fillStyle = '#0f172a';
-          tCtx.fillRect(0, 0, 256, 256);
-          tCtx.fillStyle = '#1e293b';
-          tCtx.fillRect(4, 4, 120, 120);
-          tCtx.fillRect(132, 132, 120, 120);
-          tCtx.strokeStyle = '#020617';
-          tCtx.lineWidth = 4;
-          tCtx.strokeRect(0, 0, 256, 256);
+          // Tekstur papan kayu gelap gaya koridor Piggy
+          const woodCanvas = document.createElement('canvas');
+          woodCanvas.width = 256;
+          woodCanvas.height = 256;
+          const wCtx = woodCanvas.getContext('2d');
+          wCtx.fillStyle = '#261b12';
+          wCtx.fillRect(0, 0, 256, 256);
+          for (let y = 0; y < 256; y += 32) {
+            wCtx.fillStyle = (y / 32) % 2 === 0 ? '#2d2015' : '#21170f';
+            wCtx.fillRect(0, y, 256, 30);
+            wCtx.fillStyle = '#120b07';
+            wCtx.fillRect(0, y + 30, 256, 2);
+          }
 
-          const floorTex = new THREE.CanvasTexture(tileCanvas);
-          floorTex.wrapS = THREE.RepeatWrapping;
-          floorTex.wrapT = THREE.RepeatWrapping;
-          floorTex.repeat.set(6, 24);
+          const woodTex = new THREE.CanvasTexture(woodCanvas);
+          woodTex.wrapS = THREE.RepeatWrapping;
+          woodTex.wrapT = THREE.RepeatWrapping;
+          woodTex.repeat.set(8, 2);
+
+          const floorTex = woodTex.clone();
+          floorTex.needsUpdate = true;
+          floorTex.repeat.set(4, 18);
 
           const floorMat = new THREE.MeshStandardMaterial({
             map: floorTex,
-            roughness: 0.38,
-            metalness: 0.25
+            roughness: 0.65,
+            metalness: 0.1
           });
-          const floor = new THREE.Mesh(new THREE.PlaneGeometry(10, 46), floorMat);
+          const floor = new THREE.Mesh(new THREE.PlaneGeometry(9.5, 46), floorMat);
           floor.rotation.x = -Math.PI / 2;
           floor.position.z = -12;
           scene.add(floor);
 
           const wallMat = new THREE.MeshStandardMaterial({
-            color: 0x111827,
+            map: woodTex,
             roughness: 0.85,
-            metalness: 0.1
+            metalness: 0.05
           });
 
-          const ceiling = new THREE.Mesh(new THREE.PlaneGeometry(10, 46), wallMat);
+          const ceiling = new THREE.Mesh(new THREE.PlaneGeometry(9.5, 46), wallMat);
           ceiling.rotation.x = Math.PI / 2;
-          ceiling.position.set(0, 4.2, -12);
+          ceiling.position.set(0, 4.1, -12);
           scene.add(ceiling);
 
-          const leftWall = new THREE.Mesh(new THREE.PlaneGeometry(46, 4.2), wallMat);
+          const leftWall = new THREE.Mesh(new THREE.PlaneGeometry(46, 4.1), wallMat);
           leftWall.rotation.y = Math.PI / 2;
-          leftWall.position.set(-4.5, 2.1, -12);
+          leftWall.position.set(-4.3, 2.05, -12);
           scene.add(leftWall);
 
-          const rightWall = new THREE.Mesh(new THREE.PlaneGeometry(46, 4.2), wallMat);
+          const rightWall = new THREE.Mesh(new THREE.PlaneGeometry(46, 4.1), wallMat);
           rightWall.rotation.y = -Math.PI / 2;
-          rightWall.position.set(4.5, 2.1, -12);
+          rightWall.position.set(4.3, 2.05, -12);
           scene.add(rightWall);
 
-          const pillarGeo = new THREE.BoxGeometry(0.55, 4.2, 0.55);
-          const pillarMat = new THREE.MeshStandardMaterial({ color: 0x1e293b, roughness: 0.7 });
-          const lampGeo = new THREE.BoxGeometry(1.6, 0.08, 0.24);
-          const lampMat = new THREE.MeshBasicMaterial({ color: 0xdbeafe });
+          // Bingkai lukisan dinding & lampu siling gantung gaya koridor Piggy
+          const frameGeo = new THREE.BoxGeometry(0.08, 1.35, 1.05);
+          const frameMat = new THREE.MeshStandardMaterial({ color: 0x3f2e1d, roughness: 0.6 });
+          const artMat = new THREE.MeshStandardMaterial({ color: 0x5c4d32, roughness: 0.8 });
 
+          const lampGeo = new THREE.CylinderGeometry(0.18, 0.24, 0.12, 12);
+          const lampMat = new THREE.MeshBasicMaterial({ color: 0xfef3c7 });
           const flickerLights = [];
 
-          for (let z = 4; z >= -28; z -= 6.5) {
-            const pLeft = new THREE.Mesh(pillarGeo, pillarMat);
-            pLeft.position.set(-4.1, 2.1, z);
-            scene.add(pLeft);
+          for (let z = 3; z >= -26; z -= 6.5) {
+            // Bingkai gambar kiri & kanan
+            const frameL = new THREE.Mesh(frameGeo, frameMat);
+            frameL.position.set(-4.24, 2.15, z + 1.5);
+            scene.add(frameL);
 
-            const pRight = new THREE.Mesh(pillarGeo, pillarMat);
-            pRight.position.set(4.1, 2.1, z);
-            scene.add(pRight);
+            const artL = new THREE.Mesh(new THREE.BoxGeometry(0.09, 1.15, 0.85), artMat);
+            artL.position.set(-4.23, 2.15, z + 1.5);
+            scene.add(artL);
+
+            const frameR = new THREE.Mesh(frameGeo, frameMat);
+            frameR.position.set(4.24, 2.15, z - 1.2);
+            scene.add(frameR);
+
+            // Lampu gantung siling
+            const cord = new THREE.Mesh(
+              new THREE.CylinderGeometry(0.02, 0.02, 0.45, 6),
+              new THREE.MeshBasicMaterial({ color: 0x111111 })
+            );
+            cord.position.set(0, 3.88, z);
+            scene.add(cord);
 
             const lampMesh = new THREE.Mesh(lampGeo, lampMat.clone());
-            lampMesh.position.set(0, 4.14, z);
+            lampMesh.position.set(0, 3.62, z);
             scene.add(lampMesh);
 
-            const ptLight = new THREE.PointLight(0x93c5fd, 1.35, 11, 1.8);
-            ptLight.position.set(0, 3.85, z);
+            const ptLight = new THREE.PointLight(0xfde68a, 1.45, 11.5, 1.8);
+            ptLight.position.set(0, 3.45, z);
             scene.add(ptLight);
 
             flickerLights.push({ light: ptLight, mesh: lampMesh });
           }
 
-          const endWall = new THREE.Mesh(new THREE.PlaneGeometry(10, 4.2), wallMat);
-          endWall.position.set(0, 2.1, -33);
+          // Pintu merah di hujung koridor
+          const endWall = new THREE.Mesh(new THREE.PlaneGeometry(9.5, 4.1), wallMat);
+          endWall.position.set(0, 2.05, -32);
           scene.add(endWall);
 
-          const exitSign = new THREE.Mesh(
-            new THREE.BoxGeometry(1.5, 0.42, 0.12),
-            new THREE.MeshBasicMaterial({ color: 0xef4444 })
+          const exitDoor = new THREE.Mesh(
+            new THREE.BoxGeometry(1.7, 2.8, 0.12),
+            new THREE.MeshStandardMaterial({ color: 0x450a0a, roughness: 0.7 })
           );
-          exitSign.position.set(0, 3.35, -32.9);
-          scene.add(exitSign);
+          exitDoor.position.set(0, 1.4, -31.9);
+          scene.add(exitDoor);
 
-          const redGlow = new THREE.PointLight(0xdc2626, 2.6, 16, 1.6);
-          redGlow.position.set(0, 2.8, -31.5);
+          const redGlow = new THREE.PointLight(0xdc2626, 2.4, 15, 1.6);
+          redGlow.position.set(0, 2.4, -30.5);
           scene.add(redGlow);
 
-          const ambient = new THREE.AmbientLight(0x1e293b, 0.55);
+          const ambient = new THREE.AmbientLight(0x292118, 0.65);
           scene.add(ambient);
 
           window.addEventListener('resize', () => {
@@ -1320,24 +2113,24 @@
             requestAnimationFrame(animate);
             const t = clock.getElapsedTime();
 
-            camera.position.x = Math.sin(t * 0.35) * 0.42;
-            camera.position.y = 1.75 + Math.sin(t * 0.9) * 0.04;
-            camera.position.z = 8 + Math.cos(t * 0.25) * 0.65;
-            camera.lookAt(Math.sin(t * 0.22) * 0.6, 1.65, -18);
+            camera.position.x = Math.sin(t * 0.32) * 0.35;
+            camera.position.y = 1.75 + Math.sin(t * 0.85) * 0.035;
+            camera.position.z = 8 + Math.cos(t * 0.24) * 0.55;
+            camera.lookAt(Math.sin(t * 0.2) * 0.45, 1.65, -18);
 
             if (flickerLights.length > 2) {
               const target = flickerLights[2];
-              const noise = Math.sin(t * 29) * Math.cos(t * 47);
+              const noise = Math.sin(t * 31) * Math.cos(t * 47);
               if (noise > 0.86) {
                 target.light.intensity = 0.12;
-                target.mesh.material.color.setHex(0x334155);
+                target.mesh.material.color.setHex(0x3f3f46);
               } else {
-                target.light.intensity = 1.35;
-                target.mesh.material.color.setHex(0xdbeafe);
+                target.light.intensity = 1.45;
+                target.mesh.material.color.setHex(0xfef3c7);
               }
             }
 
-            redGlow.intensity = 2.2 + Math.sin(t * 3.2) * 0.5;
+            redGlow.intensity = 2.1 + Math.sin(t * 3.0) * 0.45;
             renderer.render(scene, camera);
           }
 
@@ -1348,8 +2141,10 @@
       }
 
       /* ================= MULA HAB UTAMA ================= */
+      updateBgmUi();
       applyLanguage();
       initMenuBackdrop3D();
+      tryStartLobbyBgm();
     })();
   </script>
 </body>
