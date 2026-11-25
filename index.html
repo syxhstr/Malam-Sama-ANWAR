@@ -1322,7 +1322,7 @@
       <div class="top-quick-bar">
         <button type="button" id="btn-top-updates" class="version-chip-btn">
           <span>📋</span>
-          <span data-i18n="topUpdateChip">v1.4 • LOG KEMAS KINI</span>
+          <span data-i18n="topUpdateChip">V 2.0.0 • LOG KEMAS KINI</span>
         </button>
 
         <div class="lang-pill-group" role="group" aria-label="Language Switcher">
@@ -1351,7 +1351,7 @@
 
             <button type="button" id="btn-nav-updates" class="menu-btn">
               <span data-i18n="menuUpdates">LOG KEMAS KINI</span>
-              <span class="pill-tag red" data-i18n="menuUpdatesTag">v1.4 BARU</span>
+              <span class="pill-tag red" data-i18n="menuUpdatesTag">V 2.0.0 BARU</span>
             </button>
 
             <button type="button" id="btn-nav-settings" class="menu-btn">
@@ -1406,18 +1406,18 @@
             </div>
           </div>
 
-          <!-- CHAPTER 2: COMING SOON -->
-          <div class="panel chapter-card locked">
+          <!-- CHAPTER 2: MALAM SAMA ZAHID -->
+          <div class="panel chapter-card" style="display:flex;flex-direction:column;justify-content:space-between;border-color:rgba(59,130,246,0.65);">
             <div>
               <div class="chapter-top">
-                <span class="chapter-num" data-i18n="ch2Label">BAB 2 • MISTERI BAHARU</span>
-                <span class="pill-tag" data-i18n="comingSoon">COMING SOON</span>
+                <span class="chapter-num" style="color:#93c5fd;" data-i18n="ch2Label">BAB 2 • TEROWONG B2</span>
+                <span class="pill-tag red" style="background:rgba(37,99,235,0.35);border-color:#60a5fa;color:#dbeafe;" data-i18n="ch2Playable">BOLEH MAIN</span>
               </div>
-              <h3 class="chapter-title" data-i18n="ch2Title">COMING SOON</h3>
-              <p class="chapter-desc" data-i18n="ch2Desc">Bab kedua sedang dalam pembikinan. Lokasi baharu, teka-teki baharu, dan ancaman lebih mencabar bakal tiba tidak lama lagi.</p>
+              <h3 class="chapter-title">MALAM SAMA ZAHID</h3>
+              <p class="chapter-desc" data-i18n="ch2Desc">Terperangkap di Terowong Kargo &amp; Stesen B2 selepas lif terhempas. Cari 3 Sel Tenaga dalam gelap menggunakan lampu suluh dinamo dan buka Pintu Blast Utara sebelum ditangkap Zahid.</p>
             </div>
 
-            <button type="button" class="btn-locked" disabled data-i18n="ch2LockedBtn">DIKUNCI • COMING SOON</button>
+            <a href="https://syxhstr.github.io/Malam-Sama-Zahid---Chapter-2/" id="btn-start-ch2" class="btn-primary js-go-ch2" style="display:block;text-align:center;text-decoration:none;background:linear-gradient(135deg,#2563eb,#1d4ed8);box-shadow:0 8px 20px rgba(37,99,235,0.4);" data-i18n="ch2PlayBtn">MAIN BAB 2 &raquo;</a>
           </div>
         </div>
       </div>
@@ -1653,7 +1653,8 @@
       </div>
 
       <div class="modal-actions">
-        <button type="button" id="btn-win-again" class="btn-primary" data-i18n="btnPlayAgain">MAIN SEMULA</button>
+        <a href="https://syxhstr.github.io/Malam-Sama-Zahid---Chapter-2/" class="btn-primary js-go-ch2" style="display:block;text-align:center;text-decoration:none;background:linear-gradient(135deg,#2563eb,#1d4ed8);box-shadow:0 8px 20px rgba(37,99,235,0.4);" data-i18n="btnNextCh2">TERUSKAN KE BAB 2 &raquo;</a>
+        <button type="button" id="btn-win-again" class="btn-secondary" data-i18n="btnPlayAgain">MAIN SEMULA</button>
         <button type="button" id="btn-win-lobby" class="btn-secondary" data-i18n="btnMainMenu">MENU UTAMA</button>
       </div>
     </div>
@@ -1676,16 +1677,27 @@
           menuPlayTag: 'PILIH BAB »',
           menuShop: 'KEDAI',
           comingSoon: 'COMING SOON',
-          topUpdateChip: 'v1.4 • LOG KEMAS KINI',
+          topUpdateChip: 'V 2.0.0 • LOG KEMAS KINI',
           menuUpdates: 'LOG KEMAS KINI',
-          menuUpdatesTag: 'v1.4 BARU',
+          menuUpdatesTag: 'V 2.0.0 BARU',
           updateLogTitle: 'LOG KEMAS KINI',
           updateLatestBadge: 'TERKINI',
           updateLogs: [
             {
-              version: 'v1.4',
-              date: 'Kemas Kini Terbaharu',
+              version: 'V 2.0.0',
+              date: 'Kemas Kini Utama (Bab 2)',
               latest: true,
+              title: 'Bab 2 Dibuka: Malam Sama Zahid & Pautan Rentas Bab',
+              items: [
+                'Membuka akses penuh ke Bab 2: Malam Sama Zahid (Terowong Kargo & Stesen B2) terus dari menu Pilih Bab.',
+                'Menyambungkan pautan terus ke Bab 2 serta butang teruskan misi selepas menamatkan Bab 1.',
+                'Kemas kini versi utama V 2.0.0 dengan paparan kad Bab 2 bercahaya.'
+              ]
+            },
+            {
+              version: 'v1.4',
+              date: 'Kemas Kini Terdahulu',
+              latest: false,
               title: 'Kawalan Mesra Mobile & Perincian Perabot Penuh Tingkat 14',
               items: [
                 'Kawalan Mobile Dinaik Taraf: Kayu ria (joystick) terapung fleksibel di sebelah kiri, butang Pusing Pantas ↻ 180°, butang AKSI bercahaya bila dekat objek, serta sokongan sentuh terus pada teks interaksi.',
@@ -1749,10 +1761,11 @@
           btnStartCh1: 'MULA BAB 1',
           btnSkipStartCh1: 'TERUS MAIN (LANGKAU INTRO)',
           quickControlsHtml: '<strong>Kawalan PC:</strong> <kbd>WASD</kbd> Gerak • <kbd>Tetikus</kbd> Pandang • <kbd>E</kbd> Buka Pintu / Kunci / Ambil / Loker',
-          ch2Label: 'BAB 2 • MISTERI BAHARU',
-          ch2Title: 'COMING SOON',
-          ch2Desc: 'Bab kedua sedang dalam pembikinan. Lokasi baharu, teka-teki baharu, dan ancaman lebih mencabar bakal tiba tidak lama lagi.',
-          ch2LockedBtn: 'DIKUNCI • COMING SOON',
+          ch2Label: 'BAB 2 • TEROWONG B2',
+          ch2Playable: 'BOLEH MAIN',
+          ch2Desc: 'Terperangkap di Terowong Kargo & Stesen B2 selepas lif terhempas. Cari 3 Sel Tenaga dalam gelap menggunakan lampu suluh dinamo dan buka Pintu Blast Utara sebelum ditangkap Zahid.',
+          ch2PlayBtn: 'MAIN BAB 2 »',
+          btnNextCh2: 'TERUSKAN KE BAB 2 »',
           shopItem1Title: 'Pengesan Kunci',
           shopItem1Desc: 'Menunjukkan arah lokasi kunci terdekat pada pelan Tingkat 14.',
           shopItem2Title: 'Azimat Pelindung',
@@ -1872,16 +1885,27 @@
           menuPlayTag: 'CHAPTERS »',
           menuShop: 'SHOP',
           comingSoon: 'COMING SOON',
-          topUpdateChip: 'v1.4 • UPDATE LOG',
+          topUpdateChip: 'V 2.0.0 • UPDATE LOG',
           menuUpdates: 'UPDATE LOG',
-          menuUpdatesTag: 'v1.4 NEW',
+          menuUpdatesTag: 'V 2.0.0 NEW',
           updateLogTitle: 'GAME UPDATE LOG',
           updateLatestBadge: 'LATEST',
           updateLogs: [
             {
-              version: 'v1.4',
-              date: 'Latest Patch',
+              version: 'V 2.0.0',
+              date: 'Major Update (Chapter 2)',
               latest: true,
+              title: 'Chapter 2 Unlocked: Malam Sama Zahid & Cross-Chapter Link',
+              items: [
+                'Unlocked full access to Chapter 2: Malam Sama Zahid (Cargo Tunnel & Station B2) directly from the Chapter Select menu.',
+                'Connected direct navigation link to Chapter 2 plus a Continue to Chapter 2 button upon beating Chapter 1.',
+                'Major version V 2.0.0 release with playable Chapter 2 card.'
+              ]
+            },
+            {
+              version: 'v1.4',
+              date: 'Previous Patch',
+              latest: false,
               title: 'Mobile-Friendly Controls & Full Floor 14 Furniture Expansion',
               items: [
                 'Upgraded Mobile Controls: Floating left-thumb joystick, quick ↻ 180° turn button, glowing context-aware ACTION button, and direct tap-to-interact on prompts.',
@@ -1945,10 +1969,11 @@
           btnStartCh1: 'START CHAPTER 1',
           btnSkipStartCh1: 'PLAY NOW (SKIP INTRO)',
           quickControlsHtml: '<strong>PC Controls:</strong> <kbd>WASD</kbd> Move • <kbd>Mouse</kbd> Look • <kbd>E</kbd> Open Door / Unlock / Take / Hide',
-          ch2Label: 'CHAPTER 2 • NEW MYSTERY',
-          ch2Title: 'COMING SOON',
-          ch2Desc: 'Chapter 2 is currently in development. New environments, new puzzles, and deadlier threats are coming soon.',
-          ch2LockedBtn: 'LOCKED • COMING SOON',
+          ch2Label: 'CHAPTER 2 • TUNNEL B2',
+          ch2Playable: 'PLAYABLE',
+          ch2Desc: 'Trapped inside Cargo Tunnel & Station B2 after the elevator crash. Find 3 Energy Cells in the dark using your dynamo flashlight and open the North Blast Gate before Zahid catches you.',
+          ch2PlayBtn: 'PLAY CHAPTER 2 »',
+          btnNextCh2: 'CONTINUE TO CHAPTER 2 »',
           shopItem1Title: 'Key Radar',
           shopItem1Desc: 'Highlights the nearest key direction on the Floor 14 map.',
           shopItem2Title: 'Guardian Charm',
@@ -4452,6 +4477,14 @@
       document.getElementById('btn-nav-play').addEventListener('click', () => {
         audio.playClick();
         showLobbyView('chapters');
+      });
+
+      document.querySelectorAll('.js-go-ch2').forEach((link) => {
+        link.addEventListener('click', (e) => {
+          e.preventDefault();
+          audio.playClick();
+          window.location.href = 'https://syxhstr.github.io/Malam-Sama-Zahid---Chapter-2/';
+        });
       });
 
       document.getElementById('btn-nav-shop').addEventListener('click', () => {
