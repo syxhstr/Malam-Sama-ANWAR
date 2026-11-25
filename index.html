@@ -40,10 +40,10 @@
       inset: 0;
       pointer-events: none;
       z-index: 3;
-      background: radial-gradient(circle at 48% 50%, transparent 42%, rgba(0, 0, 0, 0.85) 100%);
+      background: radial-gradient(circle at 48% 50%, transparent 40%, rgba(0, 0, 0, 0.88) 100%);
     }
 
-    /* ================= KARAKTER ANWAR & ZAHID (GAYA PIGGY) ================= */
+    /* ================= KARAKTER ANWAR & ZAHID (DITOLAK KE BELAKANG KORIDOR) ================= */
     .lobby-characters {
       position: fixed;
       inset: 0;
@@ -54,38 +54,38 @@
 
     .char-zahid {
       position: absolute;
-      left: 36%;
-      bottom: 13%;
-      height: 46vh;
-      max-height: 430px;
+      left: 34%;
+      bottom: 21%;
+      height: 33vh;
+      max-height: 300px;
       width: auto;
       object-fit: contain;
-      filter: brightness(0.62) contrast(1.18) drop-shadow(0 12px 24px rgba(0, 0, 0, 0.96));
+      filter: brightness(0.52) contrast(1.18) drop-shadow(0 12px 24px rgba(0, 0, 0, 0.96));
       transform-origin: bottom center;
       animation: zahidPeek 5.5s ease-in-out infinite;
     }
 
     .char-anwar {
       position: absolute;
-      left: 5%;
-      bottom: -2%;
-      height: 82vh;
-      max-height: 760px;
+      left: 14%;
+      bottom: 10%;
+      height: 58vh;
+      max-height: 520px;
       width: auto;
       object-fit: contain;
-      filter: brightness(0.86) contrast(1.12) drop-shadow(0 18px 34px rgba(0, 0, 0, 0.96));
+      filter: brightness(0.75) contrast(1.14) drop-shadow(0 16px 32px rgba(0, 0, 0, 0.96));
       transform-origin: bottom center;
       animation: anwarBreathe 4.2s ease-in-out infinite;
     }
 
     @keyframes anwarBreathe {
       0%, 100% { transform: translateY(0px) rotate(0deg) scale(1); }
-      50% { transform: translateY(6px) rotate(-0.8deg) scale(1.012); }
+      50% { transform: translateY(5px) rotate(-0.7deg) scale(1.01); }
     }
 
     @keyframes zahidPeek {
       0%, 100% { transform: translateX(0px) rotate(0deg); }
-      50% { transform: translateX(-8px) rotate(1.4deg); }
+      50% { transform: translateX(-7px) rotate(1.2deg); }
     }
 
     /* ================= SKRIN UTAMA ================= */
@@ -101,7 +101,7 @@
     }
 
     #lobby-screen {
-      padding: 18px 24px;
+      padding: 20px 28px;
       flex-direction: column;
       justify-content: space-between;
     }
@@ -129,60 +129,34 @@
       justify-content: space-between;
     }
 
-    /* Bar Atas: Gear Settings Kiri + Audio & Bahasa Kanan */
+    /* Bar Atas: Audio & Bahasa di Kanan */
     .piggy-top-bar {
       display: flex;
-      justify-content: space-between;
+      justify-content: flex-end;
       align-items: flex-start;
       width: 100%;
       z-index: 15;
     }
 
-    .piggy-gear-btn {
-      width: 64px;
-      height: 64px;
-      background: rgba(10, 12, 16, 0.72);
-      border: 3px solid rgba(255, 255, 255, 0.85);
-      border-radius: 14px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.75);
-      transition: transform 0.14s ease, background 0.14s ease, border-color 0.14s ease;
-    }
-
-    .piggy-gear-btn:hover {
-      transform: rotate(28deg) scale(1.06);
-      background: rgba(30, 41, 59, 0.9);
-      border-color: #fde047;
-    }
-
-    .piggy-gear-btn svg {
-      width: 40px;
-      height: 40px;
-      fill: #ffffff;
-    }
-
     .top-right-controls {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 12px;
     }
 
     .audio-toggle-btn {
-      background: rgba(10, 12, 16, 0.78);
-      border: 2px solid rgba(255, 255, 255, 0.45);
+      background: rgba(10, 12, 16, 0.82);
+      border: 2.5px solid rgba(255, 255, 255, 0.45);
       color: #f8fafc;
       font-family: 'Courier Prime', monospace;
       font-weight: 700;
-      font-size: 0.82rem;
-      padding: 8px 13px;
-      border-radius: 10px;
+      font-size: 0.95rem;
+      padding: 10px 16px;
+      border-radius: 11px;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
-      gap: 6px;
+      gap: 7px;
       box-shadow: 0 4px 14px rgba(0, 0, 0, 0.65);
       transition: all 0.14s ease;
     }
@@ -199,10 +173,10 @@
 
     .lang-pill-group {
       display: inline-flex;
-      background: rgba(10, 12, 16, 0.82);
-      border: 2px solid rgba(255, 255, 255, 0.35);
-      border-radius: 10px;
-      padding: 3px;
+      background: rgba(10, 12, 16, 0.85);
+      border: 2.5px solid rgba(255, 255, 255, 0.35);
+      border-radius: 11px;
+      padding: 4px;
       box-shadow: 0 4px 14px rgba(0, 0, 0, 0.65);
     }
 
@@ -212,9 +186,9 @@
       color: #94a3b8;
       font-family: 'Courier Prime', monospace;
       font-weight: 700;
-      font-size: 0.82rem;
-      padding: 6px 12px;
-      border-radius: 7px;
+      font-size: 0.95rem;
+      padding: 7px 14px;
+      border-radius: 8px;
       cursor: pointer;
       transition: all 0.14s ease;
     }
@@ -224,7 +198,7 @@
       color: #ffffff;
     }
 
-    /* Kawasan Tengah & Kanan: Tajuk Besar PIGGY-Style + 4 Butang Neon */
+    /* Kawasan Tengah & Kanan: Tajuk Besar & 4 Butang Sidebar Diperbesarkan */
     .piggy-main-stage {
       display: flex;
       justify-content: flex-end;
@@ -239,8 +213,8 @@
       display: flex;
       flex-direction: column;
       align-items: flex-end;
-      gap: 18px;
-      width: min(440px, 92vw);
+      gap: 22px;
+      width: min(560px, 94vw);
     }
 
     .piggy-title-block {
@@ -250,19 +224,19 @@
 
     .piggy-title-sub {
       font-family: 'Special Elite', 'Courier Prime', monospace;
-      font-size: clamp(1.35rem, 3vw, 2.25rem);
+      font-size: clamp(1.6rem, 3.4vw, 2.65rem);
       color: #e2e8f0;
-      letter-spacing: 3px;
+      letter-spacing: 3.5px;
       text-shadow: 0 4px 0 #000000, 0 0 18px rgba(0, 0, 0, 0.95);
       line-height: 1.05;
     }
 
     .piggy-title-main {
       font-family: 'Special Elite', 'Courier Prime', monospace;
-      font-size: clamp(3.3rem, 7.6vw, 5.8rem);
+      font-size: clamp(3.8rem, 8.6vw, 6.6rem);
       font-weight: 900;
       color: #ffffff;
-      letter-spacing: 5px;
+      letter-spacing: 6px;
       line-height: 0.95;
       text-shadow:
         0 5px 0 #000000,
@@ -273,13 +247,13 @@
         0 10px 28px rgba(0, 0, 0, 0.95);
     }
 
-    /* 4 Butang Menu Sisi Kanan Gaya Piggy (Green, Blue, Purple, Red) */
+    /* 4 Butang Menu Sisi Kanan Gaya Piggy (Diperbesarkan) */
     .piggy-btn-stack {
       display: flex;
       flex-direction: column;
-      gap: 14px;
+      gap: 18px;
       width: 100%;
-      max-width: 390px;
+      max-width: 520px;
     }
 
     .piggy-menu-btn {
@@ -287,8 +261,8 @@
       align-items: stretch;
       justify-content: space-between;
       width: 100%;
-      height: 68px;
-      border-radius: 12px;
+      height: 86px;
+      border-radius: 14px;
       cursor: pointer;
       padding: 0;
       overflow: hidden;
@@ -296,7 +270,7 @@
     }
 
     .piggy-menu-btn:hover {
-      transform: translateX(-5px) scale(1.02);
+      transform: translateX(-6px) scale(1.02);
       filter: brightness(1.16);
     }
 
@@ -310,127 +284,80 @@
       align-items: center;
       justify-content: center;
       font-family: 'Courier Prime', monospace;
-      font-size: clamp(1.35rem, 2.5vw, 1.85rem);
+      font-size: clamp(1.65rem, 3.1vw, 2.35rem);
       font-weight: 700;
-      letter-spacing: 2px;
+      letter-spacing: 3px;
       text-shadow: 0 2px 6px rgba(0, 0, 0, 0.95);
-      padding: 0 12px;
+      padding: 0 16px;
     }
 
     .piggy-btn-icon-box {
-      width: 72px;
+      width: 92px;
       display: flex;
       align-items: center;
       justify-content: center;
-      border-left: 3px solid currentColor;
+      border-left: 4px solid currentColor;
       background: rgba(0, 0, 0, 0.25);
     }
 
     .piggy-btn-icon-box svg {
-      width: 34px;
-      height: 34px;
+      width: 44px;
+      height: 44px;
     }
 
     /* Hijau - MAIN / PLAY */
     .piggy-btn-green {
-      background: linear-gradient(180deg, rgba(6, 78, 24, 0.84), rgba(3, 44, 14, 0.92));
-      border: 3.5px solid #22c55e;
+      background: linear-gradient(180deg, rgba(6, 78, 24, 0.86), rgba(3, 44, 14, 0.94));
+      border: 4px solid #22c55e;
       color: #4ade80;
-      box-shadow: 0 0 18px rgba(34, 197, 94, 0.38), inset 0 0 14px rgba(34, 197, 94, 0.22);
+      box-shadow: 0 0 22px rgba(34, 197, 94, 0.4), inset 0 0 16px rgba(34, 197, 94, 0.24);
     }
 
     /* Biru - KEDAI / SHOP */
     .piggy-btn-blue {
-      background: linear-gradient(180deg, rgba(23, 37, 110, 0.84), rgba(12, 20, 68, 0.92));
-      border: 3.5px solid #3b82f6;
+      background: linear-gradient(180deg, rgba(23, 37, 110, 0.86), rgba(12, 20, 68, 0.94));
+      border: 4px solid #3b82f6;
       color: #60a5fa;
-      box-shadow: 0 0 18px rgba(59, 130, 246, 0.36), inset 0 0 14px rgba(59, 130, 246, 0.22);
+      box-shadow: 0 0 22px rgba(59, 130, 246, 0.38), inset 0 0 16px rgba(59, 130, 246, 0.24);
     }
 
     /* Ungu - LOG KEMAS KINI / UPDATES */
     .piggy-btn-purple {
-      background: linear-gradient(180deg, rgba(76, 20, 120, 0.84), rgba(42, 10, 70, 0.92));
-      border: 3.5px solid #a855f7;
+      background: linear-gradient(180deg, rgba(76, 20, 120, 0.86), rgba(42, 10, 70, 0.94));
+      border: 4px solid #a855f7;
       color: #c084fc;
-      box-shadow: 0 0 18px rgba(168, 85, 247, 0.36), inset 0 0 14px rgba(168, 85, 247, 0.22);
+      box-shadow: 0 0 22px rgba(168, 85, 247, 0.38), inset 0 0 16px rgba(168, 85, 247, 0.24);
     }
 
-    /* Merah - TETAPAN / BAB */
+    /* Merah - TETAPAN / SETTINGS */
     .piggy-btn-red {
-      background: linear-gradient(180deg, rgba(110, 16, 16, 0.84), rgba(62, 8, 8, 0.92));
-      border: 3.5px solid #ef4444;
+      background: linear-gradient(180deg, rgba(110, 16, 16, 0.86), rgba(62, 8, 8, 0.94));
+      border: 4px solid #ef4444;
       color: #f87171;
-      box-shadow: 0 0 18px rgba(239, 68, 68, 0.38), inset 0 0 14px rgba(239, 68, 68, 0.22);
+      box-shadow: 0 0 22px rgba(239, 68, 68, 0.4), inset 0 0 16px rgba(239, 68, 68, 0.24);
     }
 
-    /* Sudut Kiri Bawah Gaya Piggy (Kad Bab + Bar Status Versi) */
+    /* Sudut Kiri Bawah: Pil Versi Sahaja (CH 1-3 Dibuang) */
     .piggy-bottom-left {
       display: flex;
       flex-direction: column;
       align-items: flex-start;
-      gap: 10px;
       z-index: 15;
-    }
-
-    .piggy-book-card {
-      width: 142px;
-      background: linear-gradient(180deg, rgba(18, 22, 32, 0.92), rgba(8, 10, 16, 0.96));
-      border: 3px solid #a855f7;
-      border-radius: 14px;
-      padding: 8px;
-      cursor: pointer;
-      box-shadow: 0 8px 22px rgba(0, 0, 0, 0.85), 0 0 14px rgba(168, 85, 247, 0.35);
-      transition: transform 0.14s ease, border-color 0.14s ease;
-      text-align: center;
-    }
-
-    .piggy-book-card:hover {
-      transform: translateY(-3px) scale(1.03);
-      border-color: #e879f9;
-    }
-
-    .piggy-book-art {
-      height: 76px;
-      border-radius: 8px;
-      background: radial-gradient(circle at 50% 35%, #334155 0%, #090d16 90%);
-      display: flex;
-      align-items: flex-end;
-      justify-content: center;
-      gap: 4px;
-      overflow: hidden;
-      padding-top: 6px;
-      border: 1px solid rgba(255, 255, 255, 0.14);
-    }
-
-    .piggy-book-art img {
-      height: 68px;
-      width: auto;
-      object-fit: contain;
-      filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.9));
-    }
-
-    .piggy-book-label {
-      margin-top: 6px;
-      font-family: 'Courier Prime', monospace;
-      font-size: 0.84rem;
-      font-weight: 700;
-      color: #f8fafc;
-      letter-spacing: 1px;
     }
 
     .piggy-token-pill {
       display: inline-flex;
       align-items: center;
-      gap: 10px;
-      background: linear-gradient(180deg, rgba(88, 16, 98, 0.9), rgba(48, 8, 56, 0.95));
-      border: 3px solid #d946ef;
-      border-radius: 12px;
-      padding: 7px 14px;
+      gap: 11px;
+      background: linear-gradient(180deg, rgba(88, 16, 98, 0.92), rgba(48, 8, 56, 0.96));
+      border: 3.5px solid #d946ef;
+      border-radius: 13px;
+      padding: 9px 17px;
       color: #f5d0fe;
       font-family: 'Courier Prime', monospace;
       font-weight: 700;
-      font-size: 1.05rem;
-      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.8), 0 0 14px rgba(217, 70, 239, 0.35);
+      font-size: 1.18rem;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.82), 0 0 16px rgba(217, 70, 239, 0.38);
       cursor: pointer;
       transition: transform 0.12s ease;
     }
@@ -439,38 +366,38 @@
       transform: scale(1.04);
     }
 
-    /* ================= VIEW D: UPDATE LOG GAYA TDS (GAMBAR 2) ================= */
+    /* ================= VIEW D: UPDATE LOG GAYA TDS (UI & TULISAN DIPERBESARKAN) ================= */
     #lobby-view-updates {
       align-items: center;
       justify-content: center;
-      background: rgba(0, 0, 0, 0.58);
-      backdrop-filter: blur(4px);
+      background: rgba(0, 0, 0, 0.62);
+      backdrop-filter: blur(5px);
     }
 
     .tds-modal-wrapper {
       position: relative;
-      width: min(980px, 95vw);
-      height: min(610px, 86vh);
-      background: rgba(14, 16, 22, 0.96);
-      border: 2px solid rgba(255, 255, 255, 0.16);
-      border-radius: 16px;
-      box-shadow: 0 28px 70px rgba(0, 0, 0, 0.92);
+      width: min(1180px, 95vw);
+      height: min(720px, 88vh);
+      background: rgba(14, 16, 22, 0.97);
+      border: 2.5px solid rgba(255, 255, 255, 0.18);
+      border-radius: 18px;
+      box-shadow: 0 28px 70px rgba(0, 0, 0, 0.94);
       display: grid;
-      grid-template-columns: 280px 1fr;
+      grid-template-columns: 340px 1fr;
       overflow: visible;
     }
 
     .tds-close-btn {
       position: absolute;
-      top: -14px;
-      right: -14px;
-      width: 52px;
-      height: 52px;
+      top: -16px;
+      right: -16px;
+      width: 60px;
+      height: 60px;
       background: linear-gradient(180deg, #ff5f5f, #dc2626);
-      border: 3px solid #7f1d1d;
-      border-radius: 12px;
+      border: 3.5px solid #7f1d1d;
+      border-radius: 14px;
       color: #ffffff;
-      font-size: 1.8rem;
+      font-size: 2.1rem;
       font-weight: 900;
       line-height: 1;
       display: flex;
@@ -478,7 +405,7 @@
       justify-content: center;
       cursor: pointer;
       z-index: 30;
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.75);
+      box-shadow: 0 8px 22px rgba(0, 0, 0, 0.78);
       transition: transform 0.12s ease, filter 0.12s ease;
     }
 
@@ -489,10 +416,10 @@
 
     /* Bar Sisi Kiri: All Updates */
     .tds-sidebar {
-      background: rgba(9, 11, 16, 0.92);
-      border-right: 2px solid rgba(255, 255, 255, 0.1);
-      border-radius: 16px 0 0 16px;
-      padding: 18px 14px;
+      background: rgba(9, 11, 16, 0.94);
+      border-right: 2px solid rgba(255, 255, 255, 0.12);
+      border-radius: 18px 0 0 18px;
+      padding: 22px 18px;
       display: flex;
       flex-direction: column;
       overflow: hidden;
@@ -500,10 +427,10 @@
 
     .tds-sidebar-title {
       text-align: center;
-      font-size: 1.45rem;
+      font-size: 1.85rem;
       font-weight: 700;
       color: #ffffff;
-      margin-bottom: 14px;
+      margin-bottom: 18px;
       text-shadow: 0 2px 4px rgba(0, 0, 0, 0.9);
     }
 
@@ -512,27 +439,27 @@
       overflow-y: auto;
       display: flex;
       flex-direction: column;
-      gap: 10px;
-      padding-right: 4px;
+      gap: 13px;
+      padding-right: 6px;
     }
 
     .tds-version-list::-webkit-scrollbar,
     .tds-content-scroll::-webkit-scrollbar {
-      width: 6px;
+      width: 7px;
     }
 
     .tds-version-list::-webkit-scrollbar-thumb,
     .tds-content-scroll::-webkit-scrollbar-thumb {
-      background: rgba(255, 255, 255, 0.25);
+      background: rgba(255, 255, 255, 0.28);
       border-radius: 999px;
     }
 
     .tds-ver-banner {
       position: relative;
-      min-height: 76px;
-      border-radius: 10px;
-      padding: 10px 12px;
-      border: 2.5px solid rgba(255, 255, 255, 0.25);
+      min-height: 92px;
+      border-radius: 12px;
+      padding: 13px 16px;
+      border: 3px solid rgba(255, 255, 255, 0.25);
       cursor: pointer;
       display: flex;
       flex-direction: column;
@@ -544,19 +471,19 @@
 
     .tds-ver-banner:hover {
       transform: translateY(-2px);
-      border-color: rgba(255, 255, 255, 0.75);
+      border-color: rgba(255, 255, 255, 0.78);
     }
 
     .tds-ver-banner.active {
       border-color: #facc15;
-      box-shadow: 0 0 16px rgba(250, 204, 21, 0.5);
+      box-shadow: 0 0 18px rgba(250, 204, 21, 0.55);
     }
 
     .tds-banner-name {
-      font-size: 1.02rem;
+      font-size: 1.28rem;
       font-weight: 700;
       color: #ffffff;
-      line-height: 1.15;
+      line-height: 1.18;
       text-shadow:
         -1.5px -1.5px 0 #000,
         1.5px -1.5px 0 #000,
@@ -567,7 +494,7 @@
     }
 
     .tds-banner-ver {
-      font-size: 0.92rem;
+      font-size: 1.12rem;
       font-weight: 700;
       color: #f8fafc;
       text-shadow:
@@ -586,33 +513,33 @@
     .theme-amber       { background: linear-gradient(135deg, #78350f 0%, #d97706 55%, #facc15 100%); }
     .theme-violet      { background: linear-gradient(135deg, #3b0764 0%, #6d28d9 60%, #a855f7 100%); }
 
-    /* Kandungan Kanan TDS */
+    /* Kandungan Kanan TDS (Tulisan Besar & Jelas) */
     .tds-content-scroll {
-      padding: 24px 28px 28px;
+      padding: 30px 36px 34px;
       overflow-y: auto;
       display: flex;
       flex-direction: column;
-      gap: 18px;
+      gap: 24px;
     }
 
     .tds-section-header {
-      font-size: 1.45rem;
+      font-size: 1.85rem;
       font-weight: 700;
       color: #ffffff;
-      padding-bottom: 8px;
-      border-bottom: 2px solid rgba(255, 255, 255, 0.72);
-      margin-bottom: 10px;
+      padding-bottom: 10px;
+      border-bottom: 2.5px solid rgba(255, 255, 255, 0.75);
+      margin-bottom: 14px;
     }
 
     .tds-bullet-list {
       list-style: none;
       display: flex;
       flex-direction: column;
-      gap: 8px;
-      padding-left: 8px;
-      font-size: 0.96rem;
-      color: #e2e8f0;
-      line-height: 1.45;
+      gap: 12px;
+      padding-left: 10px;
+      font-size: 1.18rem;
+      color: #f1f5f9;
+      line-height: 1.55;
     }
 
     .tds-bullet-list li::before {
@@ -621,69 +548,69 @@
       font-weight: 900;
     }
 
-    /* Bar Kuning Keemasan Boleh Buka-Tutup (Macam Level 4 Changes v dalam gambar) */
+    /* Bar Kuning Keemasan Boleh Buka-Tutup */
     .tds-feature-row {
       display: flex;
       align-items: flex-start;
-      gap: 18px;
-      margin-top: 6px;
+      gap: 22px;
+      margin-top: 10px;
     }
 
     .tds-feature-avatar {
-      width: 88px;
+      width: 108px;
       flex-shrink: 0;
       text-align: center;
     }
 
     .tds-feature-avatar img {
-      width: 74px;
-      height: 74px;
+      width: 92px;
+      height: 92px;
       object-fit: contain;
-      border-radius: 10px;
+      border-radius: 12px;
       background: rgba(255, 255, 255, 0.06);
-      padding: 4px;
-      border: 1px solid rgba(255, 255, 255, 0.16);
+      padding: 5px;
+      border: 1.5px solid rgba(255, 255, 255, 0.18);
     }
 
     .tds-feature-avatar span {
       display: block;
-      margin-top: 5px;
-      font-size: 0.84rem;
-      color: #cbd5e1;
-      font-weight: 600;
+      margin-top: 7px;
+      font-size: 1.05rem;
+      color: #e2e8f0;
+      font-weight: 700;
     }
 
     .tds-accordion-stack {
       flex: 1;
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 12px;
     }
 
     .tds-accordion-item {
-      border-radius: 8px;
+      border-radius: 10px;
       overflow: hidden;
     }
 
     .tds-gold-bar {
       width: 100%;
       background: linear-gradient(180deg, #f59e0b, #d97706);
-      border: 2px solid #fbbf24;
-      border-radius: 8px;
-      padding: 9px 14px;
+      border: 2.5px solid #fbbf24;
+      border-radius: 10px;
+      padding: 13px 18px;
       color: #ffffff;
       font-family: 'Fredoka', sans-serif;
-      font-size: 1.02rem;
+      font-size: 1.24rem;
       font-weight: 700;
       display: flex;
       align-items: center;
       justify-content: space-between;
       cursor: pointer;
       text-shadow:
-        -1px -1px 0 #000,
-        1px -1px 0 #000,
-        -1px 1px 0 #000,
-        1px 1px 0 #000;
+        -1.5px -1.5px 0 #000,
+        1.5px -1.5px 0 #000,
+        -1.5px 1.5px 0 #000,
+        1.5px 1.5px 0 #000;
       transition: filter 0.12s ease;
     }
 
@@ -693,18 +620,18 @@
 
     .tds-accordion-body {
       display: none;
-      background: rgba(255, 255, 255, 0.06);
-      border: 1px solid rgba(251, 191, 36, 0.35);
+      background: rgba(255, 255, 255, 0.07);
+      border: 1.5px solid rgba(251, 191, 36, 0.4);
       border-top: none;
-      border-radius: 0 0 8px 8px;
-      padding: 10px 14px;
-      font-size: 0.9rem;
-      color: #f1f5f9;
-      line-height: 1.45;
+      border-radius: 0 0 10px 10px;
+      padding: 14px 18px;
+      font-size: 1.1rem;
+      color: #f8fafc;
+      line-height: 1.55;
     }
 
     .tds-accordion-item.open .tds-gold-bar {
-      border-radius: 8px 8px 0 0;
+      border-radius: 10px 10px 0 0;
     }
 
     .tds-accordion-item.open .tds-accordion-body {
@@ -734,7 +661,7 @@
     }
 
     .subview-header h2 {
-      font-size: 1.25rem;
+      font-size: 1.35rem;
       letter-spacing: 1px;
     }
 
@@ -742,11 +669,11 @@
       background: #1e293b;
       border: 2px solid #475569;
       color: #f8fafc;
-      padding: 8px 14px;
+      padding: 9px 16px;
       border-radius: 9px;
       font-family: 'Fredoka', sans-serif;
       font-weight: 700;
-      font-size: 0.9rem;
+      font-size: 0.95rem;
       cursor: pointer;
     }
 
@@ -797,7 +724,7 @@
     }
 
     .chapter-num {
-      font-size: 0.76rem;
+      font-size: 0.78rem;
       font-weight: 700;
       letter-spacing: 1px;
       color: #fca5a5;
@@ -807,7 +734,7 @@
     .chapter-num.gold { color: #fde047; }
 
     .pill-tag {
-      font-size: 0.72rem;
+      font-size: 0.74rem;
       font-weight: 700;
       padding: 4px 10px;
       border-radius: 999px;
@@ -829,14 +756,14 @@
     }
 
     .chapter-title {
-      font-size: 1.4rem;
+      font-size: 1.42rem;
       font-weight: 700;
       margin-bottom: 10px;
       color: #ffffff;
     }
 
     .chapter-desc {
-      font-size: 0.9rem;
+      font-size: 0.92rem;
       color: #cbd5e1;
       line-height: 1.5;
       margin-bottom: 22px;
@@ -849,7 +776,7 @@
       padding: 14px 16px;
       border-radius: 10px;
       font-weight: 700;
-      font-size: 1rem;
+      font-size: 1.02rem;
       letter-spacing: 0.8px;
       text-align: center;
       text-decoration: none;
@@ -905,7 +832,7 @@
 
     .field-label {
       display: block;
-      font-size: 0.95rem;
+      font-size: 0.98rem;
       color: #e2e8f0;
       margin-bottom: 10px;
       font-weight: 700;
@@ -949,15 +876,15 @@
 
       .tds-modal-wrapper {
         grid-template-columns: 1fr;
-        grid-template-rows: 175px 1fr;
+        grid-template-rows: 185px 1fr;
         height: 86vh;
       }
 
       .tds-sidebar {
         border-right: none;
         border-bottom: 2px solid rgba(255, 255, 255, 0.12);
-        border-radius: 16px 16px 0 0;
-        padding: 12px;
+        border-radius: 18px 18px 0 0;
+        padding: 14px;
       }
 
       .tds-version-list {
@@ -967,37 +894,32 @@
       }
 
       .tds-ver-banner {
-        min-width: 185px;
-        min-height: 68px;
+        min-width: 210px;
+        min-height: 74px;
+      }
+
+      .tds-content-scroll {
+        padding: 20px;
       }
     }
 
     @media (max-width: 680px) {
       #lobby-screen {
-        padding: 12px;
+        padding: 14px;
       }
 
       .char-anwar {
-        left: -10%;
-        height: 64vh;
-        opacity: 0.78;
+        left: 2%;
+        bottom: 18%;
+        height: 46vh;
+        opacity: 0.72;
       }
 
       .char-zahid {
-        left: 22%;
-        bottom: 22%;
-        height: 36vh;
-        opacity: 0.62;
-      }
-
-      .piggy-gear-btn {
-        width: 52px;
-        height: 52px;
-      }
-
-      .piggy-gear-btn svg {
-        width: 30px;
-        height: 30px;
+        left: 30%;
+        bottom: 28%;
+        height: 28vh;
+        opacity: 0.55;
       }
 
       .piggy-main-stage {
@@ -1014,21 +936,11 @@
       }
 
       .piggy-menu-btn {
-        height: 58px;
+        height: 68px;
       }
 
-      .piggy-bottom-left {
-        flex-direction: row;
-        align-items: flex-end;
-      }
-
-      .piggy-book-card {
-        width: 112px;
-        padding: 6px;
-      }
-
-      .piggy-book-art {
-        height: 54px;
+      .piggy-btn-icon-box {
+        width: 74px;
       }
     }
   </style>
@@ -1040,7 +952,7 @@
 
   <canvas id="game-canvas"></canvas>
 
-  <!-- KARAKTER ANWAR & ZAHID DI KORIDOR -->
+  <!-- KARAKTER ANWAR & ZAHID DI KORIDOR (DITOLAK KE BELAKANG) -->
   <div class="lobby-characters" aria-hidden="true">
     <img src="zahid.png" alt="Zahid" class="char-zahid" onerror="this.style.display='none'" />
     <img src="anwar.png" alt="Anwar" class="char-anwar" onerror="this.style.display='none'" />
@@ -1053,18 +965,12 @@
 
     <!-- VIEW A: HOME MAIN MENU (GAYA PIGGY) -->
     <div id="lobby-view-home" class="lobby-view active">
-      <!-- Bar Atas: Gear Settings (Kiri) + Muzik & Bahasa (Kanan) -->
+      <!-- Bar Atas: Muzik & Bahasa di Kanan (Gear Penjuru Dibuang) -->
       <div class="piggy-top-bar">
-        <button type="button" id="btn-top-gear" class="piggy-gear-btn" title="Tetapan / Settings" aria-label="Settings">
-          <svg viewBox="0 0 24 24">
-            <path d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.07-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61 l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c-0.04-0.24-0.24-0.41-0.48-0.41 h-3.84c-0.24,0-0.43,0.17-0.47,0.41L9.25,5.35C8.66,5.59,8.12,5.92,7.63,6.29L5.24,5.33c-0.22-0.08-0.47,0-0.59,0.22L2.74,8.87 C2.62,9.08,2.66,9.34,2.86,9.48l2.03,1.58C4.84,11.36,4.8,11.69,4.8,12s0.02,0.64,0.07,0.94l-2.03,1.58 c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94l0.36,2.54 c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.44-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96 c0.22,0.08,0.47,0,0.59-0.22l1.92-3.32c0.12-0.22,0.07-0.47-0.12-0.61L19.14,12.94z M12,15.6c-1.98,0-3.6-1.62-3.6-3.6 s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z"/>
-          </svg>
-        </button>
-
         <div class="top-right-controls">
           <button type="button" id="btn-bgm-toggle" class="audio-toggle-btn">
             <span id="bgm-icon">🔊</span>
-            <span data-i18n="bgmLabel">BGM</span>
+            <span data-i18n="bgmLabel">MUZIK</span>
           </button>
 
           <div class="lang-pill-group" role="group" aria-label="Language Switcher">
@@ -1074,7 +980,7 @@
         </div>
       </div>
 
-      <!-- Tajuk Besar & 4 Butang Neon Sisi Kanan -->
+      <!-- Tajuk Besar & 4 Butang Neon Sisi Kanan (Diperbesarkan) -->
       <div class="piggy-main-stage">
         <div class="piggy-right-column">
           <div class="piggy-title-block">
@@ -1131,20 +1037,12 @@
         </div>
       </div>
 
-      <!-- Sudut Kiri Bawah: Kad Buku Bab & Pil Versi Gaya Piggy -->
+      <!-- Sudut Kiri Bawah: Pil Versi v2.0.2 Sahaja -->
       <div class="piggy-bottom-left">
-        <div id="btn-book-quick" class="piggy-book-card" title="Pilih Bab">
-          <div class="piggy-book-art">
-            <img src="anwar.png" alt="Bab 1" onerror="this.style.display='none'" />
-            <img src="zahid.png" alt="Bab 2" onerror="this.style.display='none'" />
-          </div>
-          <div class="piggy-book-label" data-i18n="bookBadge">BAB 1 - 3</div>
-        </div>
-
         <div id="btn-version-pill" class="piggy-token-pill" title="Log Kemas Kini">
           <span>🎄</span>
-          <span>v2.1.0</span>
-          <span style="color:#f0abfc;font-size:1.25rem;">+</span>
+          <span>v2.0.2</span>
+          <span style="color:#f0abfc;font-size:1.35rem;">+</span>
         </div>
       </div>
     </div>
@@ -1236,7 +1134,7 @@
       </div>
     </div>
 
-    <!-- VIEW D: UPDATE LOG MODAL GAYA TDS (GAMBAR 2) -->
+    <!-- VIEW D: UPDATE LOG MODAL GAYA TDS (TULISAN & UI DIPERBESARKAN) -->
     <div id="lobby-view-updates" class="lobby-view">
       <div class="tds-modal-wrapper">
         <button type="button" class="tds-close-btn" data-back-home aria-label="Tutup">&times;</button>
@@ -1305,14 +1203,13 @@
         } catch (e) {}
       }
 
-      /* ================= KAMUS DWI-BAHASA & DATA UPDATE LOG GAYA TDS ================= */
+      /* ================= KAMUS DWI-BAHASA & DATA UPDATE LOG (v2.0.2) ================= */
       const I18N = {
         bm: {
           menuPlay: 'MAIN',
           menuShop: 'KEDAI',
           menuUpdates: 'KEMAS KINI',
           menuSettings: 'TETAPAN',
-          bookBadge: 'BAB 1 - 3',
           bgmLabel: 'MUZIK',
           comingSoon: 'COMING SOON',
           btnBack: 'KEMBALI',
@@ -1340,9 +1237,9 @@
           sensLabel: 'Sensitiviti Kamera',
           updates: [
             {
-              id: 'v210',
+              id: 'v202',
               bannerTitle: 'Lobi Klasik & Lagu Krismas',
-              version: 'v2.1.0',
+              version: 'v2.0.2',
               theme: 'theme-purple-gold',
               mainSectionTitle: 'Perubahan Lobi Utama',
               bullets: [
@@ -1356,7 +1253,7 @@
                   name: 'Anwar',
                   img: 'anwar.png',
                   accordions: [
-                    { label: 'Paparan Lobi Utama', text: 'Diletakkan di bahagian hadapan kiri koridor dengan animasi pernafasan dan bayang-bayang seram.' },
+                    { label: 'Paparan Lobi Utama', text: 'Diletakkan di koridor kiri dengan animasi pernafasan dan bayang-bayang seram.' },
                     { label: 'Bab 1: Malam Sama Anwar', text: 'Boleh dimainkan terus melalui butang MAIN -> Bab 1.' }
                   ]
                 },
@@ -1459,7 +1356,6 @@
           menuShop: 'SHOP',
           menuUpdates: 'UPDATES',
           menuSettings: 'SETTINGS',
-          bookBadge: 'CH 1 - 3',
           bgmLabel: 'MUSIC',
           comingSoon: 'COMING SOON',
           btnBack: 'BACK',
@@ -1487,9 +1383,9 @@
           sensLabel: 'Camera Sensitivity',
           updates: [
             {
-              id: 'v210',
+              id: 'v202',
               bannerTitle: 'Classic Lobby & Xmas OST',
-              version: 'v2.1.0',
+              version: 'v2.0.2',
               theme: 'theme-purple-gold',
               mainSectionTitle: 'Main Menu Overhaul',
               bullets: [
@@ -1503,7 +1399,7 @@
                   name: 'Anwar',
                   img: 'anwar.png',
                   accordions: [
-                    { label: 'Main Lobby Pose', text: 'Positioned in the front-left hallway with subtle idle breathing animation.' },
+                    { label: 'Main Lobby Pose', text: 'Positioned in the left hallway with subtle idle breathing animation.' },
                     { label: 'Chapter 1: Malam Sama Anwar', text: 'Playable directly via PLAY -> Chapter 1.' }
                   ]
                 },
@@ -1607,7 +1503,7 @@
       let currentLang = safeGetStorage('msm_lang') || 'bm';
       if (currentLang !== 'bm' && currentLang !== 'en') currentLang = 'bm';
 
-      let selectedUpdateId = 'v210';
+      let selectedUpdateId = 'v202';
 
       let cameraSensitivity = parseFloat(safeGetStorage('msm_sens'));
       if (isNaN(cameraSensitivity) || cameraSensitivity < 0.4 || cameraSensitivity > 2.2) {
@@ -1654,7 +1550,6 @@
         });
       }
 
-      // Pastikan lagu mula bermain serta-merta apabila pemain menyentuh/klik mana-mana bahagian skrin
       ['pointerdown', 'keydown', 'touchstart'].forEach((evtName) => {
         window.addEventListener(evtName, function unlockAudio() {
           if (lobbyBgm && lobbyBgm.paused && !bgmMuted && bgmVolume > 0) {
@@ -1710,12 +1605,11 @@
         const target = e.target;
         if (!target || !target.closest) return;
 
-        // Hidupkan muzik lobi jika belum berjalan
         if (lobbyBgm && lobbyBgm.paused && !bgmMuted && bgmVolume > 0) {
           tryStartLobbyBgm();
         }
 
-        if (target.closest('#btn-nav-play') || target.closest('#btn-book-quick')) {
+        if (target.closest('#btn-nav-play')) {
           playUiClick(600);
           showLobbyView('chapters');
           return;
@@ -1731,7 +1625,7 @@
           showLobbyView('updates');
           return;
         }
-        if (target.closest('#btn-nav-settings') || target.closest('#btn-top-gear')) {
+        if (target.closest('#btn-nav-settings')) {
           playUiClick(500);
           showLobbyView('settings');
           return;
@@ -1742,7 +1636,6 @@
           return;
         }
 
-        // Butang Mute / Unmute Muzik Lobi
         if (target.closest('#btn-bgm-toggle')) {
           bgmMuted = !bgmMuted;
           safeSetStorage('msm_bgm_muted', bgmMuted ? '1' : '0');
@@ -1755,7 +1648,6 @@
           return;
         }
 
-        // Pilih kad versi di bar sisi kiri Update Log (Gaya TDS)
         const verBanner = target.closest('[data-update-id]');
         if (verBanner) {
           selectedUpdateId = verBanner.getAttribute('data-update-id');
@@ -1764,7 +1656,6 @@
           return;
         }
 
-        // Buka/tutup bar kuning keemasan di Update Log
         const goldBar = target.closest('.tds-gold-bar');
         if (goldBar) {
           const item = goldBar.closest('.tds-accordion-item');
@@ -1775,7 +1666,6 @@
           return;
         }
 
-        // Penukar Bahasa BM / BI
         const langBtn = target.closest('[data-lang-switch]');
         if (langBtn) {
           currentLang = langBtn.getAttribute('data-lang-switch') || 'bm';
@@ -1785,7 +1675,6 @@
           return;
         }
 
-        // Pautan Bab 1 / Bab 2
         const chapterLink = target.closest('.js-go-ch1, .js-go-ch2');
         if (chapterLink) {
           const targetUrl = chapterLink.getAttribute('href');
@@ -1799,7 +1688,7 @@
         }
       });
 
-      /* ================= PAPARAN LOG KEMAS KINI GAYA TDS (GAMBAR 2) ================= */
+      /* ================= PAPARAN LOG KEMAS KINI GAYA TDS ================= */
       function renderTdsUpdates() {
         const listEl = document.getElementById('tds-version-list');
         const contentEl = document.getElementById('tds-content-scroll');
@@ -1811,7 +1700,6 @@
         if (!activeEntry) return;
         selectedUpdateId = activeEntry.id;
 
-        // 1. Bina senarai kad banner di bar sisi kiri
         listEl.innerHTML = '';
         for (const u of updates) {
           const card = document.createElement('div');
@@ -1831,7 +1719,6 @@
           listEl.appendChild(card);
         }
 
-        // 2. Bina kandungan kanan bagi versi yang dipilih
         contentEl.innerHTML = '';
 
         const sec1 = document.createElement('div');
@@ -1987,7 +1874,6 @@
           renderer.setSize(window.innerWidth, window.innerHeight);
           renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
 
-          // Tekstur papan kayu gelap gaya koridor Piggy
           const woodCanvas = document.createElement('canvas');
           woodCanvas.width = 256;
           woodCanvas.height = 256;
@@ -2041,7 +1927,6 @@
           rightWall.position.set(4.3, 2.05, -12);
           scene.add(rightWall);
 
-          // Bingkai lukisan dinding & lampu siling gantung gaya koridor Piggy
           const frameGeo = new THREE.BoxGeometry(0.08, 1.35, 1.05);
           const frameMat = new THREE.MeshStandardMaterial({ color: 0x3f2e1d, roughness: 0.6 });
           const artMat = new THREE.MeshStandardMaterial({ color: 0x5c4d32, roughness: 0.8 });
@@ -2051,7 +1936,6 @@
           const flickerLights = [];
 
           for (let z = 3; z >= -26; z -= 6.5) {
-            // Bingkai gambar kiri & kanan
             const frameL = new THREE.Mesh(frameGeo, frameMat);
             frameL.position.set(-4.24, 2.15, z + 1.5);
             scene.add(frameL);
@@ -2064,7 +1948,6 @@
             frameR.position.set(4.24, 2.15, z - 1.2);
             scene.add(frameR);
 
-            // Lampu gantung siling
             const cord = new THREE.Mesh(
               new THREE.CylinderGeometry(0.02, 0.02, 0.45, 6),
               new THREE.MeshBasicMaterial({ color: 0x111111 })
@@ -2083,7 +1966,6 @@
             flickerLights.push({ light: ptLight, mesh: lampMesh });
           }
 
-          // Pintu merah di hujung koridor
           const endWall = new THREE.Mesh(new THREE.PlaneGeometry(9.5, 4.1), wallMat);
           endWall.position.set(0, 2.05, -32);
           scene.add(endWall);
