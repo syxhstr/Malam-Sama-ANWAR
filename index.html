@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-  <title>Malam Sama MADANI — Permainan Seram 3D</title>
+  <title>Malam Sama Madani — Permainan Seram 3D</title>
   <style>
     * {
       box-sizing: border-box;
@@ -29,6 +29,7 @@
       height: 100%;
       display: block;
       z-index: 1;
+      pointer-events: none;
     }
 
     #vignette-overlay {
@@ -50,13 +51,9 @@
       display: flex;
     }
 
-    .hidden {
-      display: none !important;
-    }
-
     /* ================= LOBI / MAIN MENU HUB ================= */
     #lobby-screen {
-      background: linear-gradient(135deg, rgba(6, 9, 16, 0.86), rgba(15, 23, 42, 0.76));
+      background: linear-gradient(135deg, rgba(6, 9, 16, 0.84), rgba(15, 23, 42, 0.74));
       backdrop-filter: blur(6px);
       overflow-y: auto;
       padding: 20px;
@@ -69,6 +66,7 @@
       max-width: 1120px;
       margin: auto;
       position: relative;
+      z-index: 12;
     }
 
     .top-quick-bar {
@@ -323,7 +321,7 @@
     }
 
     .chapter-card.locked {
-      opacity: 0.8;
+      opacity: 0.82;
       background: rgba(15, 23, 42, 0.72);
       border: 1px dashed rgba(250, 204, 21, 0.35);
     }
@@ -337,9 +335,9 @@
     }
 
     .chapter-num {
-      font-size: 0.76rem;
+      font-size: 0.74rem;
       font-weight: 800;
-      letter-spacing: 1.4px;
+      letter-spacing: 1.2px;
       color: #fca5a5;
     }
 
@@ -352,7 +350,7 @@
     }
 
     .chapter-title {
-      font-size: 1.42rem;
+      font-size: 1.38rem;
       font-weight: 900;
       margin-bottom: 10px;
       color: #ffffff;
@@ -668,7 +666,7 @@
             <a href="https://syxhstr.github.io/Malam-Sama-Zahid---Chapter-2/" id="btn-start-ch2" class="btn-blue js-go-ch2" data-i18n="ch2PlayBtn">MAIN BAB 2 &raquo;</a>
           </div>
 
-          <!-- CHAPTER 3: TADIKA FADHLINA (COMING SOON) -->
+          <!-- CHAPTER 3: MISTERI TADIKA FADHLINA (COMING SOON) -->
           <div class="panel chapter-card locked">
             <div>
               <div class="chapter-top">
@@ -676,7 +674,7 @@
                 <span class="pill-tag" data-i18n="comingSoon">COMING SOON</span>
               </div>
               <h3 class="chapter-title">MISTERI TADIKA FADHLINA</h3>
-              <p class="chapter-desc" data-i18n="ch3Desc">Suasana sunyi di bangunan tadika selepas waktu pulang bertukar ngeri apabila lampu mula terpadam satu demi satu. Selesaikan teka-teki bilik darjah dan cari jalan keluar sebelum terlambat.</p>
+              <p class="chapter-desc" data-i18n="ch3Desc">Suasana sunyi di Tadika Seri Fadhlina selepas waktu pulang bertukar ngeri apabila lampu mula terpadam satu demi satu. Selesaikan teka-teki bilik darjah dan cari jalan keluar sebelum terlambat.</p>
             </div>
 
             <button type="button" class="btn-locked" disabled data-i18n="comingSoon">COMING SOON</button>
@@ -718,7 +716,7 @@
       <div id="lobby-view-updates" class="lobby-view">
         <div class="subview-header">
           <button type="button" class="btn-back" data-back-home>&larr; <span data-i18n="btnBack">KEMBALI</span></button>
-          <h2 data-i18n="updateLogTitle">LOG KEMAS KINI (UPDATE LOG)</h2>
+          <h2 data-i18n="updateLogTitle">LOG KEMAS KINI (V 2.0.1)</h2>
           <div style="width:74px;"></div>
         </div>
 
@@ -755,6 +753,21 @@
 
   <script>
     (function () {
+      /* ================= PEMBANTU STORAN SELAMAT ================= */
+      function safeGetStorage(key) {
+        try {
+          return window.localStorage ? window.localStorage.getItem(key) : null;
+        } catch (e) {
+          return null;
+        }
+      }
+
+      function safeSetStorage(key, val) {
+        try {
+          if (window.localStorage) window.localStorage.setItem(key, val);
+        } catch (e) {}
+      }
+
       /* ================= KAMUS DWI-BAHASA (BM & BI) ================= */
       const I18N = {
         bm: {
@@ -774,11 +787,11 @@
               version: 'V 2.0.1',
               date: 'Kemas Kini Terkini',
               latest: true,
-              title: 'Pengasingan Bab 1, UI Seragam & Pratonton Bab 3: Tadika Fadhlina',
+              title: 'Pengasingan Bab 1, UI Seragam & Pratonton Bab 3: Misteri Tadika Fadhlina',
               items: [
                 'Mengasingkan permainan penuh Bab 1 (Malam Sama Anwar) ke repositori khusus supaya hub utama Malam Sama MADANI lebih ringan dan pantas dimuatkan.',
                 'Menyeragamkan antaramuka kad Bab 1 dengan butang terus MAIN BAB 1 » sepadan dengan gaya Bab 2.',
-                'Menambah paparan pratonton Bab 3: Tadika Fadhlina (Coming Soon) pada skrin Pilih Bab Permainan.'
+                'Menambah paparan pratonton Bab 3: Misteri Tadika Fadhlina (Lokasi: Tadika Seri Fadhlina • Coming Soon) pada skrin Pilih Bab Permainan.'
               ]
             },
             {
@@ -858,7 +871,7 @@
           ch2Desc: 'Terperangkap di Terowong Kargo & Stesen B2 selepas lif terhempas. Cari 3 Sel Tenaga dalam gelap menggunakan lampu suluh dinamo dan buka Pintu Blast Utara sebelum ditangkap Zahid.',
           ch2PlayBtn: 'MAIN BAB 2 »',
           ch3Label: 'BAB 3 • TADIKA SERI FADHLINA',
-          ch3Desc: 'Suasana sunyi di bangunan tadika selepas waktu pulang bertukar ngeri apabila lampu mula terpadam satu demi satu. Selesaikan teka-teki bilik darjah dan cari jalan keluar sebelum terlambat.',
+          ch3Desc: 'Suasana sunyi di Tadika Seri Fadhlina selepas waktu pulang bertukar ngeri apabila lampu mula terpadam satu demi satu. Selesaikan teka-teki bilik darjah dan cari jalan keluar sebelum terlambat.',
           shopItem1Title: 'Pengesan Kunci',
           shopItem1Desc: 'Menunjukkan arah lokasi kunci terdekat pada pelan kawasan.',
           shopItem2Title: 'Azimat Pelindung',
@@ -886,11 +899,11 @@
               version: 'V 2.0.1',
               date: 'Latest Update',
               latest: true,
-              title: 'Chapter 1 Separation, Unified Card UI & Chapter 3: Tadika Fadhlina Preview',
+              title: 'Chapter 1 Separation, Unified Card UI & Chapter 3: Misteri Tadika Fadhlina Preview',
               items: [
                 'Separated the standalone Chapter 1 (Malam Sama Anwar) game into its own dedicated repository for a cleaner, faster Malam Sama MADANI hub.',
                 'Streamlined the Chapter 1 card UI with a clean PLAY CHAPTER 1 » button matching Chapter 2.',
-                'Added the upcoming Chapter 3: Tadika Fadhlina (Coming Soon) card to the Chapter Select screen.'
+                'Added the upcoming Chapter 3: Misteri Tadika Fadhlina (Location: Tadika Seri Fadhlina • Coming Soon) card to the Chapter Select screen.'
               ]
             },
             {
@@ -969,8 +982,8 @@
           ch2Playable: 'PLAYABLE',
           ch2Desc: 'Trapped inside Cargo Tunnel & Station B2 after the elevator crash. Find 3 Energy Cells in the dark using your dynamo flashlight and open the North Blast Gate before Zahid catches you.',
           ch2PlayBtn: 'PLAY CHAPTER 2 »',
-          ch3Label: 'CHAPTER 3 • SERI FADHLINA KINDERGARTEN',
-          ch3Desc: 'The quiet kindergarten building after dismissal turns terrifying as lights flicker out one by one. Solve classroom puzzles and find a way out before it is too late.',
+          ch3Label: 'CHAPTER 3 • TADIKA SERI FADHLINA',
+          ch3Desc: 'The quiet atmosphere at Tadika Seri Fadhlina after dismissal turns terrifying as lights flicker out one by one. Solve classroom puzzles and find a way out before it is too late.',
           shopItem1Title: 'Key Radar',
           shopItem1Desc: 'Highlights the nearest key direction on the area map.',
           shopItem2Title: 'Guardian Charm',
@@ -982,12 +995,12 @@
           sensLabel: 'Camera Sensitivity'
         }
       };
-      JavaScript
+
       /* ================= KEADAAN & TETAPAN PENGGUNA ================= */
-      let currentLang = localStorage.getItem('msm_lang') || 'bm';
+      let currentLang = safeGetStorage('msm_lang') || 'bm';
       if (currentLang !== 'bm' && currentLang !== 'en') currentLang = 'bm';
 
-      let cameraSensitivity = parseFloat(localStorage.getItem('msm_sens'));
+      let cameraSensitivity = parseFloat(safeGetStorage('msm_sens'));
       if (isNaN(cameraSensitivity) || cameraSensitivity < 0.4 || cameraSensitivity > 2.2) {
         cameraSensitivity = 1.0;
       }
@@ -1017,172 +1030,9 @@
           gain.connect(audioCtx.destination);
           osc.start();
           osc.stop(audioCtx.currentTime + duration);
-        } catch (e) {
-          // Abaikan jika pelayar menyekat audio sebelum interaksi
-        }
+        } catch (e) {}
       }
 
-      /* ================= LATAR BELAKANG 3D THREE.JS (MENARA PERDANA) ================= */
-      function initMenuBackdrop3D() {
-        const canvas = document.getElementById('game-canvas');
-        if (!canvas || typeof THREE === 'undefined') return;
-
-        const scene = new THREE.Scene();
-        scene.background = new THREE.Color(0x05070b);
-        scene.fog = new THREE.FogExp2(0x05070b, 0.052);
-
-        const camera = new THREE.PerspectiveCamera(
-          62,
-          window.innerWidth / window.innerHeight,
-          0.1,
-          80
-        );
-        camera.position.set(0, 1.75, 8);
-
-        const renderer = new THREE.WebGLRenderer({
-          canvas: canvas,
-          antialias: true,
-          powerPreference: 'high-performance'
-        });
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
-
-        // Tekstur jubin lantai pejabat
-        const tileCanvas = document.createElement('canvas');
-        tileCanvas.width = 256;
-        tileCanvas.height = 256;
-        const tCtx = tileCanvas.getContext('2d');
-        tCtx.fillStyle = '#0f172a';
-        tCtx.fillRect(0, 0, 256, 256);
-        tCtx.fillStyle = '#1e293b';
-        tCtx.fillRect(4, 4, 120, 120);
-        tCtx.fillRect(132, 132, 120, 120);
-        tCtx.strokeStyle = '#020617';
-        tCtx.lineWidth = 4;
-        tCtx.strokeRect(0, 0, 256, 256);
-
-        const floorTex = new THREE.CanvasTexture(tileCanvas);
-        floorTex.wrapS = THREE.RepeatWrapping;
-        floorTex.wrapT = THREE.RepeatWrapping;
-        floorTex.repeat.set(6, 24);
-
-        const floorMat = new THREE.MeshStandardMaterial({
-          map: floorTex,
-          roughness: 0.38,
-          metalness: 0.25
-        });
-        const floor = new THREE.Mesh(new THREE.PlaneGeometry(10, 46), floorMat);
-        floor.rotation.x = -Math.PI / 2;
-        floor.position.z = -12;
-        scene.add(floor);
-
-        // Siling & Dinding Koridor
-        const wallMat = new THREE.MeshStandardMaterial({
-          color: 0x111827,
-          roughness: 0.85,
-          metalness: 0.1
-        });
-
-        const ceiling = new THREE.Mesh(new THREE.PlaneGeometry(10, 46), wallMat);
-        ceiling.rotation.x = Math.PI / 2;
-        ceiling.position.set(0, 4.2, -12);
-        scene.add(ceiling);
-
-        const leftWall = new THREE.Mesh(new THREE.PlaneGeometry(46, 4.2), wallMat);
-        leftWall.rotation.y = Math.PI / 2;
-        leftWall.position.set(-4.5, 2.1, -12);
-        scene.add(leftWall);
-
-        const rightWall = new THREE.Mesh(new THREE.PlaneGeometry(46, 4.2), wallMat);
-        rightWall.rotation.y = -Math.PI / 2;
-        rightWall.position.set(4.5, 2.1, -12);
-        scene.add(rightWall);
-
-        // Tiang Struktur & Lampu Pendarfluor Siling
-        const pillarGeo = new THREE.BoxGeometry(0.55, 4.2, 0.55);
-        const pillarMat = new THREE.MeshStandardMaterial({ color: 0x1e293b, roughness: 0.7 });
-        const lampGeo = new THREE.BoxGeometry(1.6, 0.08, 0.24);
-        const lampMat = new THREE.MeshBasicMaterial({ color: 0xdbeafe });
-
-        const flickerLights = [];
-
-        for (let z = 4; z >= -28; z -= 6.5) {
-          const pLeft = new THREE.Mesh(pillarGeo, pillarMat);
-          pLeft.position.set(-4.1, 2.1, z);
-          scene.add(pLeft);
-
-          const pRight = new THREE.Mesh(pillarGeo, pillarMat);
-          pRight.position.set(4.1, 2.1, z);
-          scene.add(pRight);
-
-          const lampMesh = new THREE.Mesh(lampGeo, lampMat.clone());
-          lampMesh.position.set(0, 4.14, z);
-          scene.add(lampMesh);
-
-          const ptLight = new THREE.PointLight(0x93c5fd, 1.35, 11, 1.8);
-          ptLight.position.set(0, 3.85, z);
-          scene.add(ptLight);
-
-          flickerLights.push({ light: ptLight, mesh: lampMesh, baseZ: z });
-        }
-
-        // Cahaya kecemasan merah di hujung koridor (Pintu Lif / Keluar)
-        const endWall = new THREE.Mesh(new THREE.PlaneGeometry(10, 4.2), wallMat);
-        endWall.position.set(0, 2.1, -33);
-        scene.add(endWall);
-
-        const exitSign = new THREE.Mesh(
-          new THREE.BoxGeometry(1.5, 0.42, 0.12),
-          new THREE.MeshBasicMaterial({ color: 0xef4444 })
-        );
-        exitSign.position.set(0, 3.35, -32.9);
-        scene.add(exitSign);
-
-        const redGlow = new THREE.PointLight(0xdc2626, 2.6, 16, 1.6);
-        redGlow.position.set(0, 2.8, -31.5);
-        scene.add(redGlow);
-
-        const ambient = new THREE.AmbientLight(0x1e293b, 0.55);
-        scene.add(ambient);
-
-        // Responsif apabila saiz tetingkap berubah
-        window.addEventListener('resize', () => {
-          camera.aspect = window.innerWidth / window.innerHeight;
-          camera.updateProjectionMatrix();
-          renderer.setSize(window.innerWidth, window.innerHeight);
-        });
-
-        // Gelung animasi sinematik perlahan
-        const clock = new THREE.Clock();
-        function animate() {
-          requestAnimationFrame(animate);
-          const t = clock.getElapsedTime();
-
-          // Pergerakan kamera bernafas & meninjau koridor
-          camera.position.x = Math.sin(t * 0.35) * 0.42;
-          camera.position.y = 1.75 + Math.sin(t * 0.9) * 0.04;
-          camera.position.z = 8 + Math.cos(t * 0.25) * 0.65;
-          camera.lookAt(Math.sin(t * 0.22) * 0.6, 1.65, -18);
-
-          // Kesan kelipan lampu pendarfluor yang menyeramkan
-          if (flickerLights.length > 2) {
-            const target = flickerLights[2];
-            const noise = Math.sin(t * 29) * Math.cos(t * 47);
-            if (noise > 0.86) {
-              target.light.intensity = 0.12;
-              target.mesh.material.color.setHex(0x334155);
-            } else {
-              target.light.intensity = 1.35;
-              target.mesh.material.color.setHex(0xdbeafe);
-            }
-          }
-
-          redGlow.intensity = 2.2 + Math.sin(t * 3.2) * 0.5;
-          renderer.render(scene, camera);
-        }
-
-        animate();
-      }
       /* ================= NAVIGASI PAPARAN LOBI ================= */
       const lobbyViews = {
         home: document.getElementById('lobby-view-home'),
@@ -1198,49 +1048,56 @@
         });
       }
 
-      document.getElementById('btn-nav-play').addEventListener('click', () => {
-        playUiClick(580);
-        showLobbyView('chapters');
-      });
+      document.addEventListener('click', (e) => {
+        const target = e.target;
+        if (!target || !target.closest) return;
 
-      document.getElementById('btn-nav-shop').addEventListener('click', () => {
-        playUiClick(520);
-        showLobbyView('shop');
-      });
-
-      document.getElementById('btn-nav-updates').addEventListener('click', () => {
-        playUiClick(520);
-        showLobbyView('updates');
-      });
-
-      document.getElementById('btn-top-updates').addEventListener('click', () => {
-        playUiClick(520);
-        showLobbyView('updates');
-      });
-
-      document.getElementById('btn-nav-settings').addEventListener('click', () => {
-        playUiClick(520);
-        showLobbyView('settings');
-      });
-
-      document.querySelectorAll('[data-back-home]').forEach((btn) => {
-        btn.addEventListener('click', () => {
+        if (target.closest('#btn-nav-play')) {
+          playUiClick(580);
+          showLobbyView('chapters');
+          return;
+        }
+        if (target.closest('#btn-nav-shop')) {
+          playUiClick(520);
+          showLobbyView('shop');
+          return;
+        }
+        if (target.closest('#btn-nav-updates') || target.closest('#btn-top-updates')) {
+          playUiClick(520);
+          showLobbyView('updates');
+          return;
+        }
+        if (target.closest('#btn-nav-settings')) {
+          playUiClick(520);
+          showLobbyView('settings');
+          return;
+        }
+        if (target.closest('[data-back-home]')) {
           playUiClick(420);
           showLobbyView('home');
-        });
-      });
+          return;
+        }
 
-      // Bunyi klik sebelum beralih ke pautan Bab 1 atau Bab 2
-      document.querySelectorAll('.js-go-ch1, .js-go-ch2').forEach((link) => {
-        link.addEventListener('click', (e) => {
-          const targetUrl = link.getAttribute('href');
-          if (!targetUrl) return;
-          e.preventDefault();
-          playUiClick(660, 0.08);
-          setTimeout(() => {
-            window.location.href = targetUrl;
-          }, 90);
-        });
+        const langBtn = target.closest('[data-lang-switch]');
+        if (langBtn) {
+          currentLang = langBtn.getAttribute('data-lang-switch') || 'bm';
+          safeSetStorage('msm_lang', currentLang);
+          playUiClick(560);
+          applyLanguage();
+          return;
+        }
+
+        const chapterLink = target.closest('.js-go-ch1, .js-go-ch2');
+        if (chapterLink) {
+          const targetUrl = chapterLink.getAttribute('href');
+          if (targetUrl) {
+            e.preventDefault();
+            playUiClick(660, 0.08);
+            setTimeout(() => {
+              window.location.href = targetUrl;
+            }, 90);
+          }
+        }
       });
 
       /* ================= PAPARAN LOG KEMAS KINI ================= */
@@ -1318,15 +1175,6 @@
         renderUpdateLogs();
       }
 
-      document.querySelectorAll('[data-lang-switch]').forEach((btn) => {
-        btn.addEventListener('click', () => {
-          currentLang = btn.dataset.langSwitch;
-          localStorage.setItem('msm_lang', currentLang);
-          playUiClick(560);
-          applyLanguage();
-        });
-      });
-
       /* ================= TETAPAN SENSITIVITI KAMERA ================= */
       const sensSlider = document.getElementById('sens-slider');
       const sensVal = document.getElementById('sens-val');
@@ -1337,8 +1185,166 @@
         sensSlider.addEventListener('input', () => {
           cameraSensitivity = parseFloat(sensSlider.value);
           sensVal.textContent = cameraSensitivity.toFixed(1);
-          localStorage.setItem('msm_sens', cameraSensitivity.toFixed(1));
+          safeSetStorage('msm_sens', cameraSensitivity.toFixed(1));
         });
+      }
+
+      /* ================= LATAR BELAKANG 3D THREE.JS (MENARA PERDANA) ================= */
+      function initMenuBackdrop3D() {
+        try {
+          const canvas = document.getElementById('game-canvas');
+          if (!canvas || typeof THREE === 'undefined') return;
+
+          const scene = new THREE.Scene();
+          scene.background = new THREE.Color(0x05070b);
+          scene.fog = new THREE.FogExp2(0x05070b, 0.052);
+
+          const camera = new THREE.PerspectiveCamera(
+            62,
+            window.innerWidth / window.innerHeight,
+            0.1,
+            80
+          );
+          camera.position.set(0, 1.75, 8);
+
+          const renderer = new THREE.WebGLRenderer({
+            canvas: canvas,
+            antialias: true,
+            powerPreference: 'high-performance'
+          });
+          renderer.setSize(window.innerWidth, window.innerHeight);
+          renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+
+          const tileCanvas = document.createElement('canvas');
+          tileCanvas.width = 256;
+          tileCanvas.height = 256;
+          const tCtx = tileCanvas.getContext('2d');
+          tCtx.fillStyle = '#0f172a';
+          tCtx.fillRect(0, 0, 256, 256);
+          tCtx.fillStyle = '#1e293b';
+          tCtx.fillRect(4, 4, 120, 120);
+          tCtx.fillRect(132, 132, 120, 120);
+          tCtx.strokeStyle = '#020617';
+          tCtx.lineWidth = 4;
+          tCtx.strokeRect(0, 0, 256, 256);
+
+          const floorTex = new THREE.CanvasTexture(tileCanvas);
+          floorTex.wrapS = THREE.RepeatWrapping;
+          floorTex.wrapT = THREE.RepeatWrapping;
+          floorTex.repeat.set(6, 24);
+
+          const floorMat = new THREE.MeshStandardMaterial({
+            map: floorTex,
+            roughness: 0.38,
+            metalness: 0.25
+          });
+          const floor = new THREE.Mesh(new THREE.PlaneGeometry(10, 46), floorMat);
+          floor.rotation.x = -Math.PI / 2;
+          floor.position.z = -12;
+          scene.add(floor);
+
+          const wallMat = new THREE.MeshStandardMaterial({
+            color: 0x111827,
+            roughness: 0.85,
+            metalness: 0.1
+          });
+
+          const ceiling = new THREE.Mesh(new THREE.PlaneGeometry(10, 46), wallMat);
+          ceiling.rotation.x = Math.PI / 2;
+          ceiling.position.set(0, 4.2, -12);
+          scene.add(ceiling);
+
+          const leftWall = new THREE.Mesh(new THREE.PlaneGeometry(46, 4.2), wallMat);
+          leftWall.rotation.y = Math.PI / 2;
+          leftWall.position.set(-4.5, 2.1, -12);
+          scene.add(leftWall);
+
+          const rightWall = new THREE.Mesh(new THREE.PlaneGeometry(46, 4.2), wallMat);
+          rightWall.rotation.y = -Math.PI / 2;
+          rightWall.position.set(4.5, 2.1, -12);
+          scene.add(rightWall);
+
+          const pillarGeo = new THREE.BoxGeometry(0.55, 4.2, 0.55);
+          const pillarMat = new THREE.MeshStandardMaterial({ color: 0x1e293b, roughness: 0.7 });
+          const lampGeo = new THREE.BoxGeometry(1.6, 0.08, 0.24);
+          const lampMat = new THREE.MeshBasicMaterial({ color: 0xdbeafe });
+
+          const flickerLights = [];
+
+          for (let z = 4; z >= -28; z -= 6.5) {
+            const pLeft = new THREE.Mesh(pillarGeo, pillarMat);
+            pLeft.position.set(-4.1, 2.1, z);
+            scene.add(pLeft);
+
+            const pRight = new THREE.Mesh(pillarGeo, pillarMat);
+            pRight.position.set(4.1, 2.1, z);
+            scene.add(pRight);
+
+            const lampMesh = new THREE.Mesh(lampGeo, lampMat.clone());
+            lampMesh.position.set(0, 4.14, z);
+            scene.add(lampMesh);
+
+            const ptLight = new THREE.PointLight(0x93c5fd, 1.35, 11, 1.8);
+            ptLight.position.set(0, 3.85, z);
+            scene.add(ptLight);
+
+            flickerLights.push({ light: ptLight, mesh: lampMesh });
+          }
+
+          const endWall = new THREE.Mesh(new THREE.PlaneGeometry(10, 4.2), wallMat);
+          endWall.position.set(0, 2.1, -33);
+          scene.add(endWall);
+
+          const exitSign = new THREE.Mesh(
+            new THREE.BoxGeometry(1.5, 0.42, 0.12),
+            new THREE.MeshBasicMaterial({ color: 0xef4444 })
+          );
+          exitSign.position.set(0, 3.35, -32.9);
+          scene.add(exitSign);
+
+          const redGlow = new THREE.PointLight(0xdc2626, 2.6, 16, 1.6);
+          redGlow.position.set(0, 2.8, -31.5);
+          scene.add(redGlow);
+
+          const ambient = new THREE.AmbientLight(0x1e293b, 0.55);
+          scene.add(ambient);
+
+          window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+          });
+
+          const clock = new THREE.Clock();
+          function animate() {
+            requestAnimationFrame(animate);
+            const t = clock.getElapsedTime();
+
+            camera.position.x = Math.sin(t * 0.35) * 0.42;
+            camera.position.y = 1.75 + Math.sin(t * 0.9) * 0.04;
+            camera.position.z = 8 + Math.cos(t * 0.25) * 0.65;
+            camera.lookAt(Math.sin(t * 0.22) * 0.6, 1.65, -18);
+
+            if (flickerLights.length > 2) {
+              const target = flickerLights[2];
+              const noise = Math.sin(t * 29) * Math.cos(t * 47);
+              if (noise > 0.86) {
+                target.light.intensity = 0.12;
+                target.mesh.material.color.setHex(0x334155);
+              } else {
+                target.light.intensity = 1.35;
+                target.mesh.material.color.setHex(0xdbeafe);
+              }
+            }
+
+            redGlow.intensity = 2.2 + Math.sin(t * 3.2) * 0.5;
+            renderer.render(scene, camera);
+          }
+
+          animate();
+        } catch (err) {
+          console.warn('3D backdrop skipped:', err);
+        }
       }
 
       /* ================= MULA HAB UTAMA ================= */
