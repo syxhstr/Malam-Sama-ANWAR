@@ -3,6 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="screen-orientation" content="landscape" />
+  <meta name="x5-orientation" content="landscape" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <title>Malam Sama Madani — Permainan Seram 3D</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -14,17 +19,213 @@
       padding: 0;
       user-select: none;
       -webkit-user-select: none;
+      -webkit-tap-highlight-color: transparent;
     }
 
     html, body {
       width: 100%;
       height: 100%;
+      height: 100dvh;
       overflow: hidden;
       background: #060709;
       color: #f8fafc;
       font-family: 'Fredoka', 'Segoe UI', system-ui, -apple-system, sans-serif;
     }
 
+    /* ================= FORCED HORIZONTAL / LANDSCAPE GUARD ================= */
+    #orientation-lock-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      background: radial-gradient(circle at center, #1a120b 0%, #050507 100%);
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 24px;
+      gap: 14px;
+    }
+
+    .rotate-phone-icon {
+      font-size: 3.4rem;
+      animation: rotateDeviceAnim 1.8s ease-in-out infinite;
+    }
+
+    @keyframes rotateDeviceAnim {
+      0%, 100% { transform: rotate(0deg); }
+      50% { transform: rotate(-90deg); }
+    }
+
+    #orientation-lock-overlay h2 {
+      font-family: 'Special Elite', 'Courier Prime', monospace;
+      font-size: 1.45rem;
+      color: #fef08a;
+      letter-spacing: 1.5px;
+    }
+
+    #orientation-lock-overlay p {
+      font-size: 0.95rem;
+      color: #cbd5e1;
+      max-width: 340px;
+      line-height: 1.5;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    .btn-force-landscape {
+      margin-top: 6px;
+      background: linear-gradient(180deg, #16a34a, #15803d);
+      border: 2.5px solid #4ade80;
+      color: #ffffff;
+      font-family: 'Courier Prime', monospace;
+      font-weight: 700;
+      font-size: 0.95rem;
+      padding: 11px 22px;
+      border-radius: 12px;
+      cursor: pointer;
+      box-shadow: 0 6px 20px rgba(34, 197, 94, 0.35);
+    }
+
+    @media screen and (orientation: portrait) and (pointer: coarse),
+           screen and (max-width: 820px) and (orientation: portrait) {
+      #orientation-lock-overlay {
+        display: flex !important;
+      }
+      #lobby-screen,
+      #loading-screen {
+        visibility: hidden !important;
+      }
+    }
+
+    /* ================= LOADING SCREEN ================= */
+    #loading-screen {
+      position: fixed;
+      inset: 0;
+      z-index: 9500;
+      background:
+        radial-gradient(circle at 50% 28%, rgba(253, 230, 138, 0.14) 0%, rgba(18, 12, 8, 0.94) 55%, #050507 100%),
+        repeating-linear-gradient(90deg, rgba(255,255,255,0.015) 0px, rgba(255,255,255,0.015) 2px, transparent 2px, transparent 44px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      transition: opacity 0.55s ease, visibility 0.55s ease;
+    }
+
+    #loading-screen.fade-out {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    .loading-lamp-wrap {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      pointer-events: none;
+    }
+
+    .loading-cord {
+      width: 2px;
+      height: clamp(18px, 6vh, 48px);
+      background: #1c1917;
+    }
+
+    .loading-bulb {
+      width: 28px;
+      height: 12px;
+      background: #fef3c7;
+      border-radius: 0 0 14px 14px;
+      box-shadow: 0 0 28px 8px rgba(253, 230, 138, 0.6);
+      animation: bulbFlicker 2.8s infinite;
+    }
+
+    @keyframes bulbFlicker {
+      0%, 100% { opacity: 1; }
+      47% { opacity: 0.92; }
+      49% { opacity: 0.45; }
+      51% { opacity: 1; }
+      82% { opacity: 0.8; }
+      84% { opacity: 1; }
+    }
+
+    .loading-box {
+      width: min(460px, 90vw);
+      background: rgba(10, 12, 16, 0.88);
+      border: 2.5px solid rgba(255, 255, 255, 0.25);
+      border-radius: 18px;
+      padding: clamp(18px, 4vh, 30px) clamp(20px, 4vw, 32px);
+      text-align: center;
+      box-shadow: 0 20px 55px rgba(0, 0, 0, 0.92);
+    }
+
+    .loading-kicker {
+      font-family: 'Special Elite', 'Courier Prime', monospace;
+      font-size: clamp(0.95rem, 2.4vh, 1.25rem);
+      color: #cbd5e1;
+      letter-spacing: 3px;
+    }
+
+    .loading-title {
+      font-family: 'Special Elite', 'Courier Prime', monospace;
+      font-size: clamp(2.1rem, 6vh, 3.4rem);
+      color: #ffffff;
+      letter-spacing: 5px;
+      text-shadow: 0 4px 0 #000, 0 0 20px rgba(220, 38, 38, 0.45);
+      margin: 2px 0 6px;
+    }
+
+    .loading-ver-tag {
+      display: inline-block;
+      font-family: 'Courier Prime', monospace;
+      font-size: 0.85rem;
+      color: #f5d0fe;
+      background: rgba(88, 16, 98, 0.7);
+      border: 1.5px solid #d946ef;
+      padding: 3px 10px;
+      border-radius: 8px;
+      margin-bottom: clamp(14px, 3vh, 22px);
+    }
+
+    .loading-bar-bg {
+      width: 100%;
+      height: 12px;
+      background: rgba(15, 23, 42, 0.95);
+      border: 2px solid rgba(255, 255, 255, 0.28);
+      border-radius: 999px;
+      overflow: hidden;
+      padding: 1px;
+    }
+
+    .loading-bar-fill {
+      width: 0%;
+      height: 100%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #dc2626, #f59e0b, #4ade80);
+      transition: width 0.14s ease-out;
+    }
+
+    .loading-status-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 9px;
+      font-family: 'Courier Prime', monospace;
+      font-size: clamp(0.75rem, 1.9vh, 0.9rem);
+      color: #cbd5e1;
+    }
+
+    #loading-percent {
+      color: #4ade80;
+      font-weight: 700;
+    }
+
+    /* ================= CANVAS & VIGNETTE ================= */
     #game-canvas {
       position: fixed;
       inset: 0;
@@ -54,10 +255,9 @@
 
     .char-zahid {
       position: absolute;
-      left: 34%;
-      bottom: 21%;
-      height: 33vh;
-      max-height: 300px;
+      left: clamp(26%, 32vw, 35%);
+      bottom: clamp(16%, 20vh, 22%);
+      height: clamp(130px, 34vh, 300px);
       width: auto;
       object-fit: contain;
       filter: brightness(0.52) contrast(1.18) drop-shadow(0 12px 24px rgba(0, 0, 0, 0.96));
@@ -67,10 +267,9 @@
 
     .char-anwar {
       position: absolute;
-      left: 14%;
-      bottom: 10%;
-      height: 58vh;
-      max-height: 520px;
+      left: clamp(6%, 12vw, 15%);
+      bottom: clamp(6%, 9vh, 11%);
+      height: clamp(210px, 58vh, 520px);
       width: auto;
       object-fit: contain;
       filter: brightness(0.75) contrast(1.14) drop-shadow(0 16px 32px rgba(0, 0, 0, 0.96));
@@ -88,7 +287,7 @@
       50% { transform: translateX(-7px) rotate(1.2deg); }
     }
 
-    /* ================= SKRIN UTAMA ================= */
+    /* ================= SKRIN UTAMA (RESPONSIVE FIT ALL DEVICES) ================= */
     .screen {
       position: fixed;
       inset: 0;
@@ -101,7 +300,11 @@
     }
 
     #lobby-screen {
-      padding: 20px 28px;
+      padding:
+        max(10px, env(safe-area-inset-top), 2vh)
+        max(16px, env(safe-area-inset-right), 2.4vw)
+        max(10px, env(safe-area-inset-bottom), 2vh)
+        max(16px, env(safe-area-inset-left), 2.4vw);
       flex-direction: column;
       justify-content: space-between;
     }
@@ -127,38 +330,43 @@
       position: relative;
       flex-direction: column;
       justify-content: space-between;
+      min-height: 0;
     }
 
-    /* Bar Atas: Audio & Bahasa di Kanan */
+    /* Bar Atas: Fullscreen, Audio & Bahasa di Kanan */
     .piggy-top-bar {
       display: flex;
       justify-content: flex-end;
       align-items: flex-start;
       width: 100%;
       z-index: 15;
+      flex-shrink: 0;
     }
 
     .top-right-controls {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: clamp(6px, 1vw, 12px);
+      flex-wrap: wrap;
+      justify-content: flex-end;
     }
 
     .audio-toggle-btn {
       background: rgba(10, 12, 16, 0.82);
-      border: 2.5px solid rgba(255, 255, 255, 0.45);
+      border: 2px solid rgba(255, 255, 255, 0.45);
       color: #f8fafc;
       font-family: 'Courier Prime', monospace;
       font-weight: 700;
-      font-size: 0.95rem;
-      padding: 10px 16px;
-      border-radius: 11px;
+      font-size: clamp(0.72rem, 1.7vh, 0.95rem);
+      padding: clamp(6px, 1.2vh, 10px) clamp(10px, 1.4vw, 16px);
+      border-radius: 10px;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
-      gap: 7px;
+      gap: 6px;
       box-shadow: 0 4px 14px rgba(0, 0, 0, 0.65);
       transition: all 0.14s ease;
+      white-space: nowrap;
     }
 
     .audio-toggle-btn:hover {
@@ -171,12 +379,17 @@
       color: #fca5a5;
     }
 
+    .audio-toggle-btn.fs-active {
+      border-color: #38bdf8;
+      color: #7dd3fc;
+    }
+
     .lang-pill-group {
       display: inline-flex;
       background: rgba(10, 12, 16, 0.85);
-      border: 2.5px solid rgba(255, 255, 255, 0.35);
-      border-radius: 11px;
-      padding: 4px;
+      border: 2px solid rgba(255, 255, 255, 0.35);
+      border-radius: 10px;
+      padding: 3px;
       box-shadow: 0 4px 14px rgba(0, 0, 0, 0.65);
     }
 
@@ -186,9 +399,9 @@
       color: #94a3b8;
       font-family: 'Courier Prime', monospace;
       font-weight: 700;
-      font-size: 0.95rem;
-      padding: 7px 14px;
-      border-radius: 8px;
+      font-size: clamp(0.72rem, 1.7vh, 0.95rem);
+      padding: clamp(5px, 0.9vh, 7px) clamp(9px, 1.2vw, 14px);
+      border-radius: 7px;
       cursor: pointer;
       transition: all 0.14s ease;
     }
@@ -198,45 +411,48 @@
       color: #ffffff;
     }
 
-    /* Kawasan Tengah & Kanan: Tajuk Besar & 4 Butang Sidebar Diperbesarkan */
+    /* Kawasan Tengah & Kanan: Tajuk Besar & 4 Butang Sidebar */
     .piggy-main-stage {
       display: flex;
       justify-content: flex-end;
       align-items: center;
       flex: 1;
       width: 100%;
-      padding-right: 1.5%;
+      padding-right: 1%;
       z-index: 14;
+      min-height: 0;
     }
 
     .piggy-right-column {
       display: flex;
       flex-direction: column;
       align-items: flex-end;
-      gap: 22px;
-      width: min(560px, 94vw);
+      justify-content: center;
+      gap: clamp(8px, 2vh, 22px);
+      width: min(500px, 54vw);
+      max-height: 100%;
     }
 
     .piggy-title-block {
       text-align: right;
-      margin-bottom: 4px;
+      margin-bottom: 2px;
     }
 
     .piggy-title-sub {
       font-family: 'Special Elite', 'Courier Prime', monospace;
-      font-size: clamp(1.6rem, 3.4vw, 2.65rem);
+      font-size: clamp(1.05rem, 3.1vh, 2.55rem);
       color: #e2e8f0;
-      letter-spacing: 3.5px;
+      letter-spacing: 3px;
       text-shadow: 0 4px 0 #000000, 0 0 18px rgba(0, 0, 0, 0.95);
       line-height: 1.05;
     }
 
     .piggy-title-main {
       font-family: 'Special Elite', 'Courier Prime', monospace;
-      font-size: clamp(3.8rem, 8.6vw, 6.6rem);
+      font-size: clamp(2.2rem, 7.6vh, 6.2rem);
       font-weight: 900;
       color: #ffffff;
-      letter-spacing: 6px;
+      letter-spacing: 5px;
       line-height: 0.95;
       text-shadow:
         0 5px 0 #000000,
@@ -247,13 +463,13 @@
         0 10px 28px rgba(0, 0, 0, 0.95);
     }
 
-    /* 4 Butang Menu Sisi Kanan Gaya Piggy (Diperbesarkan) */
+    /* 4 Butang Menu Sisi Kanan Gaya Piggy */
     .piggy-btn-stack {
       display: flex;
       flex-direction: column;
-      gap: 18px;
+      gap: clamp(7px, 1.7vh, 17px);
       width: 100%;
-      max-width: 520px;
+      max-width: 490px;
     }
 
     .piggy-menu-btn {
@@ -261,8 +477,8 @@
       align-items: stretch;
       justify-content: space-between;
       width: 100%;
-      height: 86px;
-      border-radius: 14px;
+      height: clamp(46px, 10.6vh, 84px);
+      border-radius: 13px;
       cursor: pointer;
       padding: 0;
       overflow: hidden;
@@ -284,31 +500,33 @@
       align-items: center;
       justify-content: center;
       font-family: 'Courier Prime', monospace;
-      font-size: clamp(1.65rem, 3.1vw, 2.35rem);
+      font-size: clamp(1.1rem, 2.9vh, 2.25rem);
       font-weight: 700;
-      letter-spacing: 3px;
+      letter-spacing: 2.5px;
       text-shadow: 0 2px 6px rgba(0, 0, 0, 0.95);
-      padding: 0 16px;
+      padding: 0 12px;
+      white-space: nowrap;
     }
 
     .piggy-btn-icon-box {
-      width: 92px;
+      width: clamp(54px, 11vh, 90px);
       display: flex;
       align-items: center;
       justify-content: center;
-      border-left: 4px solid currentColor;
+      border-left: 3.5px solid currentColor;
       background: rgba(0, 0, 0, 0.25);
+      flex-shrink: 0;
     }
 
     .piggy-btn-icon-box svg {
-      width: 44px;
-      height: 44px;
+      width: clamp(24px, 5vh, 42px);
+      height: clamp(24px, 5vh, 42px);
     }
 
     /* Hijau - MAIN / PLAY */
     .piggy-btn-green {
       background: linear-gradient(180deg, rgba(6, 78, 24, 0.86), rgba(3, 44, 14, 0.94));
-      border: 4px solid #22c55e;
+      border: 3.5px solid #22c55e;
       color: #4ade80;
       box-shadow: 0 0 22px rgba(34, 197, 94, 0.4), inset 0 0 16px rgba(34, 197, 94, 0.24);
     }
@@ -316,7 +534,7 @@
     /* Biru - KEDAI / SHOP */
     .piggy-btn-blue {
       background: linear-gradient(180deg, rgba(23, 37, 110, 0.86), rgba(12, 20, 68, 0.94));
-      border: 4px solid #3b82f6;
+      border: 3.5px solid #3b82f6;
       color: #60a5fa;
       box-shadow: 0 0 22px rgba(59, 130, 246, 0.38), inset 0 0 16px rgba(59, 130, 246, 0.24);
     }
@@ -324,7 +542,7 @@
     /* Ungu - LOG KEMAS KINI / UPDATES */
     .piggy-btn-purple {
       background: linear-gradient(180deg, rgba(76, 20, 120, 0.86), rgba(42, 10, 70, 0.94));
-      border: 4px solid #a855f7;
+      border: 3.5px solid #a855f7;
       color: #c084fc;
       box-shadow: 0 0 22px rgba(168, 85, 247, 0.38), inset 0 0 16px rgba(168, 85, 247, 0.24);
     }
@@ -332,31 +550,32 @@
     /* Merah - TETAPAN / SETTINGS */
     .piggy-btn-red {
       background: linear-gradient(180deg, rgba(110, 16, 16, 0.86), rgba(62, 8, 8, 0.94));
-      border: 4px solid #ef4444;
+      border: 3.5px solid #ef4444;
       color: #f87171;
       box-shadow: 0 0 22px rgba(239, 68, 68, 0.4), inset 0 0 16px rgba(239, 68, 68, 0.24);
     }
 
-    /* Sudut Kiri Bawah: Pil Versi Sahaja */
+    /* Sudut Kiri Bawah: Pil Versi v2.0.3 */
     .piggy-bottom-left {
       display: flex;
       flex-direction: column;
       align-items: flex-start;
       z-index: 15;
+      flex-shrink: 0;
     }
 
     .piggy-token-pill {
       display: inline-flex;
       align-items: center;
-      gap: 11px;
+      gap: 9px;
       background: linear-gradient(180deg, rgba(88, 16, 98, 0.92), rgba(48, 8, 56, 0.96));
-      border: 3.5px solid #d946ef;
-      border-radius: 13px;
-      padding: 9px 17px;
+      border: 3px solid #d946ef;
+      border-radius: 12px;
+      padding: clamp(5px, 1vh, 9px) clamp(11px, 1.5vw, 17px);
       color: #f5d0fe;
       font-family: 'Courier Prime', monospace;
       font-weight: 700;
-      font-size: 1.18rem;
+      font-size: clamp(0.85rem, 2vh, 1.18rem);
       box-shadow: 0 6px 18px rgba(0, 0, 0, 0.82), 0 0 16px rgba(217, 70, 239, 0.38);
       cursor: pointer;
       transition: transform 0.12s ease;
@@ -366,7 +585,359 @@
       transform: scale(1.04);
     }
 
-    /* ================= VIEW D: UPDATE LOG GAYA TDS (UI & TULISAN DIPERBESARKAN) ================= */
+    /* ================= VIEW B: SELECT CHAPTERS GAYA GAMBAR (MAP VOTING BOARD) ================= */
+    #lobby-view-chapters {
+      align-items: center;
+      justify-content: center;
+      padding: clamp(4px, 1vh, 12px);
+    }
+
+    .piggy-board-frame {
+      position: relative;
+      width: min(1060px, 95vw);
+      height: min(640px, 91dvh);
+      background: rgba(8, 10, 14, 0.92);
+      border: 3.5px solid #a5f3fc;
+      border-radius: 26px;
+      box-shadow:
+        0 0 26px rgba(165, 243, 252, 0.25),
+        inset 0 0 22px rgba(0, 0, 0, 0.85),
+        0 24px 60px rgba(0, 0, 0, 0.94);
+      padding: clamp(12px, 2.2vh, 22px) clamp(14px, 2.4vw, 26px);
+      display: flex;
+      flex-direction: column;
+      gap: clamp(10px, 2vh, 18px);
+      backdrop-filter: blur(6px);
+    }
+
+    .piggy-board-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      flex-shrink: 0;
+    }
+
+    .piggy-board-title {
+      flex: 1;
+      text-align: center;
+      font-family: 'Fredoka', sans-serif;
+      font-size: clamp(1.35rem, 3.8vh, 2.35rem);
+      font-weight: 700;
+      color: #ffffff;
+      letter-spacing: 1px;
+      text-shadow: 0 3px 0 #000000, 0 0 14px rgba(0, 0, 0, 0.9);
+    }
+
+    .piggy-chapter-tiles-grid {
+      flex: 1;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: clamp(10px, 2vw, 20px);
+      min-height: 0;
+      align-items: stretch;
+    }
+
+    .piggy-map-tile {
+      position: relative;
+      border-radius: 16px;
+      border: 3px solid rgba(255, 255, 255, 0.88);
+      background-color: #111318;
+      overflow: hidden;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: clamp(10px, 1.8vh, 16px);
+      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.85);
+      transition: transform 0.14s ease, border-color 0.16s ease, box-shadow 0.16s ease;
+      text-align: center;
+    }
+
+    .piggy-map-tile:hover {
+      transform: translateY(-4px) scale(1.015);
+      border-color: #67e8f9;
+      box-shadow: 0 0 22px rgba(103, 232, 249, 0.45), 0 14px 28px rgba(0, 0, 0, 0.9);
+    }
+
+    .piggy-map-tile:active {
+      transform: scale(0.98);
+    }
+
+    .piggy-map-tile.selected-tile {
+      border-color: #facc15;
+      box-shadow: 0 0 24px rgba(250, 204, 21, 0.55);
+    }
+
+    .tile-bg-scene {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .tile-bg-scene.scene-ch1 {
+      background:
+        radial-gradient(circle at 50% 35%, rgba(220, 38, 38, 0.25) 0%, rgba(15, 12, 10, 0.88) 70%),
+        repeating-linear-gradient(90deg, #271b12 0px, #271b12 24px, #19110b 24px, #19110b 48px);
+    }
+
+    .tile-bg-scene.scene-ch2 {
+      background:
+        radial-gradient(circle at 50% 35%, rgba(37, 99, 235, 0.28) 0%, rgba(9, 13, 22, 0.9) 70%),
+        repeating-linear-gradient(0deg, #161e2e 0px, #161e2e 22px, #0b101b 22px, #0b101b 44px);
+    }
+
+    .tile-bg-scene.scene-ch3 {
+      background:
+        radial-gradient(circle at 50% 35%, rgba(234, 179, 8, 0.22) 0%, rgba(16, 14, 12, 0.92) 70%),
+        repeating-linear-gradient(45deg, #1f1b16 0px, #1f1b16 20px, #12100d 20px, #12100d 40px);
+    }
+
+    .tile-boss-thumb {
+      position: absolute;
+      left: 50%;
+      bottom: 4%;
+      transform: translateX(-50%);
+      height: 76%;
+      width: auto;
+      object-fit: contain;
+      opacity: 0.55;
+      filter: contrast(1.15) brightness(0.82) drop-shadow(0 6px 14px #000);
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    .tile-school-emblem {
+      position: absolute;
+      left: 50%;
+      top: 52%;
+      transform: translate(-50%, -50%);
+      font-size: clamp(2.8rem, 8vh, 4.8rem);
+      opacity: 0.38;
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    .tile-dark-scrim {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(0, 0, 0, 0.62) 0%, rgba(0, 0, 0, 0.18) 50%, rgba(0, 0, 0, 0.68) 100%);
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    .tile-header-name {
+      position: relative;
+      z-index: 3;
+      font-family: 'Fredoka', sans-serif;
+      font-size: clamp(0.95rem, 2.4vh, 1.38rem);
+      font-weight: 700;
+      color: #ffffff;
+      line-height: 1.2;
+      text-shadow:
+        -1.5px -1.5px 0 #000,
+        1.5px -1.5px 0 #000,
+        -1.5px 1.5px 0 #000,
+        1.5px 1.5px 0 #000,
+        0 3px 8px rgba(0, 0, 0, 0.95);
+    }
+
+    .tile-bottom-row {
+      position: relative;
+      z-index: 3;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      width: 100%;
+    }
+
+    .tile-status-chip {
+      font-family: 'Courier Prime', monospace;
+      font-size: clamp(0.65rem, 1.6vh, 0.82rem);
+      font-weight: 700;
+      padding: 3px 9px;
+      border-radius: 7px;
+      background: rgba(0, 0, 0, 0.72);
+      border: 1.5px solid rgba(255, 255, 255, 0.35);
+      color: #e2e8f0;
+    }
+
+    .tile-status-chip.soon {
+      border-color: #facc15;
+      color: #fde047;
+    }
+
+    .tile-corner-num {
+      font-family: 'Fredoka', sans-serif;
+      font-size: clamp(1.35rem, 3.4vh, 2.1rem);
+      font-weight: 700;
+      color: #ffffff;
+      line-height: 1;
+      text-shadow:
+        -1.5px -1.5px 0 #000,
+        1.5px -1.5px 0 #000,
+        -1.5px 1.5px 0 #000,
+        1.5px 1.5px 0 #000;
+    }
+
+    /* ================= MODAL PREVIEW BOSS (MUNCUL BILA KLIK BAB) ================= */
+    #chapter-preview-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 6000;
+      background: rgba(0, 0, 0, 0.78);
+      backdrop-filter: blur(6px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+
+    #chapter-preview-modal.open {
+      display: flex;
+      animation: fadeIn 0.16s ease;
+    }
+
+    .preview-boss-card {
+      position: relative;
+      width: min(740px, 94vw);
+      max-height: 88dvh;
+      background: rgba(11, 14, 20, 0.97);
+      border: 3px solid #a5f3fc;
+      border-radius: 22px;
+      box-shadow: 0 24px 65px rgba(0, 0, 0, 0.95), 0 0 28px rgba(165, 243, 252, 0.25);
+      display: grid;
+      grid-template-columns: clamp(140px, 28vw, 230px) 1fr;
+      overflow: visible;
+    }
+
+    .preview-close-x {
+      position: absolute;
+      top: -14px;
+      right: -14px;
+      width: 46px;
+      height: 46px;
+      border-radius: 12px;
+      background: linear-gradient(180deg, #ff5f5f, #dc2626);
+      border: 3px solid #7f1d1d;
+      color: #ffffff;
+      font-size: 1.65rem;
+      font-weight: 900;
+      line-height: 1;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.8);
+      z-index: 10;
+    }
+
+    .preview-boss-visual {
+      background: radial-gradient(circle at 50% 45%, rgba(220, 38, 38, 0.28) 0%, rgba(7, 9, 13, 0.98) 80%);
+      border-right: 2px solid rgba(255, 255, 255, 0.14);
+      border-radius: 19px 0 0 19px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-end;
+      padding: 14px 10px 0;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .preview-boss-visual.theme-blue {
+      background: radial-gradient(circle at 50% 45%, rgba(37, 99, 235, 0.3) 0%, rgba(7, 9, 13, 0.98) 80%);
+    }
+
+    .preview-boss-visual.theme-gold {
+      background: radial-gradient(circle at 50% 45%, rgba(234, 179, 8, 0.28) 0%, rgba(7, 9, 13, 0.98) 80%);
+    }
+
+    .preview-boss-visual img {
+      max-height: clamp(150px, 44vh, 270px);
+      width: auto;
+      max-width: 100%;
+      object-fit: contain;
+      filter: drop-shadow(0 10px 22px rgba(0, 0, 0, 0.95));
+    }
+
+    .preview-fallback-icon {
+      font-size: clamp(3.5rem, 12vh, 5.5rem);
+      margin: auto;
+    }
+
+    .preview-boss-info {
+      padding: clamp(14px, 2.8vh, 24px) clamp(16px, 2.8vw, 26px);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 10px;
+      overflow-y: auto;
+    }
+
+    .preview-badge-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .preview-boss-name {
+      font-family: 'Special Elite', 'Courier Prime', monospace;
+      font-size: clamp(1.1rem, 3vh, 1.65rem);
+      color: #fde047;
+      letter-spacing: 1px;
+      margin-top: 2px;
+    }
+
+    .preview-chapter-heading {
+      font-size: clamp(1.15rem, 3.2vh, 1.7rem);
+      font-weight: 700;
+      color: #ffffff;
+      line-height: 1.15;
+    }
+
+    .preview-chapter-desc {
+      font-family: 'Segoe UI', sans-serif;
+      font-size: clamp(0.82rem, 2vh, 0.98rem);
+      color: #cbd5e1;
+      line-height: 1.5;
+    }
+
+    .preview-play-cta {
+      margin-top: 4px;
+      display: block;
+      width: 100%;
+      padding: clamp(10px, 2vh, 15px) 18px;
+      border-radius: 12px;
+      font-family: 'Courier Prime', monospace;
+      font-weight: 700;
+      font-size: clamp(1rem, 2.5vh, 1.25rem);
+      letter-spacing: 2px;
+      text-align: center;
+      text-decoration: none;
+      border: 3px solid #4ade80;
+      background: linear-gradient(180deg, #16a34a, #14532d);
+      color: #ffffff;
+      box-shadow: 0 0 20px rgba(34, 197, 94, 0.45);
+      cursor: pointer;
+      transition: transform 0.12s ease, filter 0.14s ease;
+    }
+
+    .preview-play-cta:hover {
+      filter: brightness(1.12);
+      transform: scale(1.015);
+    }
+
+    .preview-play-cta.is-locked {
+      border-color: #64748b;
+      background: #1e293b;
+      color: #94a3b8;
+      box-shadow: none;
+      cursor: not-allowed;
+    }
+    /* ================= VIEW D: UPDATE LOG GAYA TDS ================= */
     #lobby-view-updates {
       align-items: center;
       justify-content: center;
@@ -376,28 +947,28 @@
 
     .tds-modal-wrapper {
       position: relative;
-      width: min(1180px, 95vw);
-      height: min(720px, 88vh);
+      width: min(1140px, 94vw);
+      height: min(680px, 88dvh);
       background: rgba(14, 16, 22, 0.97);
       border: 2.5px solid rgba(255, 255, 255, 0.18);
       border-radius: 18px;
       box-shadow: 0 28px 70px rgba(0, 0, 0, 0.94);
       display: grid;
-      grid-template-columns: 340px 1fr;
+      grid-template-columns: clamp(220px, 28vw, 330px) 1fr;
       overflow: visible;
     }
 
     .tds-close-btn {
       position: absolute;
-      top: -16px;
-      right: -16px;
-      width: 60px;
-      height: 60px;
+      top: -14px;
+      right: -14px;
+      width: clamp(44px, 7vh, 58px);
+      height: clamp(44px, 7vh, 58px);
       background: linear-gradient(180deg, #ff5f5f, #dc2626);
-      border: 3.5px solid #7f1d1d;
-      border-radius: 14px;
+      border: 3px solid #7f1d1d;
+      border-radius: 13px;
       color: #ffffff;
-      font-size: 2.1rem;
+      font-size: clamp(1.5rem, 3.5vh, 2.1rem);
       font-weight: 900;
       line-height: 1;
       display: flex;
@@ -414,12 +985,11 @@
       filter: brightness(1.1);
     }
 
-    /* Bar Sisi Kiri: All Updates */
     .tds-sidebar {
       background: rgba(9, 11, 16, 0.94);
       border-right: 2px solid rgba(255, 255, 255, 0.12);
       border-radius: 18px 0 0 18px;
-      padding: 22px 18px;
+      padding: clamp(12px, 2.2vh, 22px) clamp(10px, 1.5vw, 18px);
       display: flex;
       flex-direction: column;
       overflow: hidden;
@@ -427,10 +997,10 @@
 
     .tds-sidebar-title {
       text-align: center;
-      font-size: 1.85rem;
+      font-size: clamp(1.15rem, 3vh, 1.8rem);
       font-weight: 700;
       color: #ffffff;
-      margin-bottom: 18px;
+      margin-bottom: clamp(10px, 2vh, 18px);
       text-shadow: 0 2px 4px rgba(0, 0, 0, 0.9);
     }
 
@@ -439,13 +1009,13 @@
       overflow-y: auto;
       display: flex;
       flex-direction: column;
-      gap: 13px;
-      padding-right: 6px;
+      gap: 10px;
+      padding-right: 5px;
     }
 
     .tds-version-list::-webkit-scrollbar,
     .tds-content-scroll::-webkit-scrollbar {
-      width: 7px;
+      width: 6px;
     }
 
     .tds-version-list::-webkit-scrollbar-thumb,
@@ -456,10 +1026,10 @@
 
     .tds-ver-banner {
       position: relative;
-      min-height: 92px;
-      border-radius: 12px;
-      padding: 13px 16px;
-      border: 3px solid rgba(255, 255, 255, 0.25);
+      min-height: clamp(64px, 12vh, 88px);
+      border-radius: 11px;
+      padding: 10px 13px;
+      border: 2.5px solid rgba(255, 255, 255, 0.25);
       cursor: pointer;
       display: flex;
       flex-direction: column;
@@ -467,6 +1037,7 @@
       text-align: right;
       overflow: hidden;
       transition: transform 0.12s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+      flex-shrink: 0;
     }
 
     .tds-ver-banner:hover {
@@ -476,11 +1047,11 @@
 
     .tds-ver-banner.active {
       border-color: #facc15;
-      box-shadow: 0 0 18px rgba(250, 204, 21, 0.55);
+      box-shadow: 0 0 16px rgba(250, 204, 21, 0.55);
     }
 
     .tds-banner-name {
-      font-size: 1.28rem;
+      font-size: clamp(0.92rem, 2.2vh, 1.24rem);
       font-weight: 700;
       color: #ffffff;
       line-height: 1.18;
@@ -494,7 +1065,7 @@
     }
 
     .tds-banner-ver {
-      font-size: 1.12rem;
+      font-size: clamp(0.85rem, 2vh, 1.1rem);
       font-weight: 700;
       color: #f8fafc;
       text-shadow:
@@ -505,7 +1076,6 @@
       z-index: 2;
     }
 
-    /* Tema Warna Kad Versi TDS */
     .theme-purple-gold { background: linear-gradient(135deg, #4c1d95 0%, #9333ea 52%, #f59e0b 100%); }
     .theme-cyan-blue   { background: linear-gradient(135deg, #0369a1 0%, #0284c7 55%, #38bdf8 100%); }
     .theme-crimson     { background: linear-gradient(135deg, #7f1d1d 0%, #dc2626 55%, #fb7185 100%); }
@@ -513,33 +1083,32 @@
     .theme-amber       { background: linear-gradient(135deg, #78350f 0%, #d97706 55%, #facc15 100%); }
     .theme-violet      { background: linear-gradient(135deg, #3b0764 0%, #6d28d9 60%, #a855f7 100%); }
 
-    /* Kandungan Kanan TDS (Tulisan Besar & Jelas) */
     .tds-content-scroll {
-      padding: 30px 36px 34px;
+      padding: clamp(16px, 3vh, 28px) clamp(18px, 3vw, 34px);
       overflow-y: auto;
       display: flex;
       flex-direction: column;
-      gap: 24px;
+      gap: clamp(14px, 2.5vh, 22px);
     }
 
     .tds-section-header {
-      font-size: 1.85rem;
+      font-size: clamp(1.15rem, 3vh, 1.8rem);
       font-weight: 700;
       color: #ffffff;
-      padding-bottom: 10px;
-      border-bottom: 2.5px solid rgba(255, 255, 255, 0.75);
-      margin-bottom: 14px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid rgba(255, 255, 255, 0.75);
+      margin-bottom: 10px;
     }
 
     .tds-bullet-list {
       list-style: none;
       display: flex;
       flex-direction: column;
-      gap: 12px;
-      padding-left: 10px;
-      font-size: 1.18rem;
+      gap: 9px;
+      padding-left: 8px;
+      font-size: clamp(0.88rem, 2.1vh, 1.15rem);
       color: #f1f5f9;
-      line-height: 1.55;
+      line-height: 1.5;
     }
 
     .tds-bullet-list li::before {
@@ -548,34 +1117,33 @@
       font-weight: 900;
     }
 
-    /* Bar Kuning Keemasan Boleh Buka-Tutup */
     .tds-feature-row {
       display: flex;
       align-items: flex-start;
-      gap: 22px;
-      margin-top: 10px;
+      gap: 16px;
+      margin-top: 8px;
     }
 
     .tds-feature-avatar {
-      width: 108px;
+      width: clamp(72px, 12vh, 104px);
       flex-shrink: 0;
       text-align: center;
     }
 
     .tds-feature-avatar img {
-      width: 92px;
-      height: 92px;
+      width: clamp(62px, 10vh, 88px);
+      height: clamp(62px, 10vh, 88px);
       object-fit: contain;
-      border-radius: 12px;
+      border-radius: 11px;
       background: rgba(255, 255, 255, 0.06);
-      padding: 5px;
+      padding: 4px;
       border: 1.5px solid rgba(255, 255, 255, 0.18);
     }
 
     .tds-feature-avatar span {
       display: block;
-      margin-top: 7px;
-      font-size: 1.05rem;
+      margin-top: 5px;
+      font-size: clamp(0.82rem, 1.9vh, 1.02rem);
       color: #e2e8f0;
       font-weight: 700;
     }
@@ -584,7 +1152,7 @@
       flex: 1;
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: 9px;
     }
 
     .tds-accordion-item {
@@ -595,12 +1163,12 @@
     .tds-gold-bar {
       width: 100%;
       background: linear-gradient(180deg, #f59e0b, #d97706);
-      border: 2.5px solid #fbbf24;
+      border: 2px solid #fbbf24;
       border-radius: 10px;
-      padding: 13px 18px;
+      padding: clamp(9px, 1.6vh, 13px) 14px;
       color: #ffffff;
       font-family: 'Fredoka', sans-serif;
-      font-size: 1.24rem;
+      font-size: clamp(0.92rem, 2.2vh, 1.2rem);
       font-weight: 700;
       display: flex;
       align-items: center;
@@ -624,10 +1192,10 @@
       border: 1.5px solid rgba(251, 191, 36, 0.4);
       border-top: none;
       border-radius: 0 0 10px 10px;
-      padding: 14px 18px;
-      font-size: 1.1rem;
+      padding: 11px 14px;
+      font-size: clamp(0.84rem, 1.9vh, 1.08rem);
       color: #f8fafc;
-      line-height: 1.55;
+      line-height: 1.5;
     }
 
     .tds-accordion-item.open .tds-gold-bar {
@@ -638,14 +1206,16 @@
       display: block;
     }
 
-    /* ================= SUB-VIEW LAIN (PILIH BAB, KEDAI, TETAPAN) ================= */
+    /* ================= SUB-VIEW LAIN (KEDAI & TETAPAN) ================= */
     .subview-container {
       width: 100%;
-      max-width: 1120px;
+      max-width: 1060px;
+      max-height: 92dvh;
       margin: auto;
       display: flex;
       flex-direction: column;
-      gap: 18px;
+      gap: clamp(10px, 2vh, 18px);
+      overflow-y: auto;
     }
 
     .subview-header {
@@ -655,13 +1225,14 @@
       gap: 12px;
       background: rgba(12, 16, 26, 0.92);
       border: 2px solid rgba(255, 255, 255, 0.2);
-      padding: 14px 18px;
+      padding: clamp(9px, 1.6vh, 14px) 16px;
       border-radius: 14px;
       box-shadow: 0 12px 30px rgba(0, 0, 0, 0.7);
+      flex-shrink: 0;
     }
 
     .subview-header h2 {
-      font-size: 1.35rem;
+      font-size: clamp(1rem, 2.6vh, 1.35rem);
       letter-spacing: 1px;
     }
 
@@ -669,69 +1240,26 @@
       background: #1e293b;
       border: 2px solid #475569;
       color: #f8fafc;
-      padding: 9px 16px;
+      padding: clamp(6px, 1.2vh, 9px) 14px;
       border-radius: 9px;
       font-family: 'Fredoka', sans-serif;
       font-weight: 700;
-      font-size: 0.95rem;
+      font-size: clamp(0.8rem, 1.9vh, 0.95rem);
       cursor: pointer;
+      white-space: nowrap;
     }
 
     .btn-back:hover {
       background: #334155;
     }
 
-    .chapters-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 18px;
-      align-items: stretch;
-    }
-
     .panel {
       background: rgba(12, 16, 26, 0.92);
       border: 2px solid rgba(148, 163, 184, 0.28);
       border-radius: 16px;
-      padding: 22px;
+      padding: clamp(14px, 2.4vh, 22px);
       box-shadow: 0 18px 40px rgba(0, 0, 0, 0.7);
     }
-
-    .chapter-card {
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      min-height: 280px;
-      transition: transform 0.16s ease;
-    }
-
-    .chapter-card:not(.locked):hover {
-      transform: translateY(-4px);
-    }
-
-    .chapter-card.ch1-card { border-color: #ef4444; }
-    .chapter-card.ch2-card { border-color: #3b82f6; }
-    .chapter-card.locked {
-      opacity: 0.84;
-      border: 2px dashed rgba(250, 204, 21, 0.45);
-    }
-
-    .chapter-top {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 10px;
-    }
-
-    .chapter-num {
-      font-size: 0.78rem;
-      font-weight: 700;
-      letter-spacing: 1px;
-      color: #fca5a5;
-    }
-
-    .chapter-num.blue { color: #93c5fd; }
-    .chapter-num.gold { color: #fde047; }
 
     .pill-tag {
       font-size: 0.74rem;
@@ -755,54 +1283,6 @@
       color: #dbeafe;
     }
 
-    .chapter-title {
-      font-size: 1.42rem;
-      font-weight: 700;
-      margin-bottom: 10px;
-      color: #ffffff;
-    }
-
-    .chapter-desc {
-      font-size: 0.92rem;
-      color: #cbd5e1;
-      line-height: 1.5;
-      margin-bottom: 22px;
-      font-family: 'Segoe UI', sans-serif;
-    }
-
-    .btn-primary, .btn-blue, .btn-locked {
-      display: block;
-      width: 100%;
-      padding: 14px 16px;
-      border-radius: 10px;
-      font-weight: 700;
-      font-size: 1.02rem;
-      letter-spacing: 0.8px;
-      text-align: center;
-      text-decoration: none;
-      cursor: pointer;
-      border: none;
-    }
-
-    .btn-primary {
-      background: linear-gradient(135deg, #dc2626, #991b1b);
-      color: #ffffff;
-      box-shadow: 0 8px 20px rgba(220, 38, 38, 0.42);
-    }
-
-    .btn-blue {
-      background: linear-gradient(135deg, #2563eb, #1d4ed8);
-      color: #ffffff;
-      box-shadow: 0 8px 20px rgba(37, 99, 235, 0.42);
-    }
-
-    .btn-locked {
-      background: rgba(30, 41, 59, 0.75);
-      color: #94a3b8;
-      border: 1px solid rgba(148, 163, 184, 0.3);
-      cursor: not-allowed;
-    }
-
     .shop-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -813,18 +1293,18 @@
       background: rgba(12, 16, 26, 0.92);
       border: 2px solid rgba(59, 130, 246, 0.4);
       border-radius: 14px;
-      padding: 20px;
+      padding: clamp(12px, 2.2vh, 20px);
       text-align: center;
     }
 
-    .shop-icon { font-size: 2.2rem; margin-bottom: 8px; }
-    .shop-card h3 { font-size: 1.08rem; margin-bottom: 6px; }
-    .shop-card p { font-size: 0.85rem; color: #94a3b8; margin-bottom: 12px; font-family: 'Segoe UI', sans-serif; }
+    .shop-icon { font-size: clamp(1.6rem, 4vh, 2.2rem); margin-bottom: 6px; }
+    .shop-card h3 { font-size: clamp(0.95rem, 2.2vh, 1.08rem); margin-bottom: 5px; }
+    .shop-card p { font-size: clamp(0.78rem, 1.8vh, 0.85rem); color: #94a3b8; margin-bottom: 10px; font-family: 'Segoe UI', sans-serif; }
 
     .settings-stack {
       display: flex;
       flex-direction: column;
-      gap: 16px;
+      gap: clamp(10px, 2vh, 16px);
       max-width: 620px;
       width: 100%;
       margin: 0 auto;
@@ -832,9 +1312,9 @@
 
     .field-label {
       display: block;
-      font-size: 0.98rem;
+      font-size: clamp(0.85rem, 2vh, 0.98rem);
       color: #e2e8f0;
-      margin-bottom: 10px;
+      margin-bottom: 8px;
       font-weight: 700;
     }
 
@@ -845,7 +1325,7 @@
     }
 
     .lang-choice-btn {
-      padding: 12px;
+      padding: clamp(9px, 1.6vh, 12px);
       border-radius: 10px;
       background: #1e293b;
       border: 2px solid #334155;
@@ -865,88 +1345,41 @@
       width: 100%;
       accent-color: #ef4444;
     }
-
-    /* ================= RESPONSIF MOBILE ================= */
-    @media (max-width: 900px) {
-      .chapters-grid, .shop-grid {
-        grid-template-columns: 1fr;
-        max-height: 74vh;
-        overflow-y: auto;
-      }
-
-      .tds-modal-wrapper {
-        grid-template-columns: 1fr;
-        grid-template-rows: 185px 1fr;
-        height: 86vh;
-      }
-
-      .tds-sidebar {
-        border-right: none;
-        border-bottom: 2px solid rgba(255, 255, 255, 0.12);
-        border-radius: 18px 18px 0 0;
-        padding: 14px;
-      }
-
-      .tds-version-list {
-        flex-direction: row;
-        overflow-x: auto;
-        overflow-y: hidden;
-      }
-
-      .tds-ver-banner {
-        min-width: 210px;
-        min-height: 74px;
-      }
-
-      .tds-content-scroll {
-        padding: 20px;
-      }
-    }
-
-    @media (max-width: 680px) {
-      #lobby-screen {
-        padding: 14px;
-      }
-
-      .char-anwar {
-        left: 2%;
-        bottom: 18%;
-        height: 46vh;
-        opacity: 0.72;
-      }
-
-      .char-zahid {
-        left: 30%;
-        bottom: 28%;
-        height: 28vh;
-        opacity: 0.55;
-      }
-
-      .piggy-main-stage {
-        padding-right: 0;
-        justify-content: center;
-      }
-
-      .piggy-right-column {
-        align-items: center;
-      }
-
-      .piggy-title-block {
-        text-align: center;
-      }
-
-      .piggy-menu-btn {
-        height: 68px;
-      }
-
-      .piggy-btn-icon-box {
-        width: 74px;
-      }
-    }
   </style>
   <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
 </head>
 <body>
+  <!-- SEKATAN PAKSA MELINTANG (FORCED HORIZONTAL GUARD) -->
+  <div id="orientation-lock-overlay" role="alertdialog" aria-modal="true">
+    <div class="rotate-phone-icon">📱🔄</div>
+    <h2 data-i18n="rotateTitle">PUSINGKAN SKRIN MELINTANG</h2>
+    <p data-i18n="rotateDesc">Permainan ini dikunci dalam mod melintang (Horizontal). Sila pusingkan telefon anda untuk bermain.</p>
+    <button type="button" id="btn-force-landscape" class="btn-force-landscape" data-i18n="rotateBtn">KUNCI MELINTANG &amp; SKRIN PENUH</button>
+  </div>
+
+  <!-- SKRIN LOADING (V 2.0.3) -->
+  <div id="loading-screen" aria-label="Skrin Memuatkan">
+    <div class="loading-lamp-wrap" aria-hidden="true">
+      <div class="loading-cord"></div>
+      <div class="loading-bulb"></div>
+    </div>
+
+    <div class="loading-box">
+      <div class="loading-kicker">MALAM SAMA</div>
+      <div class="loading-title">MADANI</div>
+      <div class="loading-ver-tag">v2.0.3</div>
+
+      <div class="loading-bar-bg">
+        <div class="loading-bar-fill" id="loading-bar-fill"></div>
+      </div>
+
+      <div class="loading-status-row">
+        <span id="loading-status-text">Menyediakan koridor &amp; lampu...</span>
+        <span id="loading-percent">0%</span>
+      </div>
+    </div>
+  </div>
+
   <!-- LAGU LATAR LOBI LOOPING -->
   <audio id="lobby-bgm" src="lobbyxmas.mp3" loop preload="auto"></audio>
 
@@ -965,9 +1398,14 @@
 
     <!-- VIEW A: HOME MAIN MENU (GAYA PIGGY) -->
     <div id="lobby-view-home" class="lobby-view active">
-      <!-- Bar Atas: Muzik & Bahasa di Kanan -->
+      <!-- Bar Atas: Fullscreen, Muzik & Bahasa di Kanan -->
       <div class="piggy-top-bar">
         <div class="top-right-controls">
+          <button type="button" id="btn-fullscreen-toggle" class="audio-toggle-btn" title="Skrin Penuh">
+            <span id="fs-icon">⛶</span>
+            <span id="fs-label" data-i18n="fullscreenLabel">SKRIN PENUH</span>
+          </button>
+
           <button type="button" id="btn-bgm-toggle" class="audio-toggle-btn">
             <span id="bgm-icon">🔊</span>
             <span data-i18n="bgmLabel">MUZIK</span>
@@ -980,7 +1418,7 @@
         </div>
       </div>
 
-      <!-- Tajuk Besar & 4 Butang Neon Sisi Kanan (Diperbesarkan) -->
+      <!-- Tajuk Besar & 4 Butang Neon Sisi Kanan -->
       <div class="piggy-main-stage">
         <div class="piggy-right-column">
           <div class="piggy-title-block">
@@ -1037,66 +1475,60 @@
         </div>
       </div>
 
-      <!-- Sudut Kiri Bawah: Pil Versi v2.0.2 Sahaja -->
+      <!-- Sudut Kiri Bawah: Pil Versi v2.0.3 -->
       <div class="piggy-bottom-left">
         <div id="btn-version-pill" class="piggy-token-pill" title="Log Kemas Kini">
           <span>🎄</span>
-          <span>v2.0.2</span>
-          <span style="color:#f0abfc;font-size:1.35rem;">+</span>
+          <span>v2.0.3</span>
+          <span style="color:#f0abfc;font-size:1.25rem;">+</span>
         </div>
       </div>
     </div>
 
-    <!-- VIEW B: CHAPTER SELECTION (3 BAB) -->
+    <!-- VIEW B: CHAPTER SELECTION GAYA GAMBAR (MAP VOTING BOARD) -->
     <div id="lobby-view-chapters" class="lobby-view">
-      <div class="subview-container">
-        <div class="subview-header">
+      <div class="piggy-board-frame">
+        <div class="piggy-board-top">
           <button type="button" class="btn-back" data-back-home>&larr; <span data-i18n="btnBack">KEMBALI</span></button>
-          <h2 data-i18n="chapterSelectTitle">PILIH BAB PERMAINAN</h2>
-          <div style="width:84px;"></div>
+          <h2 class="piggy-board-title" data-i18n="chapterSelectTitle">Pilih Bab Permainan</h2>
+          <div style="width:82px;"></div>
         </div>
 
-        <div class="chapters-grid">
-          <!-- CHAPTER 1: MALAM SAMA ANWAR -->
-          <div class="panel chapter-card ch1-card">
-            <div>
-              <div class="chapter-top">
-                <span class="chapter-num" data-i18n="ch1Label">BAB 1 • TINGKAT 14</span>
-                <span class="pill-tag red" data-i18n="ch1Playable">BOLEH MAIN</span>
-              </div>
-              <h3 class="chapter-title">MALAM SAMA ANWAR</h3>
-              <p class="chapter-desc" data-i18n="ch1Desc">Terperangkap di Tingkat 14 Menara Perdana selepas waktu pejabat. Cari kunci berwarna, kumpul 4 Fail Audit Sulit, hidupkan 2 suis janakuasa dan lari ke Lif Utama sebelum ditangkap Anwar.</p>
+        <div class="piggy-chapter-tiles-grid">
+          <!-- KAD BAB 1 -->
+          <div class="piggy-map-tile" role="button" tabindex="0" data-open-chapter="ch1">
+            <div class="tile-bg-scene scene-ch1"></div>
+            <img src="anwar.png" alt="Anwar" class="tile-boss-thumb" onerror="this.style.display='none'" />
+            <div class="tile-dark-scrim"></div>
+            <div class="tile-header-name" data-i18n="tileCh1Title">Malam Sama Anwar - Bab 1</div>
+            <div class="tile-bottom-row">
+              <span class="tile-status-chip" data-i18n="ch1Playable">BOLEH MAIN</span>
+              <span class="tile-corner-num">1</span>
             </div>
-
-            <a href="https://syxhstr.github.io/Malam-Sama-Anwar---Chapter-1/" id="btn-start-ch1" class="btn-primary js-go-ch1" data-i18n="ch1PlayBtn">MAIN BAB 1 &raquo;</a>
           </div>
 
-          <!-- CHAPTER 2: MALAM SAMA ZAHID -->
-          <div class="panel chapter-card ch2-card">
-            <div>
-              <div class="chapter-top">
-                <span class="chapter-num blue" data-i18n="ch2Label">BAB 2 • TEROWONG B2</span>
-                <span class="pill-tag blue" data-i18n="ch2Playable">BOLEH MAIN</span>
-              </div>
-              <h3 class="chapter-title">MALAM SAMA ZAHID</h3>
-              <p class="chapter-desc" data-i18n="ch2Desc">Terperangkap di Terowong Kargo &amp; Stesen B2 selepas lif terhempas. Cari 3 Sel Tenaga dalam gelap menggunakan lampu suluh dinamo dan buka Pintu Blast Utara sebelum ditangkap Zahid.</p>
+          <!-- KAD BAB 2 -->
+          <div class="piggy-map-tile" role="button" tabindex="0" data-open-chapter="ch2">
+            <div class="tile-bg-scene scene-ch2"></div>
+            <img src="zahid.png" alt="Zahid" class="tile-boss-thumb" onerror="this.style.display='none'" />
+            <div class="tile-dark-scrim"></div>
+            <div class="tile-header-name" data-i18n="tileCh2Title">Malam Sama Zahid - Bab 2</div>
+            <div class="tile-bottom-row">
+              <span class="tile-status-chip" data-i18n="ch2Playable">BOLEH MAIN</span>
+              <span class="tile-corner-num">2</span>
             </div>
-
-            <a href="https://syxhstr.github.io/Malam-Sama-Zahid---Chapter-2/" id="btn-start-ch2" class="btn-blue js-go-ch2" data-i18n="ch2PlayBtn">MAIN BAB 2 &raquo;</a>
           </div>
 
-          <!-- CHAPTER 3: MISTERI TADIKA FADHLINA (COMING SOON) -->
-          <div class="panel chapter-card locked">
-            <div>
-              <div class="chapter-top">
-                <span class="chapter-num gold" data-i18n="ch3Label">BAB 3 • TADIKA SERI FADHLINA</span>
-                <span class="pill-tag" data-i18n="comingSoon">COMING SOON</span>
-              </div>
-              <h3 class="chapter-title">MISTERI TADIKA FADHLINA</h3>
-              <p class="chapter-desc" data-i18n="ch3Desc">Suasana sunyi di Tadika Seri Fadhlina selepas waktu pulang bertukar ngeri apabila lampu mula terpadam satu demi satu. Selesaikan teka-teki bilik darjah dan cari jalan keluar sebelum terlambat.</p>
+          <!-- KAD BAB 3 -->
+          <div class="piggy-map-tile" role="button" tabindex="0" data-open-chapter="ch3">
+            <div class="tile-bg-scene scene-ch3"></div>
+            <div class="tile-school-emblem">🏫</div>
+            <div class="tile-dark-scrim"></div>
+            <div class="tile-header-name" data-i18n="tileCh3Title">Misteri Tadika Fadhlina - Bab 3</div>
+            <div class="tile-bottom-row">
+              <span class="tile-status-chip soon" data-i18n="comingSoon">COMING SOON</span>
+              <span class="tile-corner-num">3</span>
             </div>
-
-            <button type="button" class="btn-locked" disabled data-i18n="comingSoon">COMING SOON</button>
           </div>
         </div>
       </div>
@@ -1134,18 +1566,16 @@
       </div>
     </div>
 
-    <!-- VIEW D: UPDATE LOG MODAL GAYA TDS (TULISAN & UI DIPERBESARKAN) -->
+    <!-- VIEW D: UPDATE LOG MODAL GAYA TDS -->
     <div id="lobby-view-updates" class="lobby-view">
       <div class="tds-modal-wrapper">
         <button type="button" class="tds-close-btn" data-back-home aria-label="Tutup">&times;</button>
 
-        <!-- Panel Kiri: All Updates / Semua Kemas Kini -->
         <aside class="tds-sidebar">
           <h2 class="tds-sidebar-title" data-i18n="allUpdatesTitle">Semua Kemas Kini</h2>
           <div id="tds-version-list" class="tds-version-list"></div>
         </aside>
 
-        <!-- Panel Kanan: Butiran Versi Dipilih -->
         <div id="tds-content-scroll" class="tds-content-scroll"></div>
       </div>
     </div>
@@ -1186,6 +1616,32 @@
     </div>
   </section>
 
+  <!-- MODAL PREVIEW BOSS BILA KLIK KAD BAB -->
+  <div id="chapter-preview-modal" role="dialog" aria-modal="true">
+    <div class="preview-boss-card">
+      <button type="button" id="btn-close-preview" class="preview-close-x" aria-label="Tutup">&times;</button>
+
+      <div class="preview-boss-visual" id="preview-boss-visual">
+        <img id="preview-boss-img" src="anwar.png" alt="Boss" />
+        <div id="preview-boss-fallback" class="preview-fallback-icon" style="display:none;">🏫</div>
+      </div>
+
+      <div class="preview-boss-info">
+        <div>
+          <div class="preview-badge-row">
+            <span class="pill-tag red" id="preview-chapter-tag">BAB 1 • TINGKAT 14</span>
+            <span class="pill-tag" id="preview-status-tag">BOLEH MAIN</span>
+          </div>
+          <div class="preview-boss-name" id="preview-boss-name">BOS: ANWAR</div>
+          <h3 class="preview-chapter-heading" id="preview-chapter-title">MALAM SAMA ANWAR</h3>
+        </div>
+
+        <p class="preview-chapter-desc" id="preview-chapter-desc"></p>
+
+        <a href="#" id="preview-play-btn" class="preview-play-cta">MAIN BAB 1 &raquo;</a>
+      </div>
+    </div>
+  </div>
   <script>
     (function () {
       /* ================= PEMBANTU STORAN SELAMAT ================= */
@@ -1203,9 +1659,105 @@
         } catch (e) {}
       }
 
-      /* ================= KAMUS DWI-BAHASA & DATA UPDATE LOG (v2.0.2) ================= */
+      /* ================= FORCED HORIZONTAL & FULLSCREEN ================= */
+      function isMobileOrTouch() {
+        return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
+               (window.matchMedia && window.matchMedia('(pointer: coarse)').matches);
+      }
+
+      async function requestLandscapeAndFullscreen(forceFs = true) {
+        try {
+          const docEl = document.documentElement;
+          if (forceFs && !document.fullscreenElement && !document.webkitFullscreenElement) {
+            if (docEl.requestFullscreen) {
+              await docEl.requestFullscreen({ navigationUI: 'hide' }).catch(() => {});
+            } else if (docEl.webkitRequestFullscreen) {
+              docEl.webkitRequestFullscreen();
+            }
+          }
+          if (screen.orientation && screen.orientation.lock) {
+            await screen.orientation.lock('landscape').catch(() => {
+              screen.orientation.lock('landscape-primary').catch(() => {});
+            });
+          }
+        } catch (e) {}
+        updateFullscreenBtnUi();
+      }
+
+      function toggleFullscreenManual() {
+        try {
+          if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+            requestLandscapeAndFullscreen(true);
+          } else {
+            if (document.exitFullscreen) {
+              document.exitFullscreen().catch(() => {});
+            } else if (document.webkitExitFullscreen) {
+              document.webkitExitFullscreen();
+            }
+          }
+        } catch (e) {}
+        setTimeout(updateFullscreenBtnUi, 120);
+      }
+
+      function updateFullscreenBtnUi() {
+        const fsBtn = document.getElementById('btn-fullscreen-toggle');
+        const fsLabel = document.getElementById('fs-label');
+        if (!fsBtn || !fsLabel) return;
+        const isFs = Boolean(document.fullscreenElement || document.webkitFullscreenElement);
+        fsBtn.classList.toggle('fs-active', isFs);
+        const dict = I18N[currentLang] || I18N.bm;
+        fsLabel.textContent = isFs ? dict.exitFullscreenLabel : dict.fullscreenLabel;
+      }
+
+      document.addEventListener('fullscreenchange', updateFullscreenBtnUi);
+      document.addEventListener('webkitfullscreenchange', updateFullscreenBtnUi);
+      window.addEventListener('orientationchange', () => requestLandscapeAndFullscreen(isMobileOrTouch()));
+
+      /* ================= LOADING SCREEN CONTROLLER ================= */
+      function runLoadingScreen() {
+        const loadingScreen = document.getElementById('loading-screen');
+        const barFill = document.getElementById('loading-bar-fill');
+        const statusText = document.getElementById('loading-status-text');
+        const percentText = document.getElementById('loading-percent');
+        if (!loadingScreen || !barFill || !statusText || !percentText) return;
+
+        const steps = [
+          { p: 20, msg: 'Menyediakan koridor kayu & lampu...' },
+          { p: 48, msg: 'Mengunci mod melintang (Horizontal)...' },
+          { p: 76, msg: 'Memuatkan karakter & data bab v2.0.3...' },
+          { p: 100, msg: 'Sedia masuk ke lobi!' }
+        ];
+
+        let progress = 0;
+        const timer = setInterval(() => {
+          progress = Math.min(100, progress + Math.floor(Math.random() * 11) + 6);
+          barFill.style.width = progress + '%';
+          percentText.textContent = progress + '%';
+
+          for (let i = steps.length - 1; i >= 0; i--) {
+            if (progress >= steps[i].p - 18) {
+              statusText.textContent = steps[i].msg;
+              break;
+            }
+          }
+
+          if (progress >= 100) {
+            clearInterval(timer);
+            setTimeout(() => {
+              loadingScreen.classList.add('fade-out');
+            }, 260);
+          }
+        }, 85);
+      }
+
+      /* ================= KAMUS DWI-BAHASA & DATA UPDATE LOG (v2.0.3) ================= */
       const I18N = {
         bm: {
+          rotateTitle: 'PUSINGKAN SKRIN MELINTANG',
+          rotateDesc: 'Permainan ini dikunci dalam mod melintang (Horizontal). Sila pusingkan telefon anda untuk bermain.',
+          rotateBtn: 'KUNCI MELINTANG & SKRIN PENUH',
+          fullscreenLabel: 'SKRIN PENUH',
+          exitFullscreenLabel: 'KELUAR PENUH',
           menuPlay: 'MAIN',
           menuShop: 'KEDAI',
           menuUpdates: 'KEMAS KINI',
@@ -1214,16 +1766,25 @@
           comingSoon: 'COMING SOON',
           btnBack: 'KEMBALI',
           allUpdatesTitle: 'Semua Kemas Kini',
-          chapterSelectTitle: 'PILIH BAB PERMAINAN',
+          chapterSelectTitle: 'Pilih Bab Permainan',
+          tileCh1Title: 'Malam Sama Anwar - Bab 1',
+          tileCh2Title: 'Malam Sama Zahid - Bab 2',
+          tileCh3Title: 'Misteri Tadika Fadhlina - Bab 3',
           ch1Label: 'BAB 1 • TINGKAT 14',
           ch1Playable: 'BOLEH MAIN',
+          ch1Boss: 'BOS: ANWAR',
+          ch1Title: 'MALAM SAMA ANWAR',
           ch1Desc: 'Terperangkap di Tingkat 14 Menara Perdana selepas waktu pejabat. Cari kunci berwarna, kumpul 4 Fail Audit Sulit, hidupkan 2 suis janakuasa dan lari ke Lif Utama sebelum ditangkap Anwar.',
           ch1PlayBtn: 'MAIN BAB 1 »',
           ch2Label: 'BAB 2 • TEROWONG B2',
           ch2Playable: 'BOLEH MAIN',
+          ch2Boss: 'BOS: ZAHID',
+          ch2Title: 'MALAM SAMA ZAHID',
           ch2Desc: 'Terperangkap di Terowong Kargo & Stesen B2 selepas lif terhempas. Cari 3 Sel Tenaga dalam gelap menggunakan lampu suluh dinamo dan buka Pintu Blast Utara sebelum ditangkap Zahid.',
           ch2PlayBtn: 'MAIN BAB 2 »',
           ch3Label: 'BAB 3 • TADIKA SERI FADHLINA',
+          ch3Boss: 'BOS: MISTERI TADIKA FADHLINA',
+          ch3Title: 'MISTERI TADIKA FADHLINA',
           ch3Desc: 'Suasana sunyi di Tadika Seri Fadhlina selepas waktu pulang bertukar ngeri apabila lampu mula terpadam satu demi satu. Selesaikan teka-teki bilik darjah dan cari jalan keluar sebelum terlambat.',
           shopItem1Title: 'Pengesan Kunci',
           shopItem1Desc: 'Menunjukkan arah lokasi kunci terdekat pada pelan kawasan.',
@@ -1236,6 +1797,29 @@
           bgmVolLabel: 'Kelantangan Muzik Lobi',
           sensLabel: 'Sensitiviti Kamera',
           updates: [
+            {
+              id: 'v203',
+              bannerTitle: 'Skrin Penuh, Loading & Pilihan Bab',
+              version: 'v2.0.3',
+              theme: 'theme-cyan-blue',
+              mainSectionTitle: 'Pembaharuan v2.0.3',
+              bullets: [
+                'Menambah skrin loading pembukaan bertema koridor kayu sebelum memasuki Menu Utama.',
+                'Mengunci paparan dalam mod melintang (Forced Horizontal) serta menambah butang Skrin Penuh (Fullscreen) di penjuru atas kanan.',
+                'Menukar paparan Pilih Bab Permainan kepada papan petak bab dengan tetingkap Preview Boss (gambar boss, nama, penerangan & butang Main) apabila kad diklik.',
+                'Melaraskan skala UI lobi supaya muat dengan kemas pada semua saiz skrin peranti.'
+              ],
+              subSectionTitle: 'Sistem Baharu',
+              characterCards: [
+                {
+                  name: 'Anwar & Zahid',
+                  img: 'anwar.png',
+                  accordions: [
+                    { label: 'Preview Bab Interaktif', text: 'Klik mana-mana kad bab pada papan pilihan untuk melihat potret boss dan penerangan misi sebelum mula bermain.' }
+                  ]
+                }
+              ]
+            },
             {
               id: 'v202',
               bannerTitle: 'Lobi Klasik & Lagu Perayaan',
@@ -1271,7 +1855,7 @@
               id: 'v201',
               bannerTitle: 'Misteri Tadika Fadhlina',
               version: 'v2.0.1',
-              theme: 'theme-cyan-blue',
+              theme: 'theme-crimson',
               mainSectionTitle: 'Perubahan Struktur Bab',
               bullets: [
                 'Mengasingkan permainan penuh Bab 1 (Malam Sama Anwar) ke repositori khusus supaya hab utama lebih ringan.',
@@ -1279,21 +1863,13 @@
                 'Menambah pratonton Bab 3: Misteri Tadika Fadhlina di lokasi Tadika Seri Fadhlina (Coming Soon).'
               ],
               subSectionTitle: 'Status Bab',
-              characterCards: [
-                {
-                  name: 'Tadika Seri Fadhlina',
-                  img: 'anwar.png',
-                  accordions: [
-                    { label: 'Bab 3 (Coming Soon)', text: 'Lokasi baharu di Tadika Seri Fadhlina sedang dalam pembangunan.' }
-                  ]
-                }
-              ]
+              characterCards: []
             },
             {
               id: 'v200',
               bannerTitle: 'Malam Sama Zahid',
               version: 'v2.0.0',
-              theme: 'theme-crimson',
+              theme: 'theme-emerald',
               mainSectionTitle: 'Pelancaran Bab 2',
               bullets: [
                 'Membuka akses penuh ke Bab 2: Malam Sama Zahid di Terowong Kargo & Stesen B2.',
@@ -1301,21 +1877,13 @@
                 'Menyambungkan pautan terus dari Bab 1 ke Bab 2 selepas tamat misi.'
               ],
               subSectionTitle: 'Perubahan Gameplay',
-              characterCards: [
-                {
-                  name: 'Zahid (Bos B2)',
-                  img: 'zahid.png',
-                  accordions: [
-                    { label: 'AI Rondaan Terowong', text: 'Rondaan dinamik di kawasan rel bawah tanah dengan sistem pengesanan bunyi.' }
-                  ]
-                }
-              ]
+              characterCards: []
             },
             {
               id: 'v140',
               bannerTitle: 'Kawalan Mobile & Perabot',
               version: 'v1.4.0',
-              theme: 'theme-emerald',
+              theme: 'theme-amber',
               mainSectionTitle: 'Naik Taraf Mobile & 3D',
               bullets: [
                 'Kayu ria (joystick) terapung fleksibel, butang Pusing Pantas 180°, dan butang AKSI bercahaya.',
@@ -1328,7 +1896,7 @@
               id: 'v120',
               bannerTitle: 'Bot Anti-Sangkut & 4 Kunci',
               version: 'v1.2.0',
-              theme: 'theme-amber',
+              theme: 'theme-violet',
               mainSectionTitle: 'Pembaikan Laluan AI',
               bullets: [
                 'Membaiki laluan navigasi bot supaya tidak tersangkut pada meja pejabat.',
@@ -1341,7 +1909,7 @@
               id: 'v100',
               bannerTitle: 'Malam Sama Anwar',
               version: 'v1.0.0',
-              theme: 'theme-violet',
+              theme: 'theme-purple-gold',
               mainSectionTitle: 'Pelancaran Awal',
               bullets: [
                 'Pelancaran pertama Malam Sama Anwar di Tingkat 14 Menara Perdana dengan misi 4 Fail Audit Sulit dan 2 suis janakuasa.'
@@ -1352,6 +1920,11 @@
           ]
         },
         en: {
+          rotateTitle: 'ROTATE TO LANDSCAPE',
+          rotateDesc: 'This game is locked to Horizontal (Landscape) mode. Please rotate your phone sideways to continue.',
+          rotateBtn: 'LOCK LANDSCAPE & FULLSCREEN',
+          fullscreenLabel: 'FULLSCREEN',
+          exitFullscreenLabel: 'EXIT FULL',
           menuPlay: 'PLAY',
           menuShop: 'SHOP',
           menuUpdates: 'UPDATES',
@@ -1360,16 +1933,25 @@
           comingSoon: 'COMING SOON',
           btnBack: 'BACK',
           allUpdatesTitle: 'All Updates',
-          chapterSelectTitle: 'SELECT CHAPTER',
+          chapterSelectTitle: 'Select Chapter',
+          tileCh1Title: 'Malam Sama Anwar - Chapter 1',
+          tileCh2Title: 'Malam Sama Zahid - Chapter 2',
+          tileCh3Title: 'Misteri Tadika Fadhlina - Chapter 3',
           ch1Label: 'CHAPTER 1 • FLOOR 14',
           ch1Playable: 'PLAYABLE',
+          ch1Boss: 'BOSS: ANWAR',
+          ch1Title: 'MALAM SAMA ANWAR',
           ch1Desc: 'Trapped on Floor 14 of Perdana Tower after office hours. Find colored keys, collect 4 Confidential Audit Files, activate 2 generator switches, and escape via the Main Elevator before Anwar catches you.',
           ch1PlayBtn: 'PLAY CHAPTER 1 »',
           ch2Label: 'CHAPTER 2 • TUNNEL B2',
           ch2Playable: 'PLAYABLE',
+          ch2Boss: 'BOSS: ZAHID',
+          ch2Title: 'MALAM SAMA ZAHID',
           ch2Desc: 'Trapped inside Cargo Tunnel & Station B2 after the elevator crash. Find 3 Energy Cells in the dark using your dynamo flashlight and open the North Blast Gate before Zahid catches you.',
           ch2PlayBtn: 'PLAY CHAPTER 2 »',
           ch3Label: 'CHAPTER 3 • TADIKA SERI FADHLINA',
+          ch3Boss: 'BOSS: TADIKA SERI FADHLINA',
+          ch3Title: 'MISTERI TADIKA FADHLINA',
           ch3Desc: 'The quiet atmosphere at Tadika Seri Fadhlina after dismissal turns terrifying as lights flicker out one by one. Solve classroom puzzles and find a way out before it is too late.',
           shopItem1Title: 'Key Radar',
           shopItem1Desc: 'Highlights the nearest key direction on the area map.',
@@ -1382,6 +1964,29 @@
           bgmVolLabel: 'Lobby Music Volume',
           sensLabel: 'Camera Sensitivity',
           updates: [
+            {
+              id: 'v203',
+              bannerTitle: 'Fullscreen, Loading & Chapter Board',
+              version: 'v2.0.3',
+              theme: 'theme-cyan-blue',
+              mainSectionTitle: 'v2.0.3 Enhancements',
+              bullets: [
+                'Added an atmospheric wooden hallway loading screen before entering the Main Menu.',
+                'Enforced Horizontal (Landscape) orientation lock and added a Fullscreen toggle button in the top-right bar.',
+                'Redesigned Chapter Selection into a tile board where clicking a chapter opens a Boss Preview modal with boss portrait, description, and Play button.',
+                'Scaled lobby UI elements so everything fits cleanly across all device resolutions.'
+              ],
+              subSectionTitle: 'New Features',
+              characterCards: [
+                {
+                  name: 'Anwar & Zahid',
+                  img: 'anwar.png',
+                  accordions: [
+                    { label: 'Interactive Boss Preview', text: 'Tap any chapter tile on the board to inspect the boss portrait and mission briefing before launching.' }
+                  ]
+                }
+              ]
+            },
             {
               id: 'v202',
               bannerTitle: 'Classic Lobby & Festive OST',
@@ -1417,7 +2022,7 @@
               id: 'v201',
               bannerTitle: 'Misteri Tadika Fadhlina',
               version: 'v2.0.1',
-              theme: 'theme-cyan-blue',
+              theme: 'theme-crimson',
               mainSectionTitle: 'Chapter Structure Changes',
               bullets: [
                 'Separated standalone Chapter 1 (Malam Sama Anwar) into its own repository for faster hub loading.',
@@ -1425,21 +2030,13 @@
                 'Added Chapter 3 preview: Misteri Tadika Fadhlina at Tadika Seri Fadhlina (Coming Soon).'
               ],
               subSectionTitle: 'Chapter Status',
-              characterCards: [
-                {
-                  name: 'Tadika Seri Fadhlina',
-                  img: 'anwar.png',
-                  accordions: [
-                    { label: 'Chapter 3 (Coming Soon)', text: 'Upcoming kindergarten setting currently in development.' }
-                  ]
-                }
-              ]
+              characterCards: []
             },
             {
               id: 'v200',
               bannerTitle: 'Malam Sama Zahid',
               version: 'v2.0.0',
-              theme: 'theme-crimson',
+              theme: 'theme-emerald',
               mainSectionTitle: 'Chapter 2 Release',
               bullets: [
                 'Unlocked full access to Chapter 2: Malam Sama Zahid in Cargo Tunnel & Station B2.',
@@ -1447,21 +2044,13 @@
                 'Linked Chapter 1 victory screen directly into Chapter 2.'
               ],
               subSectionTitle: 'Gameplay Changes',
-              characterCards: [
-                {
-                  name: 'Zahid (B2 Boss)',
-                  img: 'zahid.png',
-                  accordions: [
-                    { label: 'Tunnel Patrol AI', text: 'Dynamic underground rail patrol with sound detection.' }
-                  ]
-                }
-              ]
+              characterCards: []
             },
             {
               id: 'v140',
               bannerTitle: 'Mobile Controls & Props',
               version: 'v1.4.0',
-              theme: 'theme-emerald',
+              theme: 'theme-amber',
               mainSectionTitle: 'Mobile & 3D Upgrade',
               bullets: [
                 'Floating left-thumb joystick, quick 180° turn button, and glowing ACTION prompt button.',
@@ -1474,7 +2063,7 @@
               id: 'v120',
               bannerTitle: 'Anti-Stuck AI & 4 Keys',
               version: 'v1.2.0',
-              theme: 'theme-amber',
+              theme: 'theme-violet',
               mainSectionTitle: 'AI Pathing Fixes',
               bullets: [
                 'Fixed bot navigation waypoints around office desks.',
@@ -1487,7 +2076,7 @@
               id: 'v100',
               bannerTitle: 'Malam Sama Anwar',
               version: 'v1.0.0',
-              theme: 'theme-violet',
+              theme: 'theme-purple-gold',
               mainSectionTitle: 'Initial Launch',
               bullets: [
                 'Original launch of Floor 14 Perdana Tower featuring 4 Confidential Audit Files and 2 generator switches.'
@@ -1503,7 +2092,8 @@
       let currentLang = safeGetStorage('msm_lang') || 'bm';
       if (currentLang !== 'bm' && currentLang !== 'en') currentLang = 'bm';
 
-      let selectedUpdateId = 'v202';
+      let selectedUpdateId = 'v203';
+      let activePreviewChapterKey = null;
 
       let cameraSensitivity = parseFloat(safeGetStorage('msm_sens'));
       if (isNaN(cameraSensitivity) || cameraSensitivity < 0.4 || cameraSensitivity > 2.2) {
@@ -1536,9 +2126,7 @@
 
         const playPromise = lobbyBgm.play();
         if (playPromise && typeof playPromise.catch === 'function') {
-          playPromise.catch(() => {
-            // Menunggu sentuhan/klik pertama pengguna untuk mula audio
-          });
+          playPromise.catch(() => {});
         }
       }
 
@@ -1551,9 +2139,12 @@
       }
 
       ['pointerdown', 'keydown', 'touchstart'].forEach((evtName) => {
-        window.addEventListener(evtName, function unlockAudio() {
+        window.addEventListener(evtName, function unlockAudioAndFs() {
           if (lobbyBgm && lobbyBgm.paused && !bgmMuted && bgmVolume > 0) {
             tryStartLobbyBgm();
+          }
+          if (isMobileOrTouch()) {
+            requestLandscapeAndFullscreen(true);
           }
         }, { passive: true });
       });
@@ -1586,6 +2177,85 @@
         } catch (e) {}
       }
 
+      /* ================= MODAL PREVIEW BOSS BILA KLIK KAD BAB ================= */
+      const previewModal = document.getElementById('chapter-preview-modal');
+
+      function openChapterPreview(chKey) {
+        activePreviewChapterKey = chKey;
+        const dict = I18N[currentLang] || I18N.bm;
+
+        const visualBox = document.getElementById('preview-boss-visual');
+        const bossImg = document.getElementById('preview-boss-img');
+        const bossFallback = document.getElementById('preview-boss-fallback');
+        const chTag = document.getElementById('preview-chapter-tag');
+        const stTag = document.getElementById('preview-status-tag');
+        const bossName = document.getElementById('preview-boss-name');
+        const chTitle = document.getElementById('preview-chapter-title');
+        const chDesc = document.getElementById('preview-chapter-desc');
+        const playBtn = document.getElementById('preview-play-btn');
+
+        document.querySelectorAll('[data-open-chapter]').forEach((tile) => {
+          tile.classList.toggle('selected-tile', tile.getAttribute('data-open-chapter') === chKey);
+        });
+
+        visualBox.className = 'preview-boss-visual';
+
+        if (chKey === 'ch1') {
+          bossImg.style.display = 'block';
+          bossImg.src = 'anwar.png';
+          bossFallback.style.display = 'none';
+          chTag.className = 'pill-tag red';
+          chTag.textContent = dict.ch1Label;
+          stTag.className = 'pill-tag red';
+          stTag.textContent = dict.ch1Playable;
+          bossName.textContent = dict.ch1Boss;
+          chTitle.textContent = dict.ch1Title;
+          chDesc.textContent = dict.ch1Desc;
+          playBtn.className = 'preview-play-cta js-go-chapter';
+          playBtn.href = 'https://syxhstr.github.io/Malam-Sama-Anwar---Chapter-1/';
+          playBtn.textContent = dict.ch1PlayBtn;
+          playBtn.removeAttribute('aria-disabled');
+        } else if (chKey === 'ch2') {
+          visualBox.classList.add('theme-blue');
+          bossImg.style.display = 'block';
+          bossImg.src = 'zahid.png';
+          bossFallback.style.display = 'none';
+          chTag.className = 'pill-tag blue';
+          chTag.textContent = dict.ch2Label;
+          stTag.className = 'pill-tag blue';
+          stTag.textContent = dict.ch2Playable;
+          bossName.textContent = dict.ch2Boss;
+          chTitle.textContent = dict.ch2Title;
+          chDesc.textContent = dict.ch2Desc;
+          playBtn.className = 'preview-play-cta js-go-chapter';
+          playBtn.href = 'https://syxhstr.github.io/Malam-Sama-Zahid---Chapter-2/';
+          playBtn.textContent = dict.ch2PlayBtn;
+          playBtn.removeAttribute('aria-disabled');
+        } else {
+          visualBox.classList.add('theme-gold');
+          bossImg.style.display = 'none';
+          bossFallback.style.display = 'block';
+          chTag.className = 'pill-tag';
+          chTag.textContent = dict.ch3Label;
+          stTag.className = 'pill-tag';
+          stTag.textContent = dict.comingSoon;
+          bossName.textContent = dict.ch3Boss;
+          chTitle.textContent = dict.ch3Title;
+          chDesc.textContent = dict.ch3Desc;
+          playBtn.className = 'preview-play-cta is-locked';
+          playBtn.href = '#';
+          playBtn.textContent = dict.comingSoon;
+          playBtn.setAttribute('aria-disabled', 'true');
+        }
+
+        if (previewModal) previewModal.classList.add('open');
+      }
+
+      function closeChapterPreview() {
+        activePreviewChapterKey = null;
+        if (previewModal) previewModal.classList.remove('open');
+      }
+
       /* ================= NAVIGASI PAPARAN LOBI ================= */
       const lobbyViews = {
         home: document.getElementById('lobby-view-home'),
@@ -1596,6 +2266,7 @@
       };
 
       function showLobbyView(viewKey) {
+        closeChapterPreview();
         Object.entries(lobbyViews).forEach(([key, el]) => {
           if (el) el.classList.toggle('active', key === viewKey);
         });
@@ -1607,6 +2278,18 @@
 
         if (lobbyBgm && lobbyBgm.paused && !bgmMuted && bgmVolume > 0) {
           tryStartLobbyBgm();
+        }
+
+        if (target.closest('#btn-force-landscape')) {
+          playUiClick(600);
+          requestLandscapeAndFullscreen(true);
+          return;
+        }
+
+        if (target.closest('#btn-fullscreen-toggle')) {
+          playUiClick(580);
+          toggleFullscreenManual();
+          return;
         }
 
         if (target.closest('#btn-nav-play')) {
@@ -1633,6 +2316,19 @@
         if (target.closest('[data-back-home]')) {
           playUiClick(420);
           showLobbyView('home');
+          return;
+        }
+
+        const chapterTile = target.closest('[data-open-chapter]');
+        if (chapterTile) {
+          playUiClick(620);
+          openChapterPreview(chapterTile.getAttribute('data-open-chapter'));
+          return;
+        }
+
+        if (target.closest('#btn-close-preview') || target === previewModal) {
+          playUiClick(420);
+          closeChapterPreview();
           return;
         }
 
@@ -1672,13 +2368,19 @@
           safeSetStorage('msm_lang', currentLang);
           playUiClick(560);
           applyLanguage();
+          if (activePreviewChapterKey) openChapterPreview(activePreviewChapterKey);
           return;
         }
 
-        const chapterLink = target.closest('.js-go-ch1, .js-go-ch2');
+        const chapterLink = target.closest('#preview-play-btn');
         if (chapterLink) {
+          if (chapterLink.classList.contains('is-locked')) {
+            e.preventDefault();
+            playUiClick(280, 0.07);
+            return;
+          }
           const targetUrl = chapterLink.getAttribute('href');
-          if (targetUrl) {
+          if (targetUrl && targetUrl !== '#') {
             e.preventDefault();
             playUiClick(660, 0.08);
             setTimeout(() => {
@@ -1808,6 +2510,7 @@
           }
         });
 
+        updateFullscreenBtnUi();
         renderTdsUpdates();
       }
 
@@ -2026,6 +2729,8 @@
       updateBgmUi();
       applyLanguage();
       initMenuBackdrop3D();
+      requestLandscapeAndFullscreen(false);
+      runLoadingScreen();
       tryStartLobbyBgm();
     })();
   </script>
