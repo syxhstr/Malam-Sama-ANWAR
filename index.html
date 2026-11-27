@@ -555,7 +555,7 @@
       box-shadow: 0 0 22px rgba(239, 68, 68, 0.4), inset 0 0 16px rgba(239, 68, 68, 0.24);
     }
 
-    /* Sudut Kiri Bawah: Pil Versi v2.0.3 */
+    /* Sudut Kiri Bawah: Pil Versi v2.1.0 */
     .piggy-bottom-left {
       display: flex;
       flex-direction: column;
@@ -585,200 +585,118 @@
       transform: scale(1.04);
     }
 
-    /* ================= VIEW B: SELECT CHAPTERS GAYA GAMBAR (MAP VOTING BOARD) ================= */
+    /* ================= VIEW B: PILIH BAB GAYA PIGGY (MAP VOTING) ================= */
     #lobby-view-chapters {
       align-items: center;
       justify-content: center;
-      padding: clamp(4px, 1vh, 12px);
+      padding: clamp(8px, 1.6vh, 16px);
+      background: rgba(0, 0, 0, 0.72);
     }
 
-    .piggy-board-frame {
-      position: relative;
-      width: min(1060px, 95vw);
-      height: min(640px, 91dvh);
-      background: rgba(8, 10, 14, 0.92);
-      border: 3.5px solid #a5f3fc;
-      border-radius: 26px;
-      box-shadow:
-        0 0 26px rgba(165, 243, 252, 0.25),
-        inset 0 0 22px rgba(0, 0, 0, 0.85),
-        0 24px 60px rgba(0, 0, 0, 0.94);
-      padding: clamp(12px, 2.2vh, 22px) clamp(14px, 2.4vw, 26px);
+    .piggy-vote-wrap {
+      width: min(940px, 100%);
+      max-height: 100%;
+      margin: auto;
       display: flex;
       flex-direction: column;
-      gap: clamp(10px, 2vh, 18px);
-      backdrop-filter: blur(6px);
-    }
-
-    .piggy-board-top {
-      display: flex;
       align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-      flex-shrink: 0;
+      gap: clamp(8px, 2vh, 16px);
     }
 
     .piggy-board-title {
-      flex: 1;
+      width: min(520px, 86%);
+      flex-shrink: 0;
       text-align: center;
-      font-family: 'Fredoka', sans-serif;
-      font-size: clamp(1.35rem, 3.8vh, 2.35rem);
+      background: #000000;
+      border: 2.5px solid #e8b4bc;
+      border-radius: 16px;
+      padding: clamp(6px, 1.5vh, 12px) 12px;
+      font-family: 'Fredoka', 'Trebuchet MS', sans-serif;
       font-weight: 700;
-      color: #ffffff;
+      font-size: clamp(1.25rem, 4.2vh, 2rem);
       letter-spacing: 1px;
-      text-shadow: 0 3px 0 #000000, 0 0 14px rgba(0, 0, 0, 0.9);
+      color: #ffffff;
     }
 
     .piggy-chapter-tiles-grid {
-      flex: 1;
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: clamp(10px, 2vw, 20px);
+      width: 100%;
       min-height: 0;
-      align-items: stretch;
+      overflow-y: auto;
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: clamp(7px, 1.2vw, 12px);
+      padding: clamp(9px, 1.4vw, 14px);
+      background: #000000;
+      border: 2.5px solid #e8b4bc;
+      border-radius: 22px;
     }
 
     .piggy-map-tile {
-      position: relative;
-      border-radius: 16px;
-      border: 3px solid rgba(255, 255, 255, 0.88);
-      background-color: #111318;
-      overflow: hidden;
-      cursor: pointer;
+      aspect-ratio: 4 / 3;
+      min-height: 92px;
       display: flex;
       flex-direction: column;
-      justify-content: space-between;
-      padding: clamp(10px, 1.8vh, 16px);
-      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.85);
-      transition: transform 0.14s ease, border-color 0.16s ease, box-shadow 0.16s ease;
+      align-items: center;
+      justify-content: center;
+      gap: clamp(4px, 1vh, 9px);
       text-align: center;
+      padding: 8px;
+      background: radial-gradient(circle at 50% 40%, #262a33 0%, #0b0c0f 80%);
+      border: 2.5px solid #9fd8d8;
+      border-radius: 16px;
+      color: #ffffff;
+      font-family: 'Fredoka', 'Trebuchet MS', sans-serif;
+      cursor: pointer;
+      transition: transform 0.12s ease, filter 0.12s ease, border-color 0.12s ease;
     }
 
-    .piggy-map-tile:hover {
-      transform: translateY(-4px) scale(1.015);
-      border-color: #67e8f9;
-      box-shadow: 0 0 22px rgba(103, 232, 249, 0.45), 0 14px 28px rgba(0, 0, 0, 0.9);
+    .tile-chapter-num {
+      position: static;
+      font-size: clamp(0.68rem, 1.9vh, 0.9rem);
+      font-weight: 600;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: #9fd8d8;
     }
 
-    .piggy-map-tile:active {
-      transform: scale(0.98);
+    .tile-chapter-name {
+      font-size: clamp(1rem, 3.6vh, 1.6rem);
+      font-weight: 700;
+      line-height: 1.15;
+      text-wrap: balance;
+      text-shadow: 0 3px 0 #000, 0 0 10px #000;
+    }
+
+    .piggy-map-tile:hover,
+    .piggy-map-tile:focus-visible {
+      border-color: #ffffff;
+      transform: translateY(-3px);
+      filter: brightness(1.3);
+      outline: none;
     }
 
     .piggy-map-tile.selected-tile {
       border-color: #facc15;
-      box-shadow: 0 0 24px rgba(250, 204, 21, 0.55);
     }
 
-    .tile-bg-scene {
-      position: absolute;
-      inset: 0;
-      z-index: 0;
-      pointer-events: none;
-    }
-
-    .tile-bg-scene.scene-ch1 {
-      background:
-        radial-gradient(circle at 50% 35%, rgba(220, 38, 38, 0.25) 0%, rgba(15, 12, 10, 0.88) 70%),
-        repeating-linear-gradient(90deg, #271b12 0px, #271b12 24px, #19110b 24px, #19110b 48px);
-    }
-
-    .tile-bg-scene.scene-ch2 {
-      background:
-        radial-gradient(circle at 50% 35%, rgba(37, 99, 235, 0.28) 0%, rgba(9, 13, 22, 0.9) 70%),
-        repeating-linear-gradient(0deg, #161e2e 0px, #161e2e 22px, #0b101b 22px, #0b101b 44px);
-    }
-
-    .tile-bg-scene.scene-ch3 {
-      background:
-        radial-gradient(circle at 50% 35%, rgba(234, 179, 8, 0.22) 0%, rgba(16, 14, 12, 0.92) 70%),
-        repeating-linear-gradient(45deg, #1f1b16 0px, #1f1b16 20px, #12100d 20px, #12100d 40px);
-    }
-
-    .tile-boss-thumb {
-      position: absolute;
-      left: 50%;
-      bottom: 4%;
-      transform: translateX(-50%);
-      height: 76%;
-      width: auto;
-      object-fit: contain;
-      opacity: 0.55;
-      filter: contrast(1.15) brightness(0.82) drop-shadow(0 6px 14px #000);
-      z-index: 1;
-      pointer-events: none;
-    }
-
-    .tile-school-emblem {
-      position: absolute;
-      left: 50%;
-      top: 52%;
-      transform: translate(-50%, -50%);
-      font-size: clamp(2.8rem, 8vh, 4.8rem);
-      opacity: 0.38;
-      z-index: 1;
-      pointer-events: none;
-    }
-
-    .tile-dark-scrim {
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(180deg, rgba(0, 0, 0, 0.62) 0%, rgba(0, 0, 0, 0.18) 50%, rgba(0, 0, 0, 0.68) 100%);
-      z-index: 2;
-      pointer-events: none;
-    }
-
-    .tile-header-name {
-      position: relative;
-      z-index: 3;
-      font-family: 'Fredoka', sans-serif;
-      font-size: clamp(0.95rem, 2.4vh, 1.38rem);
+    .piggy-vote-back {
+      align-self: flex-start;
+      flex-shrink: 0;
+      min-width: 130px;
+      padding: clamp(6px, 1.4vh, 11px) 22px;
+      background: #000000;
+      border: 2.5px solid #b91c1c;
+      border-radius: 14px;
+      color: #ef4444;
+      font-family: 'Fredoka', 'Trebuchet MS', sans-serif;
       font-weight: 700;
-      color: #ffffff;
-      line-height: 1.2;
-      text-shadow:
-        -1.5px -1.5px 0 #000,
-        1.5px -1.5px 0 #000,
-        -1.5px 1.5px 0 #000,
-        1.5px 1.5px 0 #000,
-        0 3px 8px rgba(0, 0, 0, 0.95);
+      letter-spacing: 1px;
+      font-size: clamp(1.1rem, 3.6vh, 1.7rem);
+      cursor: pointer;
     }
 
-    .tile-bottom-row {
-      position: relative;
-      z-index: 3;
-      display: flex;
-      align-items: flex-end;
-      justify-content: space-between;
-      width: 100%;
-    }
-
-    .tile-status-chip {
-      font-family: 'Courier Prime', monospace;
-      font-size: clamp(0.65rem, 1.6vh, 0.82rem);
-      font-weight: 700;
-      padding: 3px 9px;
-      border-radius: 7px;
-      background: rgba(0, 0, 0, 0.72);
-      border: 1.5px solid rgba(255, 255, 255, 0.35);
-      color: #e2e8f0;
-    }
-
-    .tile-status-chip.soon {
-      border-color: #facc15;
-      color: #fde047;
-    }
-
-    .tile-corner-num {
-      font-family: 'Fredoka', sans-serif;
-      font-size: clamp(1.35rem, 3.4vh, 2.1rem);
-      font-weight: 700;
-      color: #ffffff;
-      line-height: 1;
-      text-shadow:
-        -1.5px -1.5px 0 #000,
-        1.5px -1.5px 0 #000,
-        -1.5px 1.5px 0 #000,
-        1.5px 1.5px 0 #000;
+    .piggy-vote-back:hover {
+      background: #1c0608;
     }
 
     /* ================= MODAL PREVIEW BOSS (MUNCUL BILA KLIK BAB) ================= */
@@ -1357,7 +1275,7 @@
     <button type="button" id="btn-force-landscape" class="btn-force-landscape" data-i18n="rotateBtn">KUNCI MELINTANG &amp; SKRIN PENUH</button>
   </div>
 
-  <!-- SKRIN LOADING (V 2.0.3) -->
+  <!-- SKRIN LOADING (V 2.1.0) -->
   <div id="loading-screen" aria-label="Skrin Memuatkan">
     <div class="loading-lamp-wrap" aria-hidden="true">
       <div class="loading-cord"></div>
@@ -1367,7 +1285,7 @@
     <div class="loading-box">
       <div class="loading-kicker">MALAM SAMA</div>
       <div class="loading-title">MADANI</div>
-      <div class="loading-ver-tag">v2.0.3</div>
+      <div class="loading-ver-tag">v2.1.0</div>
 
       <div class="loading-bar-bg">
         <div class="loading-bar-fill" id="loading-bar-fill"></div>
@@ -1475,62 +1393,41 @@
         </div>
       </div>
 
-      <!-- Sudut Kiri Bawah: Pil Versi v2.0.3 -->
+      <!-- Sudut Kiri Bawah: Pil Versi v2.1.0 -->
       <div class="piggy-bottom-left">
         <div id="btn-version-pill" class="piggy-token-pill" title="Log Kemas Kini">
           <span>🎄</span>
-          <span>v2.0.3</span>
+          <span>v2.1.0</span>
           <span style="color:#f0abfc;font-size:1.25rem;">+</span>
         </div>
       </div>
     </div>
 
-    <!-- VIEW B: CHAPTER SELECTION GAYA GAMBAR (MAP VOTING BOARD) -->
+    <!-- VIEW B: PILIH BAB GAYA PIGGY (NAMA BAB SAHAJA) -->
     <div id="lobby-view-chapters" class="lobby-view">
-      <div class="piggy-board-frame">
-        <div class="piggy-board-top">
-          <button type="button" class="btn-back" data-back-home>&larr; <span data-i18n="btnBack">KEMBALI</span></button>
-          <h2 class="piggy-board-title" data-i18n="chapterSelectTitle">Pilih Bab Permainan</h2>
-          <div style="width:82px;"></div>
-        </div>
+      <div class="piggy-vote-wrap">
+        <h2 class="piggy-board-title" data-i18n="chapterSelectTitle">Pilih Bab Permainan</h2>
 
         <div class="piggy-chapter-tiles-grid">
-          <!-- KAD BAB 1 -->
-          <div class="piggy-map-tile" role="button" tabindex="0" data-open-chapter="ch1">
-            <div class="tile-bg-scene scene-ch1"></div>
-            <img src="anwar.png" alt="Anwar" class="tile-boss-thumb" onerror="this.style.display='none'" />
-            <div class="tile-dark-scrim"></div>
-            <div class="tile-header-name" data-i18n="tileCh1Title">Malam Sama Anwar - Bab 1</div>
-            <div class="tile-bottom-row">
-              <span class="tile-status-chip" data-i18n="ch1Playable">BOLEH MAIN</span>
-              <span class="tile-corner-num">1</span>
-            </div>
-          </div>
-
-          <!-- KAD BAB 2 -->
-          <div class="piggy-map-tile" role="button" tabindex="0" data-open-chapter="ch2">
-            <div class="tile-bg-scene scene-ch2"></div>
-            <img src="zahid.png" alt="Zahid" class="tile-boss-thumb" onerror="this.style.display='none'" />
-            <div class="tile-dark-scrim"></div>
-            <div class="tile-header-name" data-i18n="tileCh2Title">Malam Sama Zahid - Bab 2</div>
-            <div class="tile-bottom-row">
-              <span class="tile-status-chip" data-i18n="ch2Playable">BOLEH MAIN</span>
-              <span class="tile-corner-num">2</span>
-            </div>
-          </div>
-
-          <!-- KAD BAB 3 -->
-          <div class="piggy-map-tile" role="button" tabindex="0" data-open-chapter="ch3">
-            <div class="tile-bg-scene scene-ch3"></div>
-            <div class="tile-school-emblem">🏫</div>
-            <div class="tile-dark-scrim"></div>
-            <div class="tile-header-name" data-i18n="tileCh3Title">Misteri Tadika Fadhlina - Bab 3</div>
-            <div class="tile-bottom-row">
-              <span class="tile-status-chip soon" data-i18n="comingSoon">COMING SOON</span>
-              <span class="tile-corner-num">3</span>
-            </div>
-          </div>
+          <button type="button" class="piggy-map-tile" data-open-chapter="ch1">
+            <span class="tile-chapter-num">Chapter 1</span>
+            <span class="tile-chapter-name">Malam Sama Anwar</span>
+          </button>
+          <button type="button" class="piggy-map-tile" data-open-chapter="ch2">
+            <span class="tile-chapter-num">Chapter 2</span>
+            <span class="tile-chapter-name">Malam Sama Zahid</span>
+          </button>
+          <button type="button" class="piggy-map-tile" data-open-chapter="ch3">
+            <span class="tile-chapter-num">Chapter 3</span>
+            <span class="tile-chapter-name">Misteri Tadika Fadhlina</span>
+          </button>
+          <button type="button" class="piggy-map-tile" data-open-chapter="ch4">
+            <span class="tile-chapter-num">Chapter 4</span>
+            <span class="tile-chapter-name">Rahsia Anthony Loke</span>
+          </button>
         </div>
+
+        <button type="button" class="piggy-vote-back" data-back-home data-i18n="btnBack">KEMBALI</button>
       </div>
     </div>
 
@@ -1724,7 +1621,7 @@
         const steps = [
           { p: 20, msg: 'Menyediakan koridor kayu & lampu...' },
           { p: 48, msg: 'Mengunci mod melintang (Horizontal)...' },
-          { p: 76, msg: 'Memuatkan karakter & data bab v2.0.3...' },
+          { p: 76, msg: 'Memuatkan karakter & data bab v2.1.0...' },
           { p: 100, msg: 'Sedia masuk ke lobi!' }
         ];
 
@@ -1750,7 +1647,7 @@
         }, 85);
       }
 
-      /* ================= KAMUS DWI-BAHASA & DATA UPDATE LOG (v2.0.3) ================= */
+      /* ================= KAMUS DWI-BAHASA & DATA UPDATE LOG (v2.1.0) ================= */
       const I18N = {
         bm: {
           rotateTitle: 'PUSINGKAN SKRIN MELINTANG',
@@ -1767,9 +1664,6 @@
           btnBack: 'KEMBALI',
           allUpdatesTitle: 'Semua Kemas Kini',
           chapterSelectTitle: 'Pilih Bab Permainan',
-          tileCh1Title: 'Malam Sama Anwar - Bab 1',
-          tileCh2Title: 'Malam Sama Zahid - Bab 2',
-          tileCh3Title: 'Misteri Tadika Fadhlina - Bab 3',
           ch1Label: 'BAB 1 • TINGKAT 14',
           ch1Playable: 'BOLEH MAIN',
           ch1Boss: 'BOS: ANWAR',
@@ -1783,9 +1677,15 @@
           ch2Desc: 'Terperangkap di Terowong Kargo & Stesen B2 selepas lif terhempas. Cari 3 Sel Tenaga dalam gelap menggunakan lampu suluh dinamo dan buka Pintu Blast Utara sebelum ditangkap Zahid.',
           ch2PlayBtn: 'MAIN BAB 2 »',
           ch3Label: 'BAB 3 • TADIKA SERI FADHLINA',
-          ch3Boss: 'BOS: MISTERI TADIKA FADHLINA',
+          ch3Playable: 'BOLEH MAIN',
+          ch3Boss: 'BOS: FADHLINA',
           ch3Title: 'MISTERI TADIKA FADHLINA',
-          ch3Desc: 'Suasana sunyi di Tadika Seri Fadhlina selepas waktu pulang bertukar ngeri apabila lampu mula terpadam satu demi satu. Selesaikan teka-teki bilik darjah dan cari jalan keluar sebelum terlambat.',
+          ch3Desc: 'Selepas lolos daripada Zahid, anda terperangkap di Tadika Seri Fadhlina. Cari kunci berwarna dan peralatan, buka 3 sistem kunci Pintu Utama (Kad Akses, 3 Gear Tembaga dan Kunci Putih) dan elakkan Fadhlina. Pistol Pelali boleh melumpuhkannya buat sementara.',
+          ch3PlayBtn: 'MAIN BAB 3 »',
+          ch4Label: 'BAB 4 • STESEN PUTRAJAYA',
+          ch4Boss: 'BOS: ANTHONY LOKE',
+          ch4Title: 'RAHSIA ANTHONY LOKE',
+          ch4Desc: 'Kereta api terakhir sudah berlalu dan Stesen Putrajaya tiba-tiba sunyi. Di sebalik platform yang gelap, ada rahsia yang menunggu untuk dibongkar... Akan datang.',
           shopItem1Title: 'Pengesan Kunci',
           shopItem1Desc: 'Menunjukkan arah lokasi kunci terdekat pada pelan kawasan.',
           shopItem2Title: 'Azimat Pelindung',
@@ -1797,6 +1697,28 @@
           bgmVolLabel: 'Kelantangan Muzik Lobi',
           sensLabel: 'Sensitiviti Kamera',
           updates: [
+            {
+              id: 'v210',
+              bannerTitle: 'Bab 3 Dibuka!',
+              version: 'v2.1.0',
+              theme: 'theme-crimson',
+              mainSectionTitle: 'Pelancaran Bab 3',
+              bullets: [
+                'Bab 3: Misteri Tadika Fadhlina kini boleh dimainkan terus dari lobi.',
+                'Menu Pilih Bab direka semula gaya papan undi peta; petak bab berbucu bulat memaparkan nombor Chapter dan nama bab. Tekan untuk lihat preview boss, penerangan dan butang Main.',
+                'Menambah preview Bab 4: Rahsia Anthony Loke di Stesen Putrajaya dengan boss Anthony Loke (Coming Soon).'
+              ],
+              subSectionTitle: 'Bab & Karakter',
+              characterCards: [
+                {
+                  name: 'Fadhlina',
+                  img: 'fadhlina.png',
+                  accordions: [
+                    { label: 'Bab 3: Misteri Tadika Fadhlina', text: 'Boleh dimainkan melalui butang MAIN -> Bab 3.' }
+                  ]
+                }
+              ]
+            },
             {
               id: 'v203',
               bannerTitle: 'Skrin Penuh, Loading & Pilihan Bab',
@@ -1934,9 +1856,6 @@
           btnBack: 'BACK',
           allUpdatesTitle: 'All Updates',
           chapterSelectTitle: 'Select Chapter',
-          tileCh1Title: 'Malam Sama Anwar - Chapter 1',
-          tileCh2Title: 'Malam Sama Zahid - Chapter 2',
-          tileCh3Title: 'Misteri Tadika Fadhlina - Chapter 3',
           ch1Label: 'CHAPTER 1 • FLOOR 14',
           ch1Playable: 'PLAYABLE',
           ch1Boss: 'BOSS: ANWAR',
@@ -1950,9 +1869,15 @@
           ch2Desc: 'Trapped inside Cargo Tunnel & Station B2 after the elevator crash. Find 3 Energy Cells in the dark using your dynamo flashlight and open the North Blast Gate before Zahid catches you.',
           ch2PlayBtn: 'PLAY CHAPTER 2 »',
           ch3Label: 'CHAPTER 3 • TADIKA SERI FADHLINA',
-          ch3Boss: 'BOSS: TADIKA SERI FADHLINA',
-          ch3Title: 'MISTERI TADIKA FADHLINA',
-          ch3Desc: 'The quiet atmosphere at Tadika Seri Fadhlina after dismissal turns terrifying as lights flicker out one by one. Solve classroom puzzles and find a way out before it is too late.',
+          ch3Playable: 'PLAYABLE',
+          ch3Boss: 'BOSS: FADHLINA',
+          ch3Title: 'FADHLINA KINDERGARTEN MYSTERY',
+          ch3Desc: 'After escaping Zahid, you are trapped inside Tadika Seri Fadhlina. Find colored keys and tools, open all 3 Main Exit locks (Access Keycard, 3 Brass Gears and the White Key) and avoid Fadhlina. The Stun Pistol can knock her out for a while.',
+          ch3PlayBtn: 'PLAY CHAPTER 3 »',
+          ch4Label: 'CHAPTER 4 • PUTRAJAYA STATION',
+          ch4Boss: 'BOSS: ANTHONY LOKE',
+          ch4Title: 'RAHSIA ANTHONY LOKE',
+          ch4Desc: 'The last train has gone and Putrajaya Station suddenly falls silent. Somewhere beyond the dark platforms, a secret is waiting to be uncovered... Coming soon.',
           shopItem1Title: 'Key Radar',
           shopItem1Desc: 'Highlights the nearest key direction on the area map.',
           shopItem2Title: 'Guardian Charm',
@@ -1964,6 +1889,28 @@
           bgmVolLabel: 'Lobby Music Volume',
           sensLabel: 'Camera Sensitivity',
           updates: [
+            {
+              id: 'v210',
+              bannerTitle: 'Chapter 3 Is Open!',
+              version: 'v2.1.0',
+              theme: 'theme-crimson',
+              mainSectionTitle: 'Chapter 3 Release',
+              bullets: [
+                'Chapter 3: Fadhlina Kindergarten Mystery can now be played straight from the lobby.',
+                'Redesigned the Chapter Select menu as a map voting board; rounded boxes show the chapter number and name. Tap one to see the boss preview, description and Play button.',
+                'Added a preview for Chapter 4: Rahsia Anthony Loke at Putrajaya Station, with Anthony Loke as the boss (Coming Soon).'
+              ],
+              subSectionTitle: 'Chapter & Character',
+              characterCards: [
+                {
+                  name: 'Fadhlina',
+                  img: 'fadhlina.png',
+                  accordions: [
+                    { label: 'Chapter 3: Fadhlina Kindergarten Mystery', text: 'Playable via PLAY -> Chapter 3.' }
+                  ]
+                }
+              ]
+            },
             {
               id: 'v203',
               bannerTitle: 'Fullscreen, Loading & Chapter Board',
@@ -2092,7 +2039,7 @@
       let currentLang = safeGetStorage('msm_lang') || 'bm';
       if (currentLang !== 'bm' && currentLang !== 'en') currentLang = 'bm';
 
-      let selectedUpdateId = 'v203';
+      let selectedUpdateId = 'v210';
       let activePreviewChapterKey = null;
 
       let cameraSensitivity = parseFloat(safeGetStorage('msm_sens'));
@@ -2180,73 +2127,56 @@
       /* ================= MODAL PREVIEW BOSS BILA KLIK KAD BAB ================= */
       const previewModal = document.getElementById('chapter-preview-modal');
 
+      /* Tambah bab baharu di sini. url kosong = Coming Soon, img kosong = ikon sahaja */
+      const CHAPTERS = {
+        ch1: { img: 'anwar.png', theme: '', tag: 'pill-tag red', url: 'https://syxhstr.github.io/Malam-Sama-Anwar---Chapter-1/' },
+        ch2: { img: 'zahid.png', theme: 'theme-blue', tag: 'pill-tag blue', url: 'https://syxhstr.github.io/Malam-Sama-Zahid---Chapter-2/' },
+        ch3: { img: 'fadhlina.png', theme: 'theme-gold', tag: 'pill-tag', url: 'https://syxhstr.github.io/Misteri-Tadika-Fadhlina---Chapter-3/' },
+        ch4: { img: '', icon: '🚆', theme: 'theme-blue', tag: 'pill-tag blue', url: '' }
+      };
+
       function openChapterPreview(chKey) {
+        const ch = CHAPTERS[chKey];
+        if (!ch) return;
         activePreviewChapterKey = chKey;
         const dict = I18N[currentLang] || I18N.bm;
-
-        const visualBox = document.getElementById('preview-boss-visual');
-        const bossImg = document.getElementById('preview-boss-img');
-        const bossFallback = document.getElementById('preview-boss-fallback');
-        const chTag = document.getElementById('preview-chapter-tag');
-        const stTag = document.getElementById('preview-status-tag');
-        const bossName = document.getElementById('preview-boss-name');
-        const chTitle = document.getElementById('preview-chapter-title');
-        const chDesc = document.getElementById('preview-chapter-desc');
-        const playBtn = document.getElementById('preview-play-btn');
+        const byId = (id) => document.getElementById(id);
 
         document.querySelectorAll('[data-open-chapter]').forEach((tile) => {
           tile.classList.toggle('selected-tile', tile.getAttribute('data-open-chapter') === chKey);
         });
 
-        visualBox.className = 'preview-boss-visual';
+        byId('preview-boss-visual').className = ('preview-boss-visual ' + ch.theme).trim();
 
-        if (chKey === 'ch1') {
-          bossImg.style.display = 'block';
-          bossImg.src = 'anwar.png';
-          bossFallback.style.display = 'none';
-          chTag.className = 'pill-tag red';
-          chTag.textContent = dict.ch1Label;
-          stTag.className = 'pill-tag red';
-          stTag.textContent = dict.ch1Playable;
-          bossName.textContent = dict.ch1Boss;
-          chTitle.textContent = dict.ch1Title;
-          chDesc.textContent = dict.ch1Desc;
-          playBtn.className = 'preview-play-cta js-go-chapter';
-          playBtn.href = 'https://syxhstr.github.io/Malam-Sama-Anwar---Chapter-1/';
-          playBtn.textContent = dict.ch1PlayBtn;
-          playBtn.removeAttribute('aria-disabled');
-        } else if (chKey === 'ch2') {
-          visualBox.classList.add('theme-blue');
-          bossImg.style.display = 'block';
-          bossImg.src = 'zahid.png';
-          bossFallback.style.display = 'none';
-          chTag.className = 'pill-tag blue';
-          chTag.textContent = dict.ch2Label;
-          stTag.className = 'pill-tag blue';
-          stTag.textContent = dict.ch2Playable;
-          bossName.textContent = dict.ch2Boss;
-          chTitle.textContent = dict.ch2Title;
-          chDesc.textContent = dict.ch2Desc;
-          playBtn.className = 'preview-play-cta js-go-chapter';
-          playBtn.href = 'https://syxhstr.github.io/Malam-Sama-Zahid---Chapter-2/';
-          playBtn.textContent = dict.ch2PlayBtn;
-          playBtn.removeAttribute('aria-disabled');
-        } else {
-          visualBox.classList.add('theme-gold');
+        const bossImg = byId('preview-boss-img');
+        const fallback = byId('preview-boss-fallback');
+        fallback.textContent = ch.icon || '❓';
+        fallback.style.display = ch.img ? 'none' : 'block';
+        bossImg.style.display = ch.img ? 'block' : 'none';
+        bossImg.onerror = () => {
           bossImg.style.display = 'none';
-          bossFallback.style.display = 'block';
-          chTag.className = 'pill-tag';
-          chTag.textContent = dict.ch3Label;
-          stTag.className = 'pill-tag';
-          stTag.textContent = dict.comingSoon;
-          bossName.textContent = dict.ch3Boss;
-          chTitle.textContent = dict.ch3Title;
-          chDesc.textContent = dict.ch3Desc;
-          playBtn.className = 'preview-play-cta is-locked';
-          playBtn.href = '#';
-          playBtn.textContent = dict.comingSoon;
-          playBtn.setAttribute('aria-disabled', 'true');
-        }
+          fallback.style.display = 'block';
+        };
+        if (ch.img) bossImg.src = ch.img;
+
+        const chTag = byId('preview-chapter-tag');
+        chTag.className = ch.tag;
+        chTag.textContent = dict[chKey + 'Label'];
+
+        const stTag = byId('preview-status-tag');
+        stTag.className = ch.tag;
+        stTag.textContent = ch.url ? dict[chKey + 'Playable'] : dict.comingSoon;
+
+        byId('preview-boss-name').textContent = dict[chKey + 'Boss'];
+        byId('preview-chapter-title').textContent = dict[chKey + 'Title'];
+        byId('preview-chapter-desc').textContent = dict[chKey + 'Desc'];
+
+        const playBtn = byId('preview-play-btn');
+        playBtn.className = 'preview-play-cta ' + (ch.url ? 'js-go-chapter' : 'is-locked');
+        playBtn.href = ch.url || '#';
+        playBtn.textContent = ch.url ? dict[chKey + 'PlayBtn'] : dict.comingSoon;
+        if (ch.url) playBtn.removeAttribute('aria-disabled');
+        else playBtn.setAttribute('aria-disabled', 'true');
 
         if (previewModal) previewModal.classList.add('open');
       }
