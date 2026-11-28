@@ -557,11 +557,56 @@
 
     /* Sudut Kiri Bawah: Pil Versi v2.1.0 */
     .piggy-bottom-left {
+      position: relative;
       display: flex;
       flex-direction: column;
       align-items: flex-start;
       z-index: 15;
       flex-shrink: 0;
+    }
+
+    /* Tab Event di atas pil versi */
+    .event-card {
+      position: absolute;
+      left: 0;
+      bottom: 100%;
+      width: clamp(150px, 22vw, 250px);
+      margin-bottom: clamp(6px, 1.4vh, 12px);
+      padding: 0;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      background: #0b0c0f;
+      border: 3px solid #ef4444;
+      border-radius: 14px;
+      color: #ffffff;
+      font-family: 'Fredoka', 'Trebuchet MS', sans-serif;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.82), 0 0 16px rgba(239, 68, 68, 0.45);
+      transition: transform 0.12s ease;
+    }
+
+    .event-card:hover { transform: scale(1.04); }
+
+    .event-card img {
+      display: block;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      max-height: 22vh;
+      object-fit: cover;
+    }
+
+    .event-card-name {
+      padding: 4px 6px 0;
+      font-size: clamp(0.72rem, 2.1vh, 0.98rem);
+    }
+
+    .event-card-countdown {
+      padding: 1px 6px 5px;
+      font-family: 'Courier Prime', monospace;
+      font-size: clamp(0.68rem, 1.9vh, 0.92rem);
+      color: #fde047;
     }
 
     .piggy-token-pill {
@@ -1395,6 +1440,12 @@
 
       <!-- Sudut Kiri Bawah: Pil Versi v2.1.0 -->
       <div class="piggy-bottom-left">
+        <button type="button" id="btn-event-card" class="event-card">
+          <img src="xmasevent26thumbnail.png" alt="Malang Krismas MADANI" onerror="this.style.display='none'" />
+          <span class="event-card-name">🎄 Malang Krismas MADANI</span>
+          <span class="event-card-countdown" id="event-countdown"></span>
+        </button>
+
         <div id="btn-version-pill" class="piggy-token-pill" title="Log Kemas Kini">
           <span>🎄</span>
           <span>v2.1.0</span>
@@ -1686,6 +1737,15 @@
           ch4Boss: 'BOS: ANTHONY LOKE',
           ch4Title: 'RAHSIA ANTHONY LOKE',
           ch4Desc: 'Kereta api terakhir sudah berlalu dan Stesen Putrajaya tiba-tiba sunyi. Di sebalik platform yang gelap, ada rahsia yang menunggu untuk dibongkar... Akan datang.',
+          dayUnit: 'HARI',
+          eventOpen: 'EVENT DIBUKA',
+          eventLocked: 'TERKUNCI',
+          eventOpensIn: '🔒 DIBUKA DALAM',
+          eventPlayBtn: 'MAIN EVENT »',
+          eventLabel: 'EVENT • 1 DISEMBER 2026',
+          eventBoss: 'BOS: NIGHTMARE SANTA ANWAR',
+          eventTitle: 'MALANG KRISMAS MADANI',
+          eventDesc: 'Loceng Krismas berbunyi di tengah malam, tapi yang datang bukan pembawa hadiah. Nightmare Santa Anwar sedang meronda bersama guni hitamnya. Bersiap sedia... jangan sampai nama awak masuk senarai dia.',
           shopItem1Title: 'Pengesan Kunci',
           shopItem1Desc: 'Menunjukkan arah lokasi kunci terdekat pada pelan kawasan.',
           shopItem2Title: 'Azimat Pelindung',
@@ -1878,6 +1938,15 @@
           ch4Boss: 'BOSS: ANTHONY LOKE',
           ch4Title: 'RAHSIA ANTHONY LOKE',
           ch4Desc: 'The last train has gone and Putrajaya Station suddenly falls silent. Somewhere beyond the dark platforms, a secret is waiting to be uncovered... Coming soon.',
+          dayUnit: 'DAYS',
+          eventOpen: 'EVENT OPEN',
+          eventLocked: 'LOCKED',
+          eventOpensIn: '🔒 OPENS IN',
+          eventPlayBtn: 'PLAY EVENT »',
+          eventLabel: 'EVENT • 1 DECEMBER 2026',
+          eventBoss: 'BOSS: NIGHTMARE SANTA ANWAR',
+          eventTitle: 'MALANG KRISMAS MADANI',
+          eventDesc: 'Christmas bells ring at midnight, but whoever is coming is not bringing gifts. Nightmare Santa Anwar is on patrol with his black sack. Get ready... and do not end up on his list.',
           shopItem1Title: 'Key Radar',
           shopItem1Desc: 'Highlights the nearest key direction on the area map.',
           shopItem2Title: 'Guardian Charm',
@@ -2132,7 +2201,8 @@
         ch1: { img: 'anwar.png', theme: '', tag: 'pill-tag red', url: 'https://syxhstr.github.io/Malam-Sama-Anwar---Chapter-1/' },
         ch2: { img: 'zahid.png', theme: 'theme-blue', tag: 'pill-tag blue', url: 'https://syxhstr.github.io/Malam-Sama-Zahid---Chapter-2/' },
         ch3: { img: 'fadhlina.png', theme: 'theme-gold', tag: 'pill-tag', url: 'https://syxhstr.github.io/Misteri-Tadika-Fadhlina---Chapter-3/' },
-        ch4: { img: '', icon: '🚆', theme: 'theme-blue', tag: 'pill-tag blue', url: '' }
+        ch4: { img: '', icon: '🚆', theme: 'theme-blue', tag: 'pill-tag blue', url: '' },
+        event: { img: 'nightmaresantaanwar.png', icon: '🎅', theme: '', tag: 'pill-tag red', url: '' }
       };
 
       function openChapterPreview(chKey) {
@@ -2178,7 +2248,42 @@
         if (ch.url) playBtn.removeAttribute('aria-disabled');
         else playBtn.setAttribute('aria-disabled', 'true');
 
+        if (chKey === 'event') updateEventUi();
+
         if (previewModal) previewModal.classList.add('open');
+      }
+
+      /* ================= EVENT: MALANG KRISMAS MADANI ================= */
+      const EVENT_UNLOCK_AT = Date.parse('2026-12-01T00:00:00+08:00');
+      const EVENT_URL = ''; // Letak link game event di sini bila dah siap
+
+      function formatCountdown(ms) {
+        const total = Math.ceil(ms / 1000);
+        const days = Math.floor(total / 86400);
+        const pad = (n) => String(n).padStart(2, '0');
+        const clock = pad(Math.floor(total / 3600) % 24) + ':' + pad(Math.floor(total / 60) % 60) + ':' + pad(total % 60);
+        return days > 0 ? days + ' ' + I18N[currentLang].dayUnit + ' ' + clock : clock;
+      }
+
+      function updateEventUi() {
+        const dict = I18N[currentLang] || I18N.bm;
+        const left = EVENT_UNLOCK_AT - Date.now();
+        const unlocked = left <= 0;
+
+        const cardText = document.getElementById('event-countdown');
+        if (cardText) cardText.textContent = unlocked ? dict.eventOpen : '🔒 ' + formatCountdown(left);
+
+        if (activePreviewChapterKey !== 'event') return;
+        const url = unlocked ? EVENT_URL : '';
+        document.getElementById('preview-status-tag').textContent = unlocked ? dict.eventOpen : dict.eventLocked;
+        const playBtn = document.getElementById('preview-play-btn');
+        playBtn.className = 'preview-play-cta ' + (url ? 'js-go-chapter' : 'is-locked');
+        playBtn.setAttribute('href', url || '#');
+        playBtn.textContent = url ? dict.eventPlayBtn
+          : unlocked ? dict.comingSoon
+          : dict.eventOpensIn + ' ' + formatCountdown(left);
+        if (url) playBtn.removeAttribute('aria-disabled');
+        else playBtn.setAttribute('aria-disabled', 'true');
       }
 
       function closeChapterPreview() {
@@ -2246,6 +2351,12 @@
         if (target.closest('[data-back-home]')) {
           playUiClick(420);
           showLobbyView('home');
+          return;
+        }
+
+        if (target.closest('#btn-event-card')) {
+          playUiClick(620);
+          openChapterPreview('event');
           return;
         }
 
@@ -2442,7 +2553,11 @@
 
         updateFullscreenBtnUi();
         renderTdsUpdates();
+        updateEventUi();
       }
+
+      updateEventUi();
+      setInterval(updateEventUi, 1000);
 
       /* ================= TETAPAN SLIDER (MUZIK & SENSITIVITI) ================= */
       const bgmVolSlider = document.getElementById('bgm-vol-slider');
